@@ -1,9 +1,10 @@
-package com.den.culinarychest.presentation.navigaion
+package com.den.culinarychest.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.den.culinarychest.presentation.navigaion.NavigationRoute
 import com.den.culinarychest.presentation.screens.AuthorizationScreen
 import com.den.culinarychest.presentation.screens.RegistrationScreen
 import com.den.culinarychest.presentation.screens.SearchScreen

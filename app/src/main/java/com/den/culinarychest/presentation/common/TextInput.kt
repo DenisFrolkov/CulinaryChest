@@ -1,5 +1,6 @@
 package com.den.culinarychest.presentation.common
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.den.culinarychest.presentation.ui.theme.SoftGray
+import com.den.culinarychest.presentation.ui.theme.SoftOrange
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,6 +55,7 @@ fun TextInput(
         ),
         modifier = Modifier
             .fillMaxWidth()
+            .background(SoftOrange)
             .padding(horizontal = 16.dp)
             .onFocusChanged {
                 isFocused = it.isFocused
