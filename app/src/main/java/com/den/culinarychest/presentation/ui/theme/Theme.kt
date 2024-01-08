@@ -1,4 +1,4 @@
-package com.den.culinarychest.ui.theme
+package com.den.culinarychest.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build
