@@ -1,14 +1,12 @@
 package com.den.culinarychest.presentation.common
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,7 +23,6 @@ import androidx.compose.ui.unit.sp
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TextInput(
     inputText: String
@@ -47,15 +44,16 @@ fun TextInput(
                 )
             )
         },
-        visualTransformation = if (text.text.isEmpty()) VisualTransformation.None else VisualTransformation.None,
+        visualTransformation = VisualTransformation.None,
         shape = RoundedCornerShape(12.dp),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
+        colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = SoftGray,
             unfocusedBorderColor = SoftGray,
+            focusedContainerColor = SoftOrange,
+            unfocusedContainerColor = SoftOrange
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .background(SoftOrange)
             .padding(horizontal = 16.dp)
             .onFocusChanged {
                 isFocused = it.isFocused

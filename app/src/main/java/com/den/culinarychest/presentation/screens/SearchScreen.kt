@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.den.culinarychest.presentation.common.RecipeItem
+import com.den.culinarychest.presentation.common.SearchBar
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 
 @Composable
@@ -30,6 +31,7 @@ fun Search(){
             modifier = Modifier
                 .padding(horizontal = 16.dp)
         ){
+            SearchBar()
             RecipeItem()
         }
     }

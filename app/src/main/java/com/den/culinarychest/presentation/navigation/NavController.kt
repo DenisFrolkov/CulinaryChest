@@ -12,7 +12,7 @@ import com.den.culinarychest.presentation.screens.SearchScreen
 @Composable
 fun NavController() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = NavigationRoute.AuthorizationScreen.route)
+    NavHost(navController = navController, startDestination = NavigationRoute.SearchScreen.route)
     {
         composable(NavigationRoute.AuthorizationScreen.route){
             AuthorizationScreen(navController = navController)
