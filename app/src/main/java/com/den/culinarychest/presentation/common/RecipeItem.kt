@@ -36,9 +36,10 @@ fun RecipeItem(
 ) {
     Column(
         modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             .border(width = .15.dp, color = SoftGray, shape = RoundedCornerShape(12.dp))
             .background(SoftOrange, RoundedCornerShape(12.dp))
-            .fillMaxWidth()
     ) {
         Row() {
             Image(

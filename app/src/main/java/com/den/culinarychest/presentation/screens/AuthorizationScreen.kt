@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.presentation.common.PushButton
 import com.den.culinarychest.presentation.common.TextInput
-import com.den.culinarychest.presentation.navigaion.NavigationRoute
+import com.den.culinarychest.presentation.navigation.NavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 
@@ -50,6 +50,6 @@ fun Authorization(
         Spacer(modifier = Modifier.height(height = 34.dp))
         TextInput(inputText = "пароль")
         Spacer(modifier = Modifier.height(height = 112.dp))
-        PushButton(textButton = "Войти", transitionalText = "Создать аккаунт?", navController = navController, navigationButton = NavigationRoute.SearchScreen.route, navigationText = NavigationRoute.RegistrationScreen.route)
+        PushButton(textButton = "Войти", transitionalText = "Создать аккаунт?", navController = navController, navigationButton = NavigationRoute.BottomNavigationBar.route, navigationText = NavigationRoute.RegistrationScreen.route)
     }
 }

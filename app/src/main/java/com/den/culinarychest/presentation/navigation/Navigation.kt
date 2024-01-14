@@ -4,15 +4,19 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.den.culinarychest.presentation.navigaion.NavigationRoute
+import com.den.culinarychest.presentation.bottomnavigation.BottomNavigationBar
 import com.den.culinarychest.presentation.screens.AuthorizationScreen
+import com.den.culinarychest.presentation.screens.ChestScreen
+import com.den.culinarychest.presentation.screens.ProfileScreen
 import com.den.culinarychest.presentation.screens.RegistrationScreen
 import com.den.culinarychest.presentation.screens.SearchScreen
 
 @Composable
-fun NavController() {
+fun Navigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = NavigationRoute.SearchScreen.route)
+    NavHost(
+        navController = navController,
+        startDestination = NavigationRoute.AuthorizationScreen.route)
     {
         composable(NavigationRoute.AuthorizationScreen.route){
             AuthorizationScreen(navController = navController)
@@ -20,8 +24,8 @@ fun NavController() {
         composable(NavigationRoute.RegistrationScreen.route){
             RegistrationScreen(navController = navController)
         }
-        composable(NavigationRoute.SearchScreen.route){
-            SearchScreen(navController = navController)
+        composable(NavigationRoute.BottomNavigationBar.route){
+            BottomNavigationBar()
         }
     }
 }

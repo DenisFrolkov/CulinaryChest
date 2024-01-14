@@ -45,7 +45,8 @@ fun SearchBar() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .offset(y = -10.dp)
+            .padding(horizontal = 12.dp)
+//            .offset(y = -10.dp)
     ) {
         SearchBar(
             modifier = Modifier
@@ -96,7 +97,7 @@ fun SearchBar() {
                 )
             },
         ) {
-            recipeElements.forEach{
+            recipeElements.forEach {
                 Row(
                     modifier = Modifier
                         .padding(all = 14.dp)
