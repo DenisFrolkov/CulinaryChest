@@ -46,7 +46,7 @@ fun SearchBar() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp)
-//            .offset(y = -10.dp)
+            .offset(y = -10.dp)
     ) {
         SearchBar(
             modifier = Modifier

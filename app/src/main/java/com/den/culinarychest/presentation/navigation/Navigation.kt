@@ -6,10 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.den.culinarychest.presentation.bottomnavigation.BottomNavigationBar
 import com.den.culinarychest.presentation.screens.AuthorizationScreen
-import com.den.culinarychest.presentation.screens.ChestScreen
-import com.den.culinarychest.presentation.screens.ProfileScreen
 import com.den.culinarychest.presentation.screens.RegistrationScreen
-import com.den.culinarychest.presentation.screens.SearchScreen
 
 @Composable
 fun Navigation() {

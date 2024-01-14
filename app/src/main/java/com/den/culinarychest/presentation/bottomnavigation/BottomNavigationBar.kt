@@ -11,14 +11,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,7 +24,7 @@ import com.den.culinarychest.presentation.common.BottomNavigationItem
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.screens.ChestScreen
+import com.den.culinarychest.presentation.TopNavigationBar.TopNavigationBar
 import com.den.culinarychest.presentation.screens.ProfileScreen
 import com.den.culinarychest.presentation.screens.SearchScreen
 
@@ -36,6 +33,9 @@ import com.den.culinarychest.presentation.screens.SearchScreen
 fun BottomNavigationBar(
 ) {
     val navBottomController = rememberNavController()
+    var searchSelected by remember { mutableStateOf(true) }
+    var topBarSelected by remember { mutableStateOf(false) }
+    var profileSelected by remember { mutableStateOf(false) }
     Scaffold(
         bottomBar = {
             Row(
@@ -54,20 +54,35 @@ fun BottomNavigationBar(
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 BottomNavigationItem(
+                    isSelected = searchSelected,
                     selectedIcon = painterResource (id = R.drawable.search_icon),
                     navBottomBarController = navBottomController,
                     buttonNavigation = BottomNavigationRoute.SearchScreen.route
-                )
+                ){
+                    searchSelected = true
+                    topBarSelected = false
+                    profileSelected = false
+                }
                 BottomNavigationItem(
+                    isSelected = topBarSelected,
                     selectedIcon = painterResource(id = R.drawable.favorite_icon),
                     navBottomBarController = navBottomController,
-                    buttonNavigation = BottomNavigationRoute.ChestScreen.route
-                )
+                    buttonNavigation = BottomNavigationRoute.TopNavigationBar.route
+                ){
+                    searchSelected = false
+                    topBarSelected = true
+                    profileSelected = false
+                }
                 BottomNavigationItem(
+                    isSelected = topBarSelected,
                     selectedIcon = painterResource(id = R.drawable.profile_icon),
                     navBottomBarController = navBottomController,
                     buttonNavigation = BottomNavigationRoute.ProfileScreen.route
-                )
+                ){
+                    topBarSelected = false
+                    searchSelected = false
+                    profileSelected = true
+                }
             }
         }
     ) {
@@ -78,8 +93,8 @@ fun BottomNavigationBar(
             composable(BottomNavigationRoute.SearchScreen.route) {
                 SearchScreen()
             }
-            composable(BottomNavigationRoute.ChestScreen.route) {
-                ChestScreen()
+            composable(BottomNavigationRoute.TopNavigationBar.route) {
+                TopNavigationBar()
             }
             composable(BottomNavigationRoute.ProfileScreen.route) {
                 ProfileScreen()
