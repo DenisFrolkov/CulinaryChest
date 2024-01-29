@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -22,7 +23,9 @@ import com.den.culinarychest.presentation.screens.FavoriteScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun TopNavigationBar() {
+fun TopNavigationBar(
+    navController: NavController
+) {
     val topBarNavController = rememberNavController()
 
     var favoriteSelected by remember { mutableStateOf(true)}
@@ -64,7 +67,7 @@ fun TopNavigationBar() {
                 FavoriteScreen()
             }
             composable(TopNavigationRoute.CreatedScreen.route) {
-                CreatedScreen()
+                CreatedScreen(navController = navController)
             }
         }
 

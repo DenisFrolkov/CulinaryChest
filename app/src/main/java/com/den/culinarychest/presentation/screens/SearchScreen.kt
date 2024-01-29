@@ -12,28 +12,34 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.den.culinarychest.presentation.common.RecipeItem
 import com.den.culinarychest.presentation.common.SearchBar
+import com.den.culinarychest.presentation.navigation.NavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 
 @Composable
-fun SearchScreen() {
-    Search()
+fun SearchScreen(
+    navController: NavController
+) {
+    Search(navController = navController)
 }
 
 @Composable
-fun Search(){
+fun Search(
+    navController: NavController
+){
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(SoftPink)
     ) {
-        Column( ){
+        Column(){
             SearchBar()
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier.padding(bottom = 50.dp)
+            ) {
                 items(10) {index ->
-                    RecipeItem()
+                    RecipeItem(navController = navController, transitionPath = NavigationRoute.RecipeScreen.route)
                 }
             }
-
         }
     }
 }

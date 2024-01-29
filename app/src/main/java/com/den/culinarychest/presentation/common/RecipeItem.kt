@@ -3,10 +3,10 @@ package com.den.culinarychest.presentation.common
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -18,15 +18,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.R
 
 @Composable
 fun RecipeItem(
+    navController: NavController,
+    transitionPath: String
 //    recipeImage: Painter,
 //    titleText: String,
 //    ingredientText: String,
@@ -38,6 +40,9 @@ fun RecipeItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+            .clickable {
+                navController.navigate(transitionPath)
+            }
             .border(width = .15.dp, color = SoftGray, shape = RoundedCornerShape(12.dp))
             .background(SoftOrange, RoundedCornerShape(12.dp))
     ) {
@@ -72,67 +77,44 @@ fun RecipeItem(
         }
         Row() {
             Row() {
-                Image(
-                    modifier = Modifier
-                        .padding(start = 23.dp, top = 7.dp, end = 0.dp, bottom = 7.dp)
-                        .size(size = 16.dp),
-                    painter = painterResource(id = R.drawable.star),
-                    contentDescription = "Тут должны быть звездочка",
-                    contentScale = ContentScale.Fit
-                )
-                Text(
-                    modifier = Modifier
-                        .padding(start = 2.dp)
-                        .align(Alignment.CenterVertically),
-                    text = "4.5",
-                    style = TextStyle(
-                        fontSize = 10.sp,
-                        color = SoftGray
-                    )
+                RecipeInformationItems(
+                    iconPainter = painterResource(id = R.drawable.star),
+                    sizeIcon = 16,
+                    textInformation = "4.5",
+                    paddingStart = 23,
+                    paddingTop = 7,
+                    paddingEnd = 0,
+                    paddingBottom = 7,
+                    fontSize = 10
                 )
             }
             Row() {
-                Image(
-                    modifier = Modifier
-                        .padding(start = 14.dp, top = 7.dp, end = 0.dp, bottom = 7.dp)
-                        .size(size = 16.dp),
-                    painter = painterResource(id = R.drawable.time),
-                    contentDescription = "Тут должны быть часы ",
-                    contentScale = ContentScale.Fit
-                )
-                Text(
-                    modifier = Modifier
-                        .padding(start = 2.dp)
-                        .align(Alignment.CenterVertically),
-                    text = "30 мин",
-                    style = TextStyle(
-                        fontSize = 10.sp,
-                        color = SoftGray
-                    )
+                RecipeInformationItems(
+                    iconPainter = painterResource(id = R.drawable.time),
+                    sizeIcon = 16,
+                    textInformation = "30 мин",
+                    paddingStart = 14,
+                    paddingTop = 7,
+                    paddingEnd = 0,
+                    paddingBottom = 7,
+                    fontSize = 10
                 )
             }
-            Row(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
+                    .fillMaxWidth()
+                    .padding(end = 8.dp),
+                contentAlignment = Alignment.CenterEnd
             ) {
-                Image(
-                    modifier = Modifier
-                        .padding(start = 0.dp, top = 7.dp, end = 0.dp, bottom = 7.dp)
-                        .size(size = 16.dp),
-                    painter = painterResource(id = R.drawable.calendar),
-                    contentDescription = "Тут должна быть дата ",
-                    contentScale = ContentScale.Fit
-                )
-                Text(
-                    modifier = Modifier
-                        .padding(start = 3.dp, end = 8.dp)
-                        .align(Alignment.CenterVertically),
-                    text = "23.10.2020",
-                    style = TextStyle(
-                        fontSize = 10.sp,
-                        color = SoftGray
-                    )
+                RecipeInformationItems(
+                    iconPainter = painterResource(id = R.drawable.calendar),
+                    sizeIcon = 16,
+                    textInformation = "23.10.2020",
+                    paddingStart = 0,
+                    paddingTop = 7,
+                    paddingEnd = 0,
+                    paddingBottom = 7,
+                    fontSize = 10
                 )
             }
         }

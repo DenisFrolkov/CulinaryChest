@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.den.culinarychest.presentation.bottomnavigation.BottomNavigationBar
 import com.den.culinarychest.presentation.screens.AuthorizationScreen
+import com.den.culinarychest.presentation.screens.RecipeScreen
 import com.den.culinarychest.presentation.screens.RegistrationScreen
 
 @Composable
@@ -22,7 +23,10 @@ fun Navigation() {
             RegistrationScreen(navController = navController)
         }
         composable(NavigationRoute.BottomNavigationBar.route){
-            BottomNavigationBar()
+            BottomNavigationBar(navController = navController)
+        }
+        composable(NavigationRoute.RecipeScreen.route){
+            RecipeScreen()
         }
     }
 }

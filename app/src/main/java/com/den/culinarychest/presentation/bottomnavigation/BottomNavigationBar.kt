@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -31,6 +32,7 @@ import com.den.culinarychest.presentation.screens.SearchScreen
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun BottomNavigationBar(
+    navController: NavController
 ) {
     val navBottomController = rememberNavController()
     var searchSelected by remember { mutableStateOf(true) }
@@ -91,10 +93,10 @@ fun BottomNavigationBar(
             startDestination = BottomNavigationRoute.SearchScreen.route
         ) {
             composable(BottomNavigationRoute.SearchScreen.route) {
-                SearchScreen()
+                SearchScreen(navController = navController)
             }
             composable(BottomNavigationRoute.TopNavigationBar.route) {
-                TopNavigationBar()
+                TopNavigationBar(navController = navController)
             }
             composable(BottomNavigationRoute.ProfileScreen.route) {
                 ProfileScreen()

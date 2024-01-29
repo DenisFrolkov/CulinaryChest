@@ -9,12 +9,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.den.culinarychest.presentation.common.FAB
 import com.den.culinarychest.presentation.common.RecipeItem
+import com.den.culinarychest.presentation.navigation.NavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 
 @Composable
-fun CreatedScreen() {
+fun CreatedScreen(
+    navController: NavController
+) {
     Box(modifier = Modifier
         .fillMaxSize()
         .background(color = SoftPink)
@@ -30,7 +34,7 @@ fun CreatedScreen() {
         Column(
             modifier = Modifier.padding(top = 82.dp)
         ) {
-            RecipeItem()
+            RecipeItem(navController = navController, transitionPath = NavigationRoute.BottomNavigationBar.route)
         }
     }
 }
