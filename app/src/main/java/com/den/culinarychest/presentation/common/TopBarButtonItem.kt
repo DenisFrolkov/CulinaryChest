@@ -20,7 +20,7 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 
 @Composable
-fun TopBarButton(
+fun TopBarButtonItem(
     isSelected: Boolean,
     textButton: String,
     topBarNavController: NavController,
@@ -46,7 +46,6 @@ fun TopBarButton(
             style = TextStyle(
                 color = SoftGray,
                 fontSize = if (isSelected) 16.sp else 14.sp,
-
             )
         )
     }

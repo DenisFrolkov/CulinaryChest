@@ -1,4 +1,4 @@
-package com.den.culinarychest.presentation.TopNavigationBar
+package com.den.culinarychest.presentation.navigation.topNavigationBar
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +17,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.den.culinarychest.presentation.common.TopBarButton
+import com.den.culinarychest.presentation.common.TopBarButtonItem
+import com.den.culinarychest.presentation.route.TopNavigationRoute
 import com.den.culinarychest.presentation.screens.CreatedScreen
 import com.den.culinarychest.presentation.screens.FavoriteScreen
 
@@ -38,7 +39,7 @@ fun TopNavigationBar(
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.Absolute.SpaceAround
             ) {
-                TopBarButton(
+                TopBarButtonItem(
                     isSelected = favoriteSelected,
                     textButton = "Избранное",
                     topBarNavController = topBarNavController,
@@ -47,7 +48,7 @@ fun TopNavigationBar(
                     favoriteSelected = it
                     createdSelected = !it
                 }
-                TopBarButton(
+                TopBarButtonItem(
                     isSelected = createdSelected,
                     textButton = "Созданное",
                     topBarNavController = topBarNavController,

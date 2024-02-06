@@ -1,4 +1,4 @@
-package com.den.culinarychest.presentation.bottomnavigation
+package com.den.culinarychest.presentation.navigation.bottomNavigation
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -25,7 +25,8 @@ import com.den.culinarychest.presentation.common.BottomNavigationItem
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.TopNavigationBar.TopNavigationBar
+import com.den.culinarychest.presentation.navigation.topNavigationBar.TopNavigationBar
+import com.den.culinarychest.presentation.route.BottomNavigationRoute
 import com.den.culinarychest.presentation.screens.ProfileScreen
 import com.den.culinarychest.presentation.screens.SearchScreen
 

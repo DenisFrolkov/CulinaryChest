@@ -1,4 +1,4 @@
-package com.den.culinarychest.presentation.TopNavigationBar
+package com.den.culinarychest.presentation.route
 
 sealed class TopNavigationRoute(val route: String) {
     data object FavoriteScreen : TopNavigationRoute("favorite_screen")

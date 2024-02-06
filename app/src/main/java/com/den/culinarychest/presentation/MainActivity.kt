@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.den.culinarychest.presentation.navigation.Navigation
+import com.den.culinarychest.presentation.navigation.appNavigation.AppNavigation
 import com.den.culinarychest.presentation.ui.theme.CulinaryChestTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,9 +19,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Navigation()
+                    AppNavigation()
                 }
             }
         }
+
     }
 }

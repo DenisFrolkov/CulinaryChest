@@ -1,4 +1,4 @@
-package com.den.culinarychest.presentation.bottomnavigation
+package com.den.culinarychest.presentation.route
 
 sealed class BottomNavigationRoute(val route: String) {
     object SearchScreen : BottomNavigationRoute("search_screen")
