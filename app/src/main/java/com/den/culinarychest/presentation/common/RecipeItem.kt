@@ -29,12 +29,6 @@ import com.den.culinarychest.R
 fun RecipeItem(
     navController: NavController,
     transitionPath: String
-//    recipeImage: Painter,
-//    titleText: String,
-//    ingredientText: String,
-//    appraisalText: String,
-//    timeText: String,
-//    dataText: String
 ) {
     Column(
         modifier = Modifier
@@ -48,12 +42,12 @@ fun RecipeItem(
     ) {
         Row() {
             Image(
+                painter = painterResource(id = R.drawable.image),
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .padding(start = 16.dp, top = 16.dp, end = 0.dp, bottom = 0.dp)
-                    .size(size = 94.dp),
-                painter = painterResource(id = R.drawable.image),
-                contentDescription = "Тут должна быть картинка рецепта ;)",
-                contentScale = ContentScale.Fit
+                    .size(size = 94.dp)
             )
             Column(
                 modifier = Modifier.padding(start = 10.dp, top = 12.dp)
@@ -66,12 +60,12 @@ fun RecipeItem(
                     )
                 )
                 Text(
-                    modifier = Modifier.padding(top = 4.dp),
                     text = "Ингредиенты: макароны, крабовые палочки, чеснок, масло сливочное, сыр твёрдый, сметана, мука... ",
                     style = TextStyle(
                         fontSize = 10.sp,
                         color = SoftGray
-                    )
+                    ),
+                    modifier = Modifier.padding(top = 4.dp),
                 )
             }
         }

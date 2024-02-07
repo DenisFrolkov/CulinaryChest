@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
@@ -38,6 +39,8 @@ fun TextInput(
     onTextChanged: (String) -> Unit,
     validation: (String) -> Boolean
 ) {
+    val stringResource = LocalContext.current.resources
+
     var text by remember { mutableStateOf(TextFieldValue()) }
     var isHintVisible by remember { mutableStateOf(true) }
     var isError by remember { mutableStateOf(false) }
@@ -51,12 +54,12 @@ fun TextInput(
 
 
     Box(
+        contentAlignment = Alignment.CenterStart,
         modifier = Modifier
             .fillMaxWidth()
             .border(width = 0.1.dp, color = SoftGray, shape = RoundedCornerShape(14.dp))
             .background(color = SoftOrange, shape = RoundedCornerShape(14.dp))
-            .padding(start = 12.dp, top = 15.dp, end = 12.dp, bottom = 16.dp),
-        contentAlignment = Alignment.CenterStart
+            .padding(start = 12.dp, top = 15.dp, end = 12.dp, bottom = 16.dp)
     ) {
         BasicTextField(
             value = text,
@@ -77,7 +80,7 @@ fun TextInput(
         )
         if (isHintVisible) {
             Text(
-                text = inputText,
+                text = "Введите $inputText",
                 style = TextStyle(
                     fontSize = 16.sp,
                     color = SoftGray
@@ -112,12 +115,12 @@ fun TextInput(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.mistake_icon),
-                contentDescription = "Тут должна быть иконка ошибки",
+                contentDescription = null,
                 tint = Red,
                 modifier = Modifier.size(16.dp)
             )
             Text(
-                text = "Проверьте правильность набора информации",
+                text = stringResource.getString(R.string.mistake_text),
                 style = TextStyle(
                     fontSize = 12.sp,
                     color = Red

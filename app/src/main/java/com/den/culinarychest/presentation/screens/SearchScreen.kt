@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.den.culinarychest.presentation.common.RecipeItem
-import com.den.culinarychest.presentation.common.SearchBar
+import com.den.culinarychest.presentation.common.SearchBarItem
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 
@@ -32,9 +32,9 @@ fun Search(
             .background(SoftPink)
     ) {
         Column(){
-            SearchBar()
+            SearchBarItem()
             LazyColumn(
-                modifier = Modifier.padding(bottom = 50.dp)
+                modifier = Modifier.padding(bottom = 40.dp)
             ) {
                 items(10) {index ->
                     RecipeItem(navController = navController, transitionPath = AppNavigationRoute.RecipeScreen.route)

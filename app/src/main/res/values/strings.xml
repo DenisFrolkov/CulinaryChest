@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">CulinaryChest</string>
+    <string name="mistake_text">Проверьте правильность набора информации</string>
+    <string name="authorization_text">Авторизация</string>
+    <string name="registration_text">Регистрация</string>
+    <string name="new_account_text">Создать аккаунт?</string>
+    <string name="enter_text">Войти</string>
+    <string name="search_text">Поиск</string>
+    <string name="login_text">логин</string>
+    <string name="email_text">почту</string>
+    <string name="password_text">почту</string>
+    <string name="verification_text">почту</string>
 </resources>

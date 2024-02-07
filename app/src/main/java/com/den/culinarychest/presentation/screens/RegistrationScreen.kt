@@ -61,19 +61,19 @@ fun Registration(
         ) {
             Spacer(modifier = Modifier.height(24.dp))
             TextInput(
-                inputText = "Введите логин",
+                inputText = "логин",
                 onTextChanged = { login = it },
                 validation = { it.matches(Regex("[a-zA-Z0-9_]+")) && it.length in 5..20 }
             )
             Spacer(modifier = Modifier.height(32.dp))
             TextInput(
-                inputText = "Введите почту",
+                inputText = "почту",
                 onTextChanged = { email = it },
                 validation = { it.matches(Regex("^([a-zA-Z0-9_\\-]+)@([a-zA-Z0-9_\\-]+)\\.([a-zA-Z]{2,5})\$")) }
             )
             Spacer(modifier = Modifier.height(32.dp))
             TextInput(
-                inputText = "Введите пароль",
+                inputText = "пароль",
                 onTextChanged = { password = it },
                 validation = { it.matches(Regex("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}\$")) }
             )

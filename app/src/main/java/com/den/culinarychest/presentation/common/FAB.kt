@@ -20,14 +20,14 @@ fun FAB() {
     Box(
         modifier = Modifier
             .background(color = SoftOrange, shape = RoundedCornerShape(size = 25.dp))
-            .border(width = 0.5.dp, color = SoftGray, shape = RoundedCornerShape(size = 25.dp))
+            .border(width = 0.1.dp, color = SoftGray, shape = RoundedCornerShape(size = 25.dp))
             .size(size = 50.dp),
         contentAlignment = Alignment.Center
     ) {
         Image(
             modifier = Modifier.size(size = 20.dp),
             painter = painterResource(id = R.drawable.add_icon),
-            contentDescription = "Тут должна быть иконка добавления"
+            contentDescription = null
         )
     }
 }

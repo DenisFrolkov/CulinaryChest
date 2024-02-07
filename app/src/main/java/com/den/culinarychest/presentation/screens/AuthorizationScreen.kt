@@ -15,10 +15,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.PushButton
 import com.den.culinarychest.presentation.common.TextInput
 import com.den.culinarychest.presentation.route.AppNavigationRoute
@@ -36,6 +38,8 @@ fun AuthorizationScreen(
 @Composable
 fun Authorization(navController: NavController) {
 
+    val stringResource = LocalContext.current.resources
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -47,7 +51,7 @@ fun Authorization(navController: NavController) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Авторизация",
+            text = stringResource.getString(R.string.authorization_text),
             style = TextStyle(
                 fontSize = 24.sp,
                 color = SoftGray
@@ -58,7 +62,7 @@ fun Authorization(navController: NavController) {
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
         TextInput(
-            inputText = "Введите почту",
+            inputText = stringResource.getString(R.string.email_text),
             onTextChanged = { inputEmail -> email = inputEmail },
             validation = { text ->
                 android.util.Patterns.EMAIL_ADDRESS.matcher(text).matches()
@@ -66,17 +70,17 @@ fun Authorization(navController: NavController) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         TextInput(
-            inputText = "Введите пароль",
+            inputText = stringResource.getString(R.string.verification_text),
             onTextChanged = { inputPass -> password = inputPass },
             validation = { text ->
-                text.length >= 8 // Простая проверка на минимальную длину пароля
+                text.length >= 8
             }
         )
         Spacer(modifier = Modifier.height(32.dp))
         }
         PushButton(
-            textButton = "Войти",
-            transitionalText = "Создать аккаунт?",
+            textButton = stringResource.getString(R.string.enter_text),
+            transitionalText = stringResource.getString(R.string.new_account_text),
             navController = navController,
             navigationButton = AppNavigationRoute.BottomAppNavigationBar.route,
             navigationText = AppNavigationRoute.RegistrationScreen.route

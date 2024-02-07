@@ -25,15 +25,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.den.culinarychest.R
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 
 @OptIn(ExperimentalMaterial3Api::class)
+@Preview
 @Composable
-fun SearchBar() {
+fun SearchBarItem() {
+    val stringResource = LocalContext.current.resources
+
     var textParameter by remember { mutableStateOf("") }
     var activeParameter by remember { mutableStateOf(false) }
     val recipeElements = remember {
@@ -71,7 +77,7 @@ fun SearchBar() {
             },
             placeholder = {
                 Text(
-                    text = "Поиск",
+                    text = stringResource.getString(R.string.authorization_text),
                     style = TextStyle(
                         fontSize = 16.sp,
                         color = SoftGray
@@ -80,9 +86,8 @@ fun SearchBar() {
             },
             trailingIcon = {
                 val icon = if (activeParameter) Icons.Default.Clear else Icons.Default.Search
-                val contentDescription =
-                    if (activeParameter) "Тут должна быть иконка крестика" else "Тут должна быть иконка поиска"
-                val tint = if (activeParameter) SoftGray else SoftGray
+                val contentDescription = null
+                val tint = SoftGray
 
                 Icon(
                     modifier = Modifier
@@ -105,7 +110,7 @@ fun SearchBar() {
                     Icon(
                         modifier = Modifier.padding(end = 10.dp),
                         imageVector = Icons.Default.History,
-                        contentDescription = "Тут должна быть иконка истории"
+                        contentDescription = null
                     )
                     Text(text = it)
                 }
