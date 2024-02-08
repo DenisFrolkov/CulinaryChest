@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import com.den.culinarychest.R
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -46,6 +47,9 @@ fun RecipeScreen() {
 
 @Composable
 fun Recipe() {
+
+    val stringResources = LocalContext.current.resources
+
     var clickLike by remember { mutableStateOf(false) }
     val text = """
         Макароны – 100 г, Крабовые палочки – 100 г, Чеснок – 1 зубчик, Масло сливочное – 10 г, Сыр твёрдый – 10 г, Сметана – 2 ст. ложки, Мука – 1/4 ч. ложки, Травы прованские сушеные – 1/2 ч. ложки, Соль – по вкусу, Перец чёрный молотый – по вкусу;
@@ -71,7 +75,7 @@ fun Recipe() {
                 Image(
                     modifier = Modifier.size(24.dp),
                     painter = painterResource(id = R.drawable.back_icon),
-                    contentDescription = "Тут должна быть иконка назад"
+                    contentDescription = null
                 )
                 if (clickLike == false) {
                     Image(
@@ -79,7 +83,7 @@ fun Recipe() {
                             .size(24.dp)
                             .clickable { clickLike = true },
                         painter = painterResource(id = R.drawable.heart_icon_dont_like),
-                        contentDescription = "Тут должна быть икона пустого сердца"
+                        contentDescription = null
                     )
                 } else {
                     Image(
@@ -87,7 +91,7 @@ fun Recipe() {
                             .size(24.dp)
                             .clickable { clickLike = false },
                         painter = painterResource(id = R.drawable.heart_icon_like),
-                        contentDescription = "Тут должна быть икона красного сердца"
+                        contentDescription = null
                     )
                 }
             }
@@ -104,7 +108,7 @@ fun Recipe() {
                         .padding(start = 10.dp, top = 10.dp, end = 10.dp)
                         .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp)),
                     painter = painterResource(id = R.drawable.image_recipe),
-                    contentDescription = "тут должна быть картинка рецепта",
+                    contentDescription = null,
                     contentScale = ContentScale.Crop
                 )
                 Row() {
@@ -166,7 +170,7 @@ fun Recipe() {
                 ) {
                     Text(
                         modifier = Modifier.padding(all = 6.dp),
-                        text = "Ингредиенты:",
+                        text = stringResources.getString(R.string.ingredients_text),
                         style = TextStyle(
                             fontSize = 12.sp,
                             color = SoftGray
@@ -190,7 +194,7 @@ fun Recipe() {
                 }
                 Text(
                     modifier = Modifier.padding(start = 10.dp, top = 10.dp, bottom = 6.dp),
-                    text = "Шаги приготовления:",
+                    text = stringResources.getString(R.string.preparation_steps_text),
                     style = TextStyle(
                         fontSize = 16.sp,
                         color = SoftGray

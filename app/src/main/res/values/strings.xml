@@ -1,13 +1,25 @@
 <resources>
     <string name="app_name">CulinaryChest</string>
-    <string name="mistake_text">Проверьте правильность набора информации</string>
     <string name="authorization_text">Авторизация</string>
     <string name="registration_text">Регистрация</string>
-    <string name="new_account_text">Создать аккаунт?</string>
+    <string name="new_account_issue_text">Создать аккаунт?</string>
+    <string name="log_in_to_an_existing_text">Войти в существующий?</string>
+    <string name="new_account_text">Создать аккаунт</string>
+    <string name="favorite_recipe_text">Избранные рецепты</string>
+    <string name="created_recipe_text">Созданные рецепты</string>
+    <string name="edit_text">Редактировать</string>
     <string name="enter_text">Войти</string>
+    <string name="exit_text">Выйти</string>
+    <string name="login_text">Логин</string>
+    <string name="email_text">Почта</string>
+    <string name="password_text">Пароль</string>
+    <string name="verification_text">Повторите пароль</string>
+    <string name="mistake_text">Проверьте правильность набора информации</string>
+    <string name="empty_text">Здесь еще ничего нет :(</string>
+    <string name="preparation_steps_text">Шаги приготовления:</string>
+    <string name="ingredients_text">Ингредиенты:</string>
     <string name="search_text">Поиск</string>
-    <string name="login_text">логин</string>
-    <string name="email_text">почту</string>
-    <string name="password_text">почту</string>
-    <string name="verification_text">почту</string>
+    <string name="favorite_text">Избранное</string>
+    <string name="сreated_text">Созданное</string>
+    <string name="profile_text">Профиль</string>
 </resources>

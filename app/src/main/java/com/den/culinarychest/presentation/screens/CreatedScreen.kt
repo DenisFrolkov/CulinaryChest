@@ -19,22 +19,26 @@ import com.den.culinarychest.presentation.ui.theme.SoftPink
 fun CreatedScreen(
     navController: NavController
 ) {
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(color = SoftPink)
-    ){
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = SoftPink)
+    ) {
         Box(
+            contentAlignment = Alignment.BottomEnd,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(end = 16.dp, bottom = 66.dp),
-            contentAlignment = Alignment.BottomEnd
+                .padding(end = 16.dp, bottom = 66.dp)
         ) {
             FAB()
         }
         Column(
             modifier = Modifier.padding(top = 82.dp)
         ) {
-            RecipeItem(navController = navController, transitionPath = AppNavigationRoute.BottomAppNavigationBar.route)
+            RecipeItem(
+                navController = navController,
+                transitionPath = AppNavigationRoute.BottomAppNavigationBar.route
+            )
         }
     }
 }

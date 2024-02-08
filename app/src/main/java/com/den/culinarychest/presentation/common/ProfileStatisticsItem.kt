@@ -15,14 +15,14 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 
 @Composable
 fun ProfileStatisticsItem(
-    TextStatistic: String,
-    NumberStatistic: String
+    textStatistic: String,
+    numberStatistic: String
 ) {
     Column(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = TextStatistic,
+            text = textStatistic,
             style = TextStyle(
                 color = SoftGray,
                 fontSize = 12.sp
@@ -30,13 +30,13 @@ fun ProfileStatisticsItem(
         )
         Spacer(modifier = Modifier.height(6.dp))
         Text(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally),
-            text = NumberStatistic,
+            text = numberStatistic,
             style = TextStyle(
                 color = SoftGray,
                 fontSize = 14.sp
-            )
+            ),
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
         )
     }
 }

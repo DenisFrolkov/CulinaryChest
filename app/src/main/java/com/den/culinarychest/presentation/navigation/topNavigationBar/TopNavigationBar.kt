@@ -12,11 +12,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.TopBarButtonItem
 import com.den.culinarychest.presentation.route.TopNavigationRoute
 import com.den.culinarychest.presentation.screens.CreatedScreen
@@ -27,6 +29,9 @@ import com.den.culinarychest.presentation.screens.FavoriteScreen
 fun TopNavigationBar(
     navController: NavController
 ) {
+
+    val stringResource = LocalContext.current.resources
+
     val topBarNavController = rememberNavController()
 
     var favoriteSelected by remember { mutableStateOf(true)}
@@ -41,7 +46,7 @@ fun TopNavigationBar(
             ) {
                 TopBarButtonItem(
                     isSelected = favoriteSelected,
-                    textButton = "Избранное",
+                    textButton = stringResource.getString(R.string.favorite_text),
                     topBarNavController = topBarNavController,
                     buttonNavigation = TopNavigationRoute.FavoriteScreen.route
                 ){
@@ -50,7 +55,7 @@ fun TopNavigationBar(
                 }
                 TopBarButtonItem(
                     isSelected = createdSelected,
-                    textButton = "Созданное",
+                    textButton = stringResource.getString(R.string.favorite_text),
                     topBarNavController = topBarNavController,
                     buttonNavigation = TopNavigationRoute.CreatedScreen.route
                 ) {

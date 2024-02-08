@@ -25,25 +25,30 @@ fun RecipeInformationItems(
     paddingEnd: Int,
     paddingBottom: Int,
     fontSize: Int
-    ) {
+) {
     Row() {
         Image(
-            modifier = Modifier
-                .padding(start = paddingStart.dp, top = paddingTop.dp, end = paddingEnd.dp, bottom = paddingBottom.dp)
-                .size(size = sizeIcon.dp),
             painter = iconPainter,
-            contentDescription = "Тут должны быть часы ",
-            contentScale = ContentScale.Fit
+            contentDescription = null,
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .padding(
+                    start = paddingStart.dp,
+                    top = paddingTop.dp,
+                    end = paddingEnd.dp,
+                    bottom = paddingBottom.dp
+                )
+                .size(size = sizeIcon.dp)
         )
         Text(
-            modifier = Modifier
-                .padding(start = 4.dp)
-                .align(Alignment.CenterVertically),
             text = textInformation,
             style = TextStyle(
                 fontSize = fontSize.sp,
                 color = SoftGray
-            )
+            ),
+            modifier = Modifier
+                .padding(start = 4.dp)
+                .align(Alignment.CenterVertically)
         )
     }
 }

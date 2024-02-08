@@ -25,6 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.platform.LocalContext
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.navigation.topNavigationBar.TopNavigationBar
 import com.den.culinarychest.presentation.route.BottomNavigationRoute
@@ -40,17 +41,19 @@ fun BottomNavigationBar(
     navController: NavController
 ) {
 
+    val stringResource = LocalContext.current.resources
+
     val bottomNavController = rememberNavController()
 
     val bottomNavigationItems = listOf(
         BottomNavigationItem(
-            BottomNavigationRoute.SearchScreen.route, R.drawable.search_icon, "Поиск"
+            BottomNavigationRoute.SearchScreen.route, R.drawable.search_icon, stringResource.getString(R.string.search_text)
         ),
         BottomNavigationItem(
-            BottomNavigationRoute.TopNavigationBar.route, R.drawable.favorites_icon, "Избранное"
+            BottomNavigationRoute.TopNavigationBar.route, R.drawable.favorites_icon, stringResource.getString(R.string.favorite_text)
         ),
         BottomNavigationItem(
-            BottomNavigationRoute.ProfileScreen.route, R.drawable.profile_icon, "Профиль"
+            BottomNavigationRoute.ProfileScreen.route, R.drawable.profile_icon, stringResource.getString(R.string.profile_text)
         ),
     )
 

@@ -85,9 +85,6 @@ fun SearchBarItem() {
                 )
             },
             trailingIcon = {
-                val icon = if (activeParameter) Icons.Default.Clear else Icons.Default.Search
-                val contentDescription = null
-                val tint = SoftGray
 
                 Icon(
                     modifier = Modifier
@@ -96,9 +93,9 @@ fun SearchBarItem() {
                                 textParameter = ""
                             } else activeParameter = false
                         },
-                    imageVector = icon,
-                    contentDescription = contentDescription,
-                    tint = tint
+                    imageVector = if (activeParameter) Icons.Default.Clear else Icons.Default.Search,
+                    contentDescription = null,
+                    tint = SoftGray
                 )
             },
         ) {
