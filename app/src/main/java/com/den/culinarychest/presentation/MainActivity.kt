@@ -3,10 +3,6 @@ package com.den.culinarychest.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
 import com.den.culinarychest.presentation.navigation.appNavigation.AppNavigation
 import com.den.culinarychest.presentation.ui.theme.CulinaryChestTheme
 
@@ -15,14 +11,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CulinaryChestTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    AppNavigation()
-                }
+                AppNavigation()
             }
         }
-
     }
 }

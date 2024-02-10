@@ -12,7 +12,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.den.culinarychest.presentation.common.RecipeItem
 import com.den.culinarychest.presentation.common.SearchBarItem
-import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 
 @Composable
@@ -37,7 +36,7 @@ fun Search(
                 modifier = Modifier.padding(bottom = 40.dp)
             ) {
                 items(10) {index ->
-                    RecipeItem(navController = navController, transitionPath = AppNavigationRoute.RecipeScreen.route)
+                    RecipeItem(navController = navController)
                 }
             }
         }

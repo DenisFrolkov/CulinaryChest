@@ -63,20 +63,18 @@ fun Authorization(navController: NavController) {
         ) {
         TextInput(
             inputText = stringResource.getString(R.string.email_text),
-            onTextChanged = { inputEmail -> email = inputEmail },
-            validation = { text ->
-                android.util.Patterns.EMAIL_ADDRESS.matcher(text).matches()
-            }
-        )
-        Spacer(modifier = Modifier.height(16.dp))
+            onTextChanged = { inputEmail -> email = inputEmail }
+        ) { text ->
+            android.util.Patterns.EMAIL_ADDRESS.matcher(text).matches()
+        }
+            Spacer(modifier = Modifier.height(16.dp))
         TextInput(
             inputText = stringResource.getString(R.string.verification_text),
-            onTextChanged = { inputPass -> password = inputPass },
-            validation = { text ->
-                text.length >= 8
-            }
-        )
-        Spacer(modifier = Modifier.height(32.dp))
+            onTextChanged = { inputPass -> password = inputPass }
+        ) { text ->
+            text.length >= 8
+        }
+            Spacer(modifier = Modifier.height(32.dp))
         }
         PushButton(
             textButton = stringResource.getString(R.string.enter_text),

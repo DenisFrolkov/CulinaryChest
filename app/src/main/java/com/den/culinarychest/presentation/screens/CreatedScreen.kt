@@ -12,7 +12,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.den.culinarychest.presentation.common.FAB
 import com.den.culinarychest.presentation.common.RecipeItem
-import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 
 @Composable
@@ -30,15 +29,12 @@ fun CreatedScreen(
                 .fillMaxSize()
                 .padding(end = 16.dp, bottom = 66.dp)
         ) {
-            FAB()
+            FAB(navController = navController)
         }
         Column(
             modifier = Modifier.padding(top = 82.dp)
         ) {
-            RecipeItem(
-                navController = navController,
-                transitionPath = AppNavigationRoute.BottomAppNavigationBar.route
-            )
+            RecipeItem( navController = navController )
         }
     }
 }

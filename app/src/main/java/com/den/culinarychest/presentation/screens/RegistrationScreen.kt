@@ -66,27 +66,23 @@ fun Registration(
             Spacer(modifier = Modifier.height(24.dp))
             TextInput(
                 inputText = stringResource.getString(R.string.login_text),
-                onTextChanged = { login = it },
-                validation = { it.matches(Regex("[a-zA-Z0-9_]+")) && it.length in 5..20 }
-            )
+                onTextChanged = { login = it }
+            ) { it.matches(Regex("[a-zA-Z0-9_]+")) && it.length in 5..20 }
             Spacer(modifier = Modifier.height(32.dp))
             TextInput(
                 inputText = stringResource.getString(R.string.email_text),
-                onTextChanged = { email = it },
-                validation = { it.matches(Regex("^([a-zA-Z0-9_\\-]+)@([a-zA-Z0-9_\\-]+)\\.([a-zA-Z]{2,5})\$")) }
-            )
+                onTextChanged = { email = it }
+            ) { it.matches(Regex("^([a-zA-Z0-9_\\-]+)@([a-zA-Z0-9_\\-]+)\\.([a-zA-Z]{2,5})\$")) }
             Spacer(modifier = Modifier.height(32.dp))
             TextInput(
                 inputText = stringResource.getString(R.string.password_text),
-                onTextChanged = { password = it },
-                validation = { it.matches(Regex("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}\$")) }
-            )
+                onTextChanged = { password = it }
+            ) { it.matches(Regex("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}\$")) }
             Spacer(modifier = Modifier.height(32.dp))
             TextInput(
                 inputText = stringResource.getString(R.string.verification_text),
-                onTextChanged = { verification = it },
-                validation = { it == password }
-            )
+                onTextChanged = { verification = it }
+            ) { it == password }
         }
         Spacer(modifier = Modifier.height(52.dp))
         PushButton(

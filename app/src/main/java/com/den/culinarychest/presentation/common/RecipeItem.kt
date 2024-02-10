@@ -24,18 +24,18 @@ import androidx.navigation.NavController
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.R
+import com.den.culinarychest.presentation.route.AppNavigationRoute
 
 @Composable
 fun RecipeItem(
     navController: NavController,
-    transitionPath: String
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             .clickable {
-                navController.navigate(transitionPath)
+                navController.navigate(AppNavigationRoute.RecipeScreen.route)
             }
             .border(width = .15.dp, color = SoftGray, shape = RoundedCornerShape(12.dp))
             .background(SoftOrange, RoundedCornerShape(12.dp))

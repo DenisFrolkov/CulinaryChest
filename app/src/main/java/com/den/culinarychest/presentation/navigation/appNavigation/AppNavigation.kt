@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.navigation.bottomNavigation.BottomNavigationBar
 import com.den.culinarychest.presentation.screens.AuthorizationScreen
+import com.den.culinarychest.presentation.screens.CreatingRecipeScreen
 import com.den.culinarychest.presentation.screens.RecipeScreen
 import com.den.culinarychest.presentation.screens.RegistrationScreen
 
@@ -15,7 +16,7 @@ fun AppNavigation() {
     val appNavigationController = rememberNavController()
     NavHost(
         navController = appNavigationController,
-        startDestination = AppNavigationRoute.AuthorizationScreen.route)
+        startDestination = AppNavigationRoute.CreatingRecipeScreen.route)
     {
         composable(AppNavigationRoute.AuthorizationScreen.route){
             AuthorizationScreen(navController = appNavigationController)
@@ -27,7 +28,10 @@ fun AppNavigation() {
             BottomNavigationBar(navController = appNavigationController)
         }
         composable(AppNavigationRoute.RecipeScreen.route){
-            RecipeScreen()
+            RecipeScreen(navController = appNavigationController)
+        }
+        composable(AppNavigationRoute.CreatingRecipeScreen.route){
+            CreatingRecipeScreen(navController = appNavigationController)
         }
     }
 }

@@ -18,8 +18,12 @@
     <string name="empty_text">Здесь еще ничего нет :(</string>
     <string name="preparation_steps_text">Шаги приготовления:</string>
     <string name="ingredients_text">Ингредиенты:</string>
+    <string name="enter_title_recipe">Введите название рецепта</string>
+    <string name="enter_ingredients_recipe">Введите ингредиенты</string>
+    <string name="enter_time_recipe">Введите время приготовления блюда:</string>
     <string name="search_text">Поиск</string>
     <string name="favorite_text">Избранное</string>
     <string name="сreated_text">Созданное</string>
     <string name="profile_text">Профиль</string>
+    <string name="nothing"> </string>
 </resources>

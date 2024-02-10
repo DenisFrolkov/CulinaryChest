@@ -5,4 +5,5 @@ sealed class AppNavigationRoute(val route: String) {
     object RegistrationScreen : AppNavigationRoute("registration_screen")
     object BottomAppNavigationBar : AppNavigationRoute("bottom_navigation_bar")
     object RecipeScreen : AppNavigationRoute("recipe_screen")
+    object CreatingRecipeScreen : AppNavigationRoute("creating_recipe_screen")
 }

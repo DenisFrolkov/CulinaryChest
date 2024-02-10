@@ -4,8 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,24 +30,26 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.den.culinarychest.presentation.common.RecipeInformationItems
 import com.den.culinarychest.presentation.common.StepRecipeItem
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 
-@Preview
 @Composable
-fun RecipeScreen() {
-    Recipe()
+fun RecipeScreen(
+    navController: NavController
+) {
+    Recipe(navController = navController)
 }
 
 @Composable
-fun Recipe() {
-
+fun Recipe(
+    navController: NavController
+) {
     val stringResources = LocalContext.current.resources
 
     var clickLike by remember { mutableStateOf(false) }
@@ -60,40 +62,42 @@ fun Recipe() {
         "С крабовых палочек снимаем упаковку. Нарезаем крабовые палочки кружочками. Чеснок очищаем и нарезаем мелкими кусочками."
     )
     Column {
-        Box(
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(color = SoftOrange)
                 .border(width = 0.1.dp, color = SoftGray)
+                .padding(horizontal = 12.dp, vertical = 14.dp)
         ) {
-            Row(
+            Image(
+                painter = painterResource(id = R.drawable.back_icon),
+                contentDescription = null,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+                    .size(24.dp)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {
+                        navController.popBackStack()
+                    }
+            )
+            if (clickLike == false) {
                 Image(
-                    modifier = Modifier.size(24.dp),
-                    painter = painterResource(id = R.drawable.back_icon),
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable { clickLike = true },
+                    painter = painterResource(id = R.drawable.heart_icon_dont_like),
                     contentDescription = null
                 )
-                if (clickLike == false) {
-                    Image(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .clickable { clickLike = true },
-                        painter = painterResource(id = R.drawable.heart_icon_dont_like),
-                        contentDescription = null
-                    )
-                } else {
-                    Image(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .clickable { clickLike = false },
-                        painter = painterResource(id = R.drawable.heart_icon_like),
-                        contentDescription = null
-                    )
-                }
+            } else {
+                Image(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable { clickLike = false },
+                    painter = painterResource(id = R.drawable.heart_icon_like),
+                    contentDescription = null
+                )
             }
         }
         LazyColumn(

@@ -55,7 +55,7 @@ fun TopNavigationBar(
                 }
                 TopBarButtonItem(
                     isSelected = createdSelected,
-                    textButton = stringResource.getString(R.string.favorite_text),
+                    textButton = stringResource.getString(R.string.created_recipe_text),
                     topBarNavController = topBarNavController,
                     buttonNavigation = TopNavigationRoute.CreatedScreen.route
                 ) {
