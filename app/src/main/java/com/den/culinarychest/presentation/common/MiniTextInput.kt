@@ -37,7 +37,6 @@ fun MiniTextInput(
     onTextChanged: (String) -> Unit,
     validation: (String) -> Boolean
 ) {
-    val stringResource = LocalContext.current.resources
 
     var text by remember { mutableStateOf(TextFieldValue()) }
     var isHintVisible by remember { mutableStateOf(true) }
@@ -80,7 +79,7 @@ fun MiniTextInput(
             Text(
                 text = inputText,
                 style = TextStyle(
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     color = SoftGray
                 ),
                 modifier = Modifier

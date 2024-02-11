@@ -61,6 +61,16 @@ fun TextInput(
             .background(color = SoftOrange, shape = RoundedCornerShape(14.dp))
             .padding(start = 12.dp, top = 15.dp, end = 12.dp, bottom = 16.dp)
     ) {
+        if (text.text.isNotEmpty()) {
+            Text(
+                text = inputText,
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    color = Black
+                ),
+                modifier = Modifier.padding(end = 5.dp)
+            )
+        }
         BasicTextField(
             value = text,
             onValueChange = {
@@ -75,7 +85,7 @@ fun TextInput(
             cursorBrush = SolidColor(Black),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 1.dp)
+                .padding(start = 16.dp ,top = 1.dp)
                 .align(Alignment.CenterStart)
         )
         if (isHintVisible) {

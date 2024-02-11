@@ -1,10 +1,12 @@
 package com.den.culinarychest.presentation.screens
 
+import android.content.res.Resources
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,10 +17,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,7 +49,9 @@ import com.den.culinarychest.presentation.ui.theme.SoftPink
 fun CreatingRecipeScreen(
     navController: NavController
 ) {
-    CreatingRecipe(navController = navController)
+    CreatingRecipe(
+        navController = navController
+    )
 }
 
 @Composable
@@ -51,7 +59,12 @@ fun CreatingRecipe(
     navController: NavController
 ) {
 
-    var text by remember { mutableStateOf("") }
+    var titleText by remember { mutableStateOf("") }
+    var ingredientsText by remember { mutableStateOf("") }
+    var timeText by remember { mutableStateOf("") }
+    var stepRecipeText by remember { mutableStateOf("") }
+
+    var count by remember { mutableIntStateOf(3) }
 
     val stringResource = LocalContext.current.resources
 
@@ -62,73 +75,144 @@ fun CreatingRecipe(
             .background(color = SoftPink)
     ) {
         item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = SoftOrange)
-                    .border(width = 0.1.dp, color = SoftGray)
-                    .padding(horizontal = 12.dp, vertical = 14.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.back_icon),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        ) {
-                            navController.popBackStack()
-                        }
-                )
-            }
-            Image(
-                painter = painterResource(id = R.drawable.add_recipe_photo),
-                contentDescription = null,
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 6.dp)
-                    .clip(shape = RoundedCornerShape(14.dp))
-                    .clickable(
-//                    interactionSource = remember { MutableInteractionSource() },
-//                    indication = null
-                    ) { }
+            TopBar(navController = navController)
+            AddRecipePhoto()
+            RecipeInputs(
+                stringResource = stringResource,
+                onTitleTextChanged = { titleText = it },
+                onIngredientsTextChanged = { ingredientsText = it },
+                onTimeTextChanged = { timeText = it })
+            DescribeSteps(
+                stringResource = stringResource,
+                count = count,
+                onCountChange = { newCount -> count = newCount }
             )
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 10.dp)
+        }
+        items(count) { index ->
+            val itemNumber = index + 1
+            Spacer(modifier = Modifier.height(height =  10.dp))
+            Box(
+                modifier = Modifier.padding(horizontal =  16.dp)
             ) {
                 TextInput(
-                    inputText = stringResource.getString(R.string.enter_title_recipe),
-                    onTextChanged = { text = it }
-                ) { it.matches(Regex("[а-яА-Я0-9_]+")) && it.length in 5..20 }
-                Spacer(modifier = Modifier.height(height = 10.dp))
-                TextInput(
-                    inputText = stringResource.getString(R.string.enter_ingredients_recipe),
-                    onTextChanged = { text = it }
-                ) { it.matches(Regex("[а-яА-Я]+")) && it.length in 5..20 }
-                Spacer(modifier = Modifier.height(height = 10.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                    Text(
-                        text = stringResource.getString(R.string.enter_time_recipe),
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            color = SoftGray
-                        ),
-                        modifier = Modifier.padding(vertical = 10.dp).padding(end = 4.dp)
-                    )
-                    Box(modifier = Modifier) {
-                        MiniTextInput(
-                            inputText = stringResource.getString(R.string.nothing),
-                            onTextChanged = { text = it }
-                        ) { it.matches(Regex("[0-9]+"))}
-                    }
-                }
+                    inputText = "$itemNumber.",
+                    onTextChanged = { stepRecipeText = it },
+                    validation = { it.matches(Regex("[а-яА-Я0-9]+")) })
             }
         }
     }
 }
+
+@Composable
+fun TopBar(navController: NavController) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = SoftOrange)
+            .border(width = 0.1.dp, color = SoftGray)
+            .padding(horizontal = 12.dp, vertical = 14.dp)
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.back_icon),
+            contentDescription = null,
+            modifier = Modifier
+                .size(24.dp)
+                .clickable { navController.popBackStack() }
+        )
+    }
+}
+
+@Composable
+fun AddRecipePhoto() {
+    Image(
+        painter = painterResource(id = R.drawable.add_recipe_photo),
+        contentDescription = null,
+        contentScale = ContentScale.FillWidth,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp, vertical = 6.dp)
+            .clip(shape = RoundedCornerShape(14.dp))
+            .clickable { /* Handle photo addition */ }
+    )
+}
+
+@Composable
+fun RecipeInputs(
+    stringResource: Resources,
+    onTitleTextChanged: (String) -> Unit,
+    onIngredientsTextChanged: (String) -> Unit,
+    onTimeTextChanged: (String) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 10.dp)
+    ) {
+        TextInput(
+            inputText = stringResource.getString(R.string.enter_title_recipe),
+            onTextChanged = onTitleTextChanged,
+            validation = { it.matches(Regex("[а-яА-Я0-9]+")) }
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        TextInput(
+            inputText = stringResource.getString(R.string.enter_ingredients_recipe),
+            onTextChanged = onIngredientsTextChanged,
+            validation = { it.matches(Regex("[а-яА-Я0-9]+")) }
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource.getString(R.string.enter_time_recipe),
+                style = TextStyle(fontSize = 14.sp, color = SoftGray),
+                modifier = Modifier
+                    .padding(vertical = 10.dp)
+                    .padding(end = 4.dp)
+            )
+            Box {
+                MiniTextInput(
+                    inputText = stringResource.getString(R.string.in_minutes_recipe),
+                    onTextChanged = onTimeTextChanged,
+                    validation = { it.matches(Regex("[0-9]+")) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun DescribeSteps(
+    stringResource: Resources,
+    count: Int,
+    onCountChange: (Int) -> Unit
+) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .padding(top = 6.dp)
+    ) {
+        Text(
+            text = stringResource.getString(R.string.describe_steps_in_preparing),
+            style = TextStyle(fontSize = 14.sp, color = SoftGray),
+            modifier = Modifier
+                .padding(vertical = 10.dp)
+                .padding(end = 4.dp)
+        )
+        Box(modifier = Modifier.padding(end = 10.dp)) {
+            Icon(
+                painter = painterResource(id = R.drawable.add_button_icon),
+                contentDescription = null,
+                tint = SoftGray,
+                modifier = Modifier
+                    .size(size = 36.dp)
+                    .clickable { onCountChange(count + 1) }
+            )
+        }
+    }
+}
+
+
+
