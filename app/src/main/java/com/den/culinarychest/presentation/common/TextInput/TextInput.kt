@@ -1,4 +1,4 @@
-package com.den.culinarychest.presentation.common
+package com.den.culinarychest.presentation.common.TextInput
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,13 +23,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.den.culinarychest.R
+import com.den.culinarychest.presentation.ui.theme.LightGray
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 
@@ -39,8 +40,6 @@ fun TextInput(
     onTextChanged: (String) -> Unit,
     validation: (String) -> Boolean
 ) {
-    val stringResource = LocalContext.current.resources
-
     var text by remember { mutableStateOf(TextFieldValue()) }
     var isHintVisible by remember { mutableStateOf(true) }
     var isError by remember { mutableStateOf(false) }
@@ -52,7 +51,6 @@ fun TextInput(
 
     if (text.text.isEmpty()) isError = false
 
-
     Box(
         contentAlignment = Alignment.CenterStart,
         modifier = Modifier
@@ -61,16 +59,6 @@ fun TextInput(
             .background(color = SoftOrange, shape = RoundedCornerShape(14.dp))
             .padding(start = 12.dp, top = 15.dp, end = 12.dp, bottom = 16.dp)
     ) {
-        if (text.text.isNotEmpty()) {
-            Text(
-                text = inputText,
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    color = Black
-                ),
-                modifier = Modifier.padding(end = 5.dp)
-            )
-        }
         BasicTextField(
             value = text,
             onValueChange = {
@@ -85,7 +73,6 @@ fun TextInput(
             cursorBrush = SolidColor(Black),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp ,top = 1.dp)
                 .align(Alignment.CenterStart)
         )
         if (isHintVisible) {
@@ -93,7 +80,7 @@ fun TextInput(
                 text = inputText,
                 style = TextStyle(
                     fontSize = 16.sp,
-                    color = SoftGray
+                    color = LightGray
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -129,7 +116,7 @@ fun TextInput(
                 modifier = Modifier.size(16.dp)
             )
             Text(
-                text = stringResource.getString(R.string.mistake_text),
+                text = stringResource(R.string.mistake_text),
                 style = TextStyle(
                     fontSize = 12.sp,
                     color = Red

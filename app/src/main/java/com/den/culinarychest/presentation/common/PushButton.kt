@@ -19,6 +19,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.den.culinarychest.presentation.ui.theme.LightGray
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 
@@ -26,6 +27,7 @@ import com.den.culinarychest.presentation.ui.theme.SoftOrange
 fun PushButton(
     textButton: String,
     transitionalText: String,
+    inputTexts: Boolean,
     navController: NavController,
     navigationButton: String,
     navigationText: String
@@ -37,13 +39,13 @@ fun PushButton(
             .height(46.dp)
             .border(width = 0.3.dp, color = Color.Gray, shape = RoundedCornerShape(12.dp)),
         colors = ButtonDefaults.buttonColors(SoftOrange),
-        onClick = { navController.navigate(navigationButton) }
+        onClick = { if (inputTexts) navController.navigate(navigationButton) }
     ) {
         Text(
             text = textButton,
             style = TextStyle(
-                fontSize = 24.sp,
-                color = SoftGray
+                fontSize = if (inputTexts) 20.sp else 20.sp,
+                color = if (inputTexts) SoftGray else LightGray
             )
         )
     }

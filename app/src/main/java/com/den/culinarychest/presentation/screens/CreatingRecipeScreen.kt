@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,12 +16,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -39,8 +36,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.common.MiniTextInput
-import com.den.culinarychest.presentation.common.TextInput
+import com.den.culinarychest.presentation.common.TextInput.MiniTextInput
+import com.den.culinarychest.presentation.common.TextInput.NumberTextInput
+import com.den.culinarychest.presentation.common.TextInput.TextInput
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
@@ -80,8 +78,8 @@ fun CreatingRecipe(
             RecipeInputs(
                 stringResource = stringResource,
                 onTitleTextChanged = { titleText = it },
-                onIngredientsTextChanged = { ingredientsText = it },
-                onTimeTextChanged = { timeText = it })
+                onIngredientsTextChanged = { ingredientsText = it }
+            ) { timeText = it }
             DescribeSteps(
                 stringResource = stringResource,
                 count = count,
@@ -90,14 +88,21 @@ fun CreatingRecipe(
         }
         items(count) { index ->
             val itemNumber = index + 1
-            Spacer(modifier = Modifier.height(height =  10.dp))
-            Box(
-                modifier = Modifier.padding(horizontal =  16.dp)
+            Spacer(modifier = Modifier.height(height = 10.dp))
+            Column(
+                modifier = Modifier.padding(horizontal = 16.dp)
             ) {
-                TextInput(
+                NumberTextInput(
                     inputText = "$itemNumber.",
                     onTextChanged = { stepRecipeText = it },
                     validation = { it.matches(Regex("[а-яА-Я0-9]+")) })
+            }
+        }
+        item {
+            Box(
+                modifier = Modifier.padding(top = 24.dp, bottom = 16.dp)
+            ) {
+                SaveButton()
             }
         }
     }
@@ -170,13 +175,11 @@ fun RecipeInputs(
                     .padding(vertical = 10.dp)
                     .padding(end = 4.dp)
             )
-            Box {
-                MiniTextInput(
-                    inputText = stringResource.getString(R.string.in_minutes_recipe),
-                    onTextChanged = onTimeTextChanged,
-                    validation = { it.matches(Regex("[0-9]+")) }
-                )
-            }
+            MiniTextInput(
+                inputText = stringResource.getString(R.string.in_minutes_recipe),
+                onTextChanged = onTimeTextChanged,
+                validation = { it.matches(Regex("[0-9]+")) }
+            )
         }
     }
 }
@@ -211,6 +214,26 @@ fun DescribeSteps(
                     .clickable { onCountChange(count + 1) }
             )
         }
+    }
+}
+
+@Composable
+fun SaveButton() {
+    Box(
+        modifier = Modifier
+            .background(color = SoftOrange, shape = RoundedCornerShape(12.dp))
+            .border(width = 0.1.dp, color = SoftGray, shape = RoundedCornerShape(12.dp))
+            .clip(shape = RoundedCornerShape(12.dp))
+            .clickable { }
+    ) {
+        Text(
+            text = "Cохранить рецепт",
+            style = TextStyle(
+                fontSize = 14.sp,
+                color = SoftGray
+            ),
+            modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp)
+        )
     }
 }
 
