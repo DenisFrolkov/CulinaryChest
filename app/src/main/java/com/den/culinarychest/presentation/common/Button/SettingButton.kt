@@ -1,4 +1,4 @@
-package com.den.culinarychest.presentation.common
+package com.den.culinarychest.presentation.common.Button
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

@@ -38,14 +38,17 @@ import com.den.culinarychest.presentation.ui.theme.SoftOrange
 fun TextInput(
     inputText: String,
     onTextChanged: (String) -> Unit,
-    validation: (String) -> Boolean
+    validation: (String) -> Boolean,
+    initialValue: Boolean
 ) {
     var text by remember { mutableStateOf(TextFieldValue()) }
     var isHintVisible by remember { mutableStateOf(true) }
     var isError by remember { mutableStateOf(false) }
 
-    LaunchedEffect(text) {
-        isError = !validation(text.text)
+    LaunchedEffect(text, initialValue) {
+        if (initialValue) {
+            isError = !validation(text.text)
+        }
         onTextChanged(text.text)
     }
 
@@ -74,6 +77,7 @@ fun TextInput(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterStart)
+                .padding(end = 40.dp)
         )
         if (isHintVisible) {
             Text(

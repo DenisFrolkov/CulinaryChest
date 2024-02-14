@@ -33,8 +33,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.den.culinarychest.presentation.common.RecipeInformationItems
-import com.den.culinarychest.presentation.common.StepRecipeItem
+import com.den.culinarychest.presentation.common.Item.RecipeInformationItems
+import com.den.culinarychest.presentation.common.Item.StepRecipeItem
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink

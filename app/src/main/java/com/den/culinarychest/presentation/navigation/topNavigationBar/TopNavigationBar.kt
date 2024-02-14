@@ -19,7 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.common.TopBarButtonItem
+import com.den.culinarychest.presentation.common.Item.TopBarButtonItem
 import com.den.culinarychest.presentation.route.TopNavigationRoute
 import com.den.culinarychest.presentation.screens.CreatedScreen
 import com.den.culinarychest.presentation.screens.FavoriteScreen

@@ -71,7 +71,7 @@ fun NumberTextInput(
                 fontSize = 16.sp,
                 color = Black
             ),
-            singleLine = true,
+            singleLine = false,
             cursorBrush = SolidColor(Black),
             modifier = Modifier
                 .fillMaxWidth()

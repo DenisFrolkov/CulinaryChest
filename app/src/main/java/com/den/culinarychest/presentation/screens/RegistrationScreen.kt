@@ -2,6 +2,8 @@ package com.den.culinarychest.presentation.screens
 
 import android.util.Patterns
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.common.PushButton
+import com.den.culinarychest.presentation.common.Button.PushButton
 import com.den.culinarychest.presentation.common.TextInput.TextInput
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
@@ -47,11 +49,18 @@ fun Registration(
     var verification by remember { mutableStateOf("") }
 
     val isLoginValid by remember { derivedStateOf { login.matches(Regex("[a-zA-Z0-9_]+")) && login.length in 5..20 } }
-    val isEmailValid by remember { derivedStateOf { Patterns.EMAIL_ADDRESS.matcher(email).matches() } }
+    val isEmailValid by remember {
+        derivedStateOf {
+            Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        }
+    }
     val isPasswordValid by remember { derivedStateOf { password.length >= 8 } }
     val isVerificationPasswordValid by remember { derivedStateOf { verification == password } }
 
     val inputTexts by remember { derivedStateOf { isLoginValid && isEmailValid && isPasswordValid && isVerificationPasswordValid } }
+
+    var pushButtonValue by remember { mutableStateOf(false) }
+
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -73,32 +82,53 @@ fun Registration(
             Spacer(modifier = Modifier.height(24.dp))
             TextInput(
                 inputText = stringResource(R.string.login_text),
-                onTextChanged = { login = it }
-            ) { it.matches(Regex("[a-zA-Z0-9_]+")) && it.length in 5..20 }
+                onTextChanged = { login = it },
+                validation = { it.matches(Regex("[a-zA-Z0-9_]+")) && it.length in 5..20 },
+                initialValue = pushButtonValue
+            )
             Spacer(modifier = Modifier.height(32.dp))
             TextInput(
                 inputText = stringResource(R.string.email_text),
-                onTextChanged = { email = it }
-            ) { text -> Patterns.EMAIL_ADDRESS.matcher(text).matches() }
+                onTextChanged = { email = it },
+                validation = { text -> Patterns.EMAIL_ADDRESS.matcher(text).matches() },
+                initialValue = pushButtonValue
+            )
             Spacer(modifier = Modifier.height(32.dp))
             TextInput(
                 inputText = stringResource(R.string.password_text),
-                onTextChanged = { password = it }
-            ) { text -> text.length >= 8 }
+                onTextChanged = { password = it },
+                validation = { text -> text.length >= 8 },
+                initialValue = pushButtonValue
+            )
             Spacer(modifier = Modifier.height(32.dp))
             TextInput(
                 inputText = stringResource(R.string.verification_text),
-                onTextChanged = { verification = it }
-            ) { text -> text == password }
+                onTextChanged = { verification = it },
+                validation = { text -> text == password },
+                initialValue = pushButtonValue
+            )
         }
         Spacer(modifier = Modifier.height(52.dp))
         PushButton(
             textButton = stringResource(R.string.new_account_text),
-            transitionalText = stringResource(R.string.log_in_to_an_existing_text),
             inputTexts = inputTexts,
             navController = navController,
             navigationButton = AppNavigationRoute.BottomAppNavigationBar.route,
-            navigationText = AppNavigationRoute.AuthorizationScreen.route
+            onButtonClick = { newValue -> pushButtonValue = newValue }
+        )
+        Spacer(modifier = Modifier.height(height = 6.dp))
+        Text(
+            modifier = Modifier.clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                navController.navigate(AppNavigationRoute.AuthorizationScreen.route)
+            },
+            text = stringResource(R.string.log_in_to_an_existing_text),
+            style = TextStyle(
+                fontSize = 14.sp,
+                color = SoftGray
+            )
         )
     }
 }

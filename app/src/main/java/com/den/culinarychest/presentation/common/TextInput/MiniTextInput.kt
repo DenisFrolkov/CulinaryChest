@@ -75,6 +75,7 @@ fun MiniTextInput(
                 .fillMaxWidth()
                 .padding(top = 1.dp)
                 .align(Alignment.CenterStart)
+                .padding(end = 40.dp)
         )
         if (isHintVisible) {
             Text(
@@ -105,5 +106,4 @@ fun MiniTextInput(
             }
         }
     }
-
 }

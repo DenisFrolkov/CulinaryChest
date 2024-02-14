@@ -1,4 +1,4 @@
-package com.den.culinarychest.presentation.common
+package com.den.culinarychest.presentation.common.Item
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row

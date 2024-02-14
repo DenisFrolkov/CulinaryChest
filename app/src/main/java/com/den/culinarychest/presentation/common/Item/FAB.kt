@@ -1,4 +1,4 @@
-package com.den.culinarychest.presentation.common
+package com.den.culinarychest.presentation.common.Item
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image

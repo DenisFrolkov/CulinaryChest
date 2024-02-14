@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,7 +65,8 @@ fun CreatingRecipe(
 
     var count by remember { mutableIntStateOf(3) }
 
-    val stringResource = LocalContext.current.resources
+    var pushButtonValue by remember { mutableStateOf(false) }
+
 
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -76,12 +78,12 @@ fun CreatingRecipe(
             TopBar(navController = navController)
             AddRecipePhoto()
             RecipeInputs(
-                stringResource = stringResource,
                 onTitleTextChanged = { titleText = it },
-                onIngredientsTextChanged = { ingredientsText = it }
-            ) { timeText = it }
+                onIngredientsTextChanged = { ingredientsText = it },
+                onTimeTextChanged = { timeText = it },
+                pushButtonValue = pushButtonValue
+            )
             DescribeSteps(
-                stringResource = stringResource,
                 count = count,
                 onCountChange = { newCount -> count = newCount }
             )
@@ -143,10 +145,10 @@ fun AddRecipePhoto() {
 
 @Composable
 fun RecipeInputs(
-    stringResource: Resources,
     onTitleTextChanged: (String) -> Unit,
     onIngredientsTextChanged: (String) -> Unit,
-    onTimeTextChanged: (String) -> Unit
+    onTimeTextChanged: (String) -> Unit,
+    pushButtonValue: Boolean
 ) {
     Column(
         modifier = Modifier
@@ -154,29 +156,31 @@ fun RecipeInputs(
             .padding(horizontal = 16.dp, vertical = 10.dp)
     ) {
         TextInput(
-            inputText = stringResource.getString(R.string.enter_title_recipe),
+            inputText = stringResource(R.string.enter_title_recipe),
             onTextChanged = onTitleTextChanged,
-            validation = { it.matches(Regex("[а-яА-Я0-9]+")) }
+            validation = { it.matches(Regex("[а-яА-Я0-9]+")) },
+            initialValue = pushButtonValue
         )
         Spacer(modifier = Modifier.height(10.dp))
         TextInput(
-            inputText = stringResource.getString(R.string.enter_ingredients_recipe),
+            inputText = stringResource(R.string.enter_ingredients_recipe),
             onTextChanged = onIngredientsTextChanged,
-            validation = { it.matches(Regex("[а-яА-Я0-9]+")) }
+            validation = { it.matches(Regex("[а-яА-Я0-9]+")) },
+            initialValue = pushButtonValue
         )
         Spacer(modifier = Modifier.height(10.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource.getString(R.string.enter_time_recipe),
+                text = stringResource(R.string.enter_time_recipe),
                 style = TextStyle(fontSize = 14.sp, color = SoftGray),
                 modifier = Modifier
                     .padding(vertical = 10.dp)
                     .padding(end = 4.dp)
             )
             MiniTextInput(
-                inputText = stringResource.getString(R.string.in_minutes_recipe),
+                inputText = stringResource(R.string.in_minutes_recipe),
                 onTextChanged = onTimeTextChanged,
                 validation = { it.matches(Regex("[0-9]+")) }
             )
@@ -186,7 +190,6 @@ fun RecipeInputs(
 
 @Composable
 fun DescribeSteps(
-    stringResource: Resources,
     count: Int,
     onCountChange: (Int) -> Unit
 ) {
@@ -198,7 +201,7 @@ fun DescribeSteps(
             .padding(top = 6.dp)
     ) {
         Text(
-            text = stringResource.getString(R.string.describe_steps_in_preparing),
+            text = stringResource(R.string.describe_steps_in_preparing),
             style = TextStyle(fontSize = 14.sp, color = SoftGray),
             modifier = Modifier
                 .padding(vertical = 10.dp)
@@ -227,7 +230,7 @@ fun SaveButton() {
             .clickable { }
     ) {
         Text(
-            text = "Cохранить рецепт",
+            text = stringResource(id = R.string.save_recipe_text),
             style = TextStyle(
                 fontSize = 14.sp,
                 color = SoftGray

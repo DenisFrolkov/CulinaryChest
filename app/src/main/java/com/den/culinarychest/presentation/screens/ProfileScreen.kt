@@ -22,8 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.common.ProfileStatisticsItem
-import com.den.culinarychest.presentation.common.SettingButton
+import com.den.culinarychest.presentation.common.Item.ProfileStatisticsItem
+import com.den.culinarychest.presentation.common.Button.SettingButton
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink

@@ -23,7 +23,8 @@
     <string name="enter_time_recipe">Введите время приготовления блюда:</string>
     <string name="in_minutes_recipe">в минутах</string>
     <string name="describe_steps_in_preparing">Опишите шаги приготовления блюда: </string>
-    <string name="save_recipe_text">Сохранить </string>
+    <string name="save_text">Сохранить </string>
+    <string name="save_recipe_text">Cохранить рецепт</string>
     <string name="search_text">Поиск</string>
     <string name="favorite_text">Избранное</string>
     <string name="сreated_text">Созданное</string>

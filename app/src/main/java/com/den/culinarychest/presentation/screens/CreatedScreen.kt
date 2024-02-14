@@ -10,8 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.den.culinarychest.presentation.common.FAB
-import com.den.culinarychest.presentation.common.RecipeItem
+import com.den.culinarychest.presentation.common.Item.FAB
+import com.den.culinarychest.presentation.common.Item.RecipeItem
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 
 @Composable
