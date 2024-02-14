@@ -20,8 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.Red
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,24 +34,21 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 
 @Composable
-fun TextInput(
+fun RecipeTextInput(
     inputText: String,
     onTextChanged: (String) -> Unit,
-    validation: (String) -> Boolean,
-    show: Boolean,
-    onShow: (Boolean) -> Unit
+    validation: (String) -> Boolean
 ) {
     var text by remember { mutableStateOf(TextFieldValue()) }
     var isHintVisible by remember { mutableStateOf(true) }
     var isError by remember { mutableStateOf(false) }
 
-    LaunchedEffect(text, show) {
-        if (show) {
-            isError = !validation(text.text)
-            onShow(false)
-        }
+    LaunchedEffect(text) {
+        isError = !validation(text.text)
         onTextChanged(text.text)
     }
+
+    if (text.text.isEmpty()) isError = false
 
     Box(
         contentAlignment = Alignment.CenterStart,
@@ -70,10 +66,10 @@ fun TextInput(
             },
             textStyle = TextStyle(
                 fontSize = 16.sp,
-                color = Black
+                color = Color.Black
             ),
             singleLine = true,
-            cursorBrush = SolidColor(Black),
+            cursorBrush = SolidColor(Color.Black),
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterStart)
@@ -95,7 +91,7 @@ fun TextInput(
             Icon(
                 painter = painterResource(id = R.drawable.clear_icon),
                 contentDescription = null,
-                tint = Black,
+                tint = Color.Black,
                 modifier = Modifier
                     .padding(end = 12.dp)
                     .size(16.dp)
@@ -116,18 +112,17 @@ fun TextInput(
             Icon(
                 painter = painterResource(id = R.drawable.mistake_icon),
                 contentDescription = null,
-                tint = Red,
+                tint = Color.Red,
                 modifier = Modifier.size(16.dp)
             )
             Text(
                 text = stringResource(R.string.mistake_text),
                 style = TextStyle(
                     fontSize = 12.sp,
-                    color = Red
+                    color = Color.Red
                 ),
                 modifier = Modifier.padding(start = 4.dp)
             )
         }
     }
 }
-

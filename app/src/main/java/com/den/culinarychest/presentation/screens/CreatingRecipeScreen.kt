@@ -1,6 +1,5 @@
 package com.den.culinarychest.presentation.screens
 
-import android.content.res.Resources
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,7 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -39,7 +37,7 @@ import androidx.navigation.NavController
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.TextInput.MiniTextInput
 import com.den.culinarychest.presentation.common.TextInput.NumberTextInput
-import com.den.culinarychest.presentation.common.TextInput.TextInput
+import com.den.culinarychest.presentation.common.TextInput.RecipeTextInput
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
@@ -65,9 +63,6 @@ fun CreatingRecipe(
 
     var count by remember { mutableIntStateOf(3) }
 
-    var pushButtonValue by remember { mutableStateOf(false) }
-
-
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -80,8 +75,7 @@ fun CreatingRecipe(
             RecipeInputs(
                 onTitleTextChanged = { titleText = it },
                 onIngredientsTextChanged = { ingredientsText = it },
-                onTimeTextChanged = { timeText = it },
-                pushButtonValue = pushButtonValue
+                onTimeTextChanged = { timeText = it }
             )
             DescribeSteps(
                 count = count,
@@ -147,26 +141,23 @@ fun AddRecipePhoto() {
 fun RecipeInputs(
     onTitleTextChanged: (String) -> Unit,
     onIngredientsTextChanged: (String) -> Unit,
-    onTimeTextChanged: (String) -> Unit,
-    pushButtonValue: Boolean
+    onTimeTextChanged: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 10.dp)
     ) {
-        TextInput(
+        RecipeTextInput(
             inputText = stringResource(R.string.enter_title_recipe),
             onTextChanged = onTitleTextChanged,
-            validation = { it.matches(Regex("[а-яА-Я0-9]+")) },
-            initialValue = pushButtonValue
+            validation = { it.matches(Regex("[а-яА-Я0-9]+")) }
         )
         Spacer(modifier = Modifier.height(10.dp))
-        TextInput(
+        RecipeTextInput(
             inputText = stringResource(R.string.enter_ingredients_recipe),
             onTextChanged = onIngredientsTextChanged,
-            validation = { it.matches(Regex("[а-яА-Я0-9]+")) },
-            initialValue = pushButtonValue
+            validation = { it.matches(Regex("[а-яА-Я0-9]+")) }
         )
         Spacer(modifier = Modifier.height(10.dp))
         Row(

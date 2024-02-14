@@ -12,12 +12,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,33 +35,29 @@ import com.den.culinarychest.presentation.ui.theme.SoftPink
 fun AuthorizationScreen(
     navController: NavController
 ) {
+
     Authorization(navController = navController)
 }
 
 
 @Composable
-fun Authorization(navController: NavController) {
+fun Authorization(
+    navController: NavController
+) {
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     val isEmailValid by remember {
         derivedStateOf {
-            email.isNotBlank()
+            email.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(email).matches()
         }
     }
-    val isPasswordValid by remember { derivedStateOf { password.isNotBlank() } }
+    val isPasswordValid by remember { derivedStateOf { password.isEmpty() || password.length >= 8 } }
 
-    val inputTexts by remember { derivedStateOf { isEmailValid && isPasswordValid } }
-
+    val inputTexts by remember { derivedStateOf { isEmailValid || isPasswordValid } }
 
     var pushButtonValue by remember { mutableStateOf(false) }
-
-    LaunchedEffect(inputTexts) {
-        !pushButtonValue
-    }
-
-    if (!inputTexts) pushButtonValue = false
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -90,7 +84,8 @@ fun Authorization(navController: NavController) {
                 validation = { text ->
                     Patterns.EMAIL_ADDRESS.matcher(text).matches()
                 },
-                initialValue = pushButtonValue
+                show = pushButtonValue,
+                onShow = { newShow -> pushButtonValue = newShow }
             )
             Spacer(modifier = Modifier.height(16.dp))
             TextInput(
@@ -99,7 +94,8 @@ fun Authorization(navController: NavController) {
                 validation = { text ->
                     text.length >= 8
                 },
-                initialValue = pushButtonValue
+                show = pushButtonValue,
+                onShow = { newShow -> pushButtonValue = newShow }
             )
             Spacer(modifier = Modifier.height(32.dp))
         }
@@ -111,21 +107,18 @@ fun Authorization(navController: NavController) {
             onButtonClick = { newValue -> pushButtonValue = newValue }
         )
         Spacer(modifier = Modifier.height(height = 6.dp))
-        if (pushButtonValue) {
-            Text(
-                modifier = Modifier.clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null
-                ) {
-                    navController.navigate(AppNavigationRoute.RegistrationScreen.route)
-                },
-                text = stringResource(R.string.new_account_text),
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    color = SoftGray
-                )
+        Text(
+            modifier = Modifier.clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                navController.navigate(AppNavigationRoute.RegistrationScreen.route)
+            },
+            text = stringResource(R.string.new_account_text),
+            style = TextStyle(
+                fontSize = 14.sp,
+                color = SoftGray
             )
-        }
+        )
     }
 }
-

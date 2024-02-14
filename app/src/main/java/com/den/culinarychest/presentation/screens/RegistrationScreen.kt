@@ -48,16 +48,16 @@ fun Registration(
     var password by remember { mutableStateOf("") }
     var verification by remember { mutableStateOf("") }
 
-    val isLoginValid by remember { derivedStateOf { login.matches(Regex("[a-zA-Z0-9_]+")) && login.length in 5..20 } }
+    val isLoginValid by remember { derivedStateOf { login.isEmpty() || login.matches(Regex("[a-zA-Z0-9_]+")) && login.length in 5..20 } }
     val isEmailValid by remember {
         derivedStateOf {
-            Patterns.EMAIL_ADDRESS.matcher(email).matches()
+            email.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(email).matches()
         }
     }
-    val isPasswordValid by remember { derivedStateOf { password.length >= 8 } }
-    val isVerificationPasswordValid by remember { derivedStateOf { verification == password } }
+    val isPasswordValid by remember { derivedStateOf { password.isEmpty() || password.length >= 8 } }
+    val isVerificationPasswordValid by remember { derivedStateOf { verification.isEmpty() && verification == password } }
 
-    val inputTexts by remember { derivedStateOf { isLoginValid && isEmailValid && isPasswordValid && isVerificationPasswordValid } }
+    val inputTexts by remember { derivedStateOf { isLoginValid || isEmailValid || isPasswordValid || isVerificationPasswordValid } }
 
     var pushButtonValue by remember { mutableStateOf(false) }
 
@@ -84,28 +84,33 @@ fun Registration(
                 inputText = stringResource(R.string.login_text),
                 onTextChanged = { login = it },
                 validation = { it.matches(Regex("[a-zA-Z0-9_]+")) && it.length in 5..20 },
-                initialValue = pushButtonValue
+                show = pushButtonValue,
+                onShow = { newShow -> pushButtonValue = newShow }
             )
             Spacer(modifier = Modifier.height(32.dp))
             TextInput(
                 inputText = stringResource(R.string.email_text),
                 onTextChanged = { email = it },
                 validation = { text -> Patterns.EMAIL_ADDRESS.matcher(text).matches() },
-                initialValue = pushButtonValue
+                show = pushButtonValue,
+                onShow = { newShow -> pushButtonValue = newShow }
+
             )
             Spacer(modifier = Modifier.height(32.dp))
             TextInput(
                 inputText = stringResource(R.string.password_text),
                 onTextChanged = { password = it },
                 validation = { text -> text.length >= 8 },
-                initialValue = pushButtonValue
+                show = pushButtonValue,
+                onShow = { newShow -> pushButtonValue = newShow }
             )
             Spacer(modifier = Modifier.height(32.dp))
             TextInput(
                 inputText = stringResource(R.string.verification_text),
                 onTextChanged = { verification = it },
-                validation = { text -> text == password },
-                initialValue = pushButtonValue
+                validation = { text -> text.isNotEmpty() && text == password },
+                show = pushButtonValue,
+                onShow = { newShow -> pushButtonValue = newShow }
             )
         }
         Spacer(modifier = Modifier.height(52.dp))
