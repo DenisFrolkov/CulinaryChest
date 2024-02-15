@@ -40,7 +40,8 @@ fun TextInput(
     onTextChanged: (String) -> Unit,
     validation: (String) -> Boolean,
     show: Boolean,
-    onShow: (Boolean) -> Unit
+    onShow: (Boolean) -> Unit,
+    returnValidation: (Boolean) -> Unit
 ) {
     var text by remember { mutableStateOf(TextFieldValue()) }
     var isHintVisible by remember { mutableStateOf(true) }
@@ -53,6 +54,8 @@ fun TextInput(
         }
         onTextChanged(text.text)
     }
+
+    if (isError) returnValidation(true)
 
     Box(
         contentAlignment = Alignment.CenterStart,

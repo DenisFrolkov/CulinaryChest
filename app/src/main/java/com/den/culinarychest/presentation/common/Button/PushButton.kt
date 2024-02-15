@@ -26,7 +26,9 @@ fun PushButton(
     inputTexts: Boolean,
     navController: NavController,
     navigationButton: String,
-    onButtonClick: (Boolean) -> Unit
+    onButtonClick: (Boolean) -> Unit,
+    verification: Boolean,
+    show: Boolean
 ) {
     Box(
         modifier = Modifier
@@ -34,7 +36,7 @@ fun PushButton(
             .border(width = 0.3.dp, color = Color.Gray, shape = RoundedCornerShape(12.dp))
             .clip(shape = RoundedCornerShape(12.dp))
             .clickable {
-                    navController.navigate(navigationButton)
+                if (show) navController.navigate(navigationButton)
                 if (inputTexts) onButtonClick(true) else onButtonClick(false)
             },
     ) {

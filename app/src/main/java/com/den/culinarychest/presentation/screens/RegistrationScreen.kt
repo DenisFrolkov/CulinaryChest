@@ -57,9 +57,40 @@ fun Registration(
     val isPasswordValid by remember { derivedStateOf { password.isEmpty() || password.length >= 8 } }
     val isVerificationPasswordValid by remember { derivedStateOf { verification.isEmpty() && verification == password } }
 
+    val isNotLoginValid by remember { derivedStateOf { login.isNotEmpty() || login.matches(Regex("[a-zA-Z0-9_]+")) && login.length in 5..20 } }
+
+    val isNotEmailValid by remember {
+        derivedStateOf {
+            email.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        }
+    }
+    val isNotPasswordValid by remember { derivedStateOf { password.isNotEmpty() && password.length >= 8 } }
+
+    val isNotVerificationPasswordValid by remember { derivedStateOf { verification.isNotEmpty() && verification == password } }
+
     val inputTexts by remember { derivedStateOf { isLoginValid || isEmailValid || isPasswordValid || isVerificationPasswordValid } }
 
+    val inputNotTexts by remember { derivedStateOf { isNotLoginValid && isNotEmailValid && isNotPasswordValid && isNotVerificationPasswordValid } }
+
     var pushButtonValue by remember { mutableStateOf(false) }
+
+    var loginCheck by remember {
+        mutableStateOf(false)
+    }
+
+    var emailCheck by remember {
+        mutableStateOf(false)
+    }
+
+    var passwordCheck by remember {
+        mutableStateOf(false)
+    }
+
+    var passwordVerificationCheck by remember {
+        mutableStateOf(false)
+    }
+
+    val verifiedText by remember { derivedStateOf { loginCheck && emailCheck && passwordCheck && passwordVerificationCheck} }
 
 
     Column(
@@ -85,7 +116,8 @@ fun Registration(
                 onTextChanged = { login = it },
                 validation = { it.matches(Regex("[a-zA-Z0-9_]+")) && it.length in 5..20 },
                 show = pushButtonValue,
-                onShow = { newShow -> pushButtonValue = newShow }
+                onShow = { newShow -> pushButtonValue = newShow },
+                returnValidation = { validation -> loginCheck = validation }
             )
             Spacer(modifier = Modifier.height(32.dp))
             TextInput(
@@ -93,7 +125,8 @@ fun Registration(
                 onTextChanged = { email = it },
                 validation = { text -> Patterns.EMAIL_ADDRESS.matcher(text).matches() },
                 show = pushButtonValue,
-                onShow = { newShow -> pushButtonValue = newShow }
+                onShow = { newShow -> pushButtonValue = newShow },
+                returnValidation = { validation -> emailCheck = validation }
 
             )
             Spacer(modifier = Modifier.height(32.dp))
@@ -102,7 +135,8 @@ fun Registration(
                 onTextChanged = { password = it },
                 validation = { text -> text.length >= 8 },
                 show = pushButtonValue,
-                onShow = { newShow -> pushButtonValue = newShow }
+                onShow = { newShow -> pushButtonValue = newShow },
+                returnValidation = { validation -> passwordCheck = validation }
             )
             Spacer(modifier = Modifier.height(32.dp))
             TextInput(
@@ -110,7 +144,8 @@ fun Registration(
                 onTextChanged = { verification = it },
                 validation = { text -> text.isNotEmpty() && text == password },
                 show = pushButtonValue,
-                onShow = { newShow -> pushButtonValue = newShow }
+                onShow = { newShow -> pushButtonValue = newShow },
+                returnValidation = { validation -> passwordVerificationCheck = validation }
             )
         }
         Spacer(modifier = Modifier.height(52.dp))
@@ -119,7 +154,9 @@ fun Registration(
             inputTexts = inputTexts,
             navController = navController,
             navigationButton = AppNavigationRoute.BottomAppNavigationBar.route,
-            onButtonClick = { newValue -> pushButtonValue = newValue }
+            onButtonClick = { newValue -> pushButtonValue = newValue },
+            verification = verifiedText,
+            show = inputNotTexts
         )
         Spacer(modifier = Modifier.height(height = 6.dp))
         Text(

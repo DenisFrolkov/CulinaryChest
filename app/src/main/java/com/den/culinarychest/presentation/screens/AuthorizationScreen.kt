@@ -53,11 +53,29 @@ fun Authorization(
             email.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(email).matches()
         }
     }
-    val isPasswordValid by remember { derivedStateOf { password.isEmpty() || password.length >= 8 } }
+    val isPasswordValid by remember { derivedStateOf { password.isNotEmpty() && password.length >= 8 } }
+
+    val isNotEmailValid by remember {
+        derivedStateOf {
+            email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        }
+    }
+    val isNotPasswordValid by remember { derivedStateOf { password.isNotEmpty() && password.length >= 8 } }
 
     val inputTexts by remember { derivedStateOf { isEmailValid || isPasswordValid } }
+    val inputNotTexts by remember { derivedStateOf { isNotEmailValid && isNotPasswordValid } }
 
     var pushButtonValue by remember { mutableStateOf(false) }
+
+    var emailCheck by remember {
+        mutableStateOf(false)
+    }
+
+    var passwordCheck by remember {
+        mutableStateOf(false)
+    }
+
+    val verifiedText by remember { derivedStateOf { emailCheck && passwordCheck } }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -81,21 +99,19 @@ fun Authorization(
             TextInput(
                 inputText = stringResource(R.string.email_text),
                 onTextChanged = { inputEmail -> email = inputEmail },
-                validation = { text ->
-                    Patterns.EMAIL_ADDRESS.matcher(text).matches()
-                },
+                validation = { text -> Patterns.EMAIL_ADDRESS.matcher(text).matches() },
                 show = pushButtonValue,
-                onShow = { newShow -> pushButtonValue = newShow }
+                onShow = { newShow -> pushButtonValue = newShow },
+                returnValidation = { validation -> emailCheck = validation }
             )
             Spacer(modifier = Modifier.height(16.dp))
             TextInput(
                 inputText = stringResource(R.string.verification_text),
                 onTextChanged = { inputPass -> password = inputPass },
-                validation = { text ->
-                    text.length >= 8
-                },
+                validation = { text -> text.length >= 8 },
                 show = pushButtonValue,
-                onShow = { newShow -> pushButtonValue = newShow }
+                onShow = { newShow -> pushButtonValue = newShow },
+                returnValidation = { validation -> passwordCheck = validation }
             )
             Spacer(modifier = Modifier.height(32.dp))
         }
@@ -104,7 +120,9 @@ fun Authorization(
             inputTexts = inputTexts,
             navController = navController,
             navigationButton = AppNavigationRoute.BottomAppNavigationBar.route,
-            onButtonClick = { newValue -> pushButtonValue = newValue }
+            onButtonClick = { newValue -> pushButtonValue = newValue },
+            verification = verifiedText,
+            show = inputNotTexts
         )
         Spacer(modifier = Modifier.height(height = 6.dp))
         Text(
