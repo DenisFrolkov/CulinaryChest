@@ -23,28 +23,28 @@ import com.den.culinarychest.presentation.ui.theme.SoftOrange
 @Composable
 fun PushButton(
     textButton: String,
-    inputTexts: Boolean,
-    navController: NavController,
-    navigationButton: String,
+    fieldCheck: Boolean,
+    controller: NavController,
+    route: String,
     onButtonClick: (Boolean) -> Unit,
-    verification: Boolean,
-    show: Boolean
+    fieldValidityCheck: Boolean
 ) {
+
     Box(
         modifier = Modifier
             .background(color = SoftOrange, shape = RoundedCornerShape(12.dp))
             .border(width = 0.3.dp, color = Color.Gray, shape = RoundedCornerShape(12.dp))
             .clip(shape = RoundedCornerShape(12.dp))
             .clickable {
-                if (show) navController.navigate(navigationButton)
-                if (inputTexts) onButtonClick(true) else onButtonClick(false)
+                if (fieldValidityCheck) controller.navigate(route)
+                if (fieldCheck) onButtonClick(true) else onButtonClick(false)
             },
     ) {
         Text(
             text = textButton,
             style = TextStyle(
                 fontSize = 20.sp,
-                color = if (inputTexts) SoftGray else LightGray,
+                color = if (fieldCheck) SoftGray else LightGray,
                 textAlign = TextAlign.Center
             ),
             modifier = Modifier.padding(horizontal = 64.dp, vertical = 12.dp)

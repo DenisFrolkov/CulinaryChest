@@ -33,49 +33,36 @@ import com.den.culinarychest.presentation.ui.theme.SoftPink
 
 @Composable
 fun AuthorizationScreen(
-    navController: NavController
+    controller: NavController
 ) {
 
-    Authorization(navController = navController)
+    Authorization(controller = controller)
 }
 
 
 @Composable
 fun Authorization(
-    navController: NavController
+    controller: NavController
 ) {
 
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    // Придумать как оптимизировать эти переменные
 
-    val isEmailValid by remember {
-        derivedStateOf {
-            email.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(email).matches()
-        }
-    }
-    val isPasswordValid by remember { derivedStateOf { password.isNotEmpty() && password.length >= 8 } }
+    var textEmailField by remember { mutableStateOf("") }
+    var textPasswordField by remember { mutableStateOf("") }
 
-    val isNotEmailValid by remember {
-        derivedStateOf {
-            email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
-        }
-    }
-    val isNotPasswordValid by remember { derivedStateOf { password.isNotEmpty() && password.length >= 8 } }
+    val isEmailValid by remember { derivedStateOf { textEmailField.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(textEmailField).matches() } }
+    val isPasswordValid by remember { derivedStateOf { textPasswordField.isNotEmpty() && textPasswordField.length >= 8 } }
 
-    val inputTexts by remember { derivedStateOf { isEmailValid || isPasswordValid } }
-    val inputNotTexts by remember { derivedStateOf { isNotEmailValid && isNotPasswordValid } }
+    val isEmailNotEmptyAndValid by remember { derivedStateOf { textEmailField.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(textEmailField).matches() } }
+    val isPasswordNotEmptyAndValid by remember { derivedStateOf { textPasswordField.isNotEmpty() && textPasswordField.length >=  8 } }
 
-    var pushButtonValue by remember { mutableStateOf(false) }
+    val hasValidInput by remember { derivedStateOf { isEmailValid || isPasswordValid } }
+    val allFieldsAreValid by remember { derivedStateOf { isEmailNotEmptyAndValid && isPasswordNotEmptyAndValid } }
 
-    var emailCheck by remember {
-        mutableStateOf(false)
-    }
+    var checkTextOnClick by remember { mutableStateOf(false) }
 
-    var passwordCheck by remember {
-        mutableStateOf(false)
-    }
-
-    val verifiedText by remember { derivedStateOf { emailCheck && passwordCheck } }
+    var emailVerificationResult by remember { mutableStateOf(false) }
+    var passwordVerificationResult by remember { mutableStateOf(false) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -97,32 +84,31 @@ fun Authorization(
                 .padding(horizontal = 16.dp)
         ) {
             TextInput(
-                inputText = stringResource(R.string.email_text),
-                onTextChanged = { inputEmail -> email = inputEmail },
-                validation = { text -> Patterns.EMAIL_ADDRESS.matcher(text).matches() },
-                show = pushButtonValue,
-                onShow = { newShow -> pushButtonValue = newShow },
-                returnValidation = { validation -> emailCheck = validation }
+                outputTextHint = stringResource(R.string.email_text),
+                onTextChanged = { inputEmail -> textEmailField = inputEmail },
+                onTextValidation = { text -> Patterns.EMAIL_ADDRESS.matcher(text).matches() },
+                checkTextOnClick = checkTextOnClick,
+                transferVerification = { newShow -> checkTextOnClick = newShow },
+                returnValidation = { validation -> emailVerificationResult = validation }
             )
             Spacer(modifier = Modifier.height(16.dp))
             TextInput(
-                inputText = stringResource(R.string.verification_text),
-                onTextChanged = { inputPass -> password = inputPass },
-                validation = { text -> text.length >= 8 },
-                show = pushButtonValue,
-                onShow = { newShow -> pushButtonValue = newShow },
-                returnValidation = { validation -> passwordCheck = validation }
+                outputTextHint = stringResource(R.string.verification_text),
+                onTextChanged = { inputPass -> textPasswordField = inputPass },
+                onTextValidation = { text -> text.length >= 8 },
+                checkTextOnClick = checkTextOnClick,
+                transferVerification = { newShow -> checkTextOnClick = newShow },
+                returnValidation = { validation -> passwordVerificationResult = validation }
             )
             Spacer(modifier = Modifier.height(32.dp))
         }
         PushButton(
             textButton = stringResource(R.string.enter_text),
-            inputTexts = inputTexts,
-            navController = navController,
-            navigationButton = AppNavigationRoute.BottomAppNavigationBar.route,
-            onButtonClick = { newValue -> pushButtonValue = newValue },
-            verification = verifiedText,
-            show = inputNotTexts
+            fieldCheck = hasValidInput,
+            controller = controller,
+            route = AppNavigationRoute.BottomAppNavigationBar.route,
+            onButtonClick = { newValue -> checkTextOnClick = newValue },
+            fieldValidityCheck = allFieldsAreValid
         )
         Spacer(modifier = Modifier.height(height = 6.dp))
         Text(
@@ -130,7 +116,7 @@ fun Authorization(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
-                navController.navigate(AppNavigationRoute.RegistrationScreen.route)
+                controller.navigate(AppNavigationRoute.RegistrationScreen.route)
             },
             text = stringResource(R.string.new_account_text),
             style = TextStyle(

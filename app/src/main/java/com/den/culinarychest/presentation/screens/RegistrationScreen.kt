@@ -32,66 +32,44 @@ import com.den.culinarychest.presentation.ui.theme.SoftPink
 
 @Composable
 fun RegistrationScreen(
-    navController: NavController
+    controller: NavController
 ) {
     Registration(
-        navController = navController
+        controller = controller
     )
 }
 
 @Composable
 fun Registration(
-    navController: NavController
+    controller: NavController
 ) {
-    var login by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var verification by remember { mutableStateOf("") }
 
-    val isLoginValid by remember { derivedStateOf { login.isEmpty() || login.matches(Regex("[a-zA-Z0-9_]+")) && login.length in 5..20 } }
-    val isEmailValid by remember {
-        derivedStateOf {
-            email.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(email).matches()
-        }
-    }
-    val isPasswordValid by remember { derivedStateOf { password.isEmpty() || password.length >= 8 } }
-    val isVerificationPasswordValid by remember { derivedStateOf { verification.isEmpty() && verification == password } }
+    // Придумать как оптимизировать эти переменные
 
-    val isNotLoginValid by remember { derivedStateOf { login.isNotEmpty() || login.matches(Regex("[a-zA-Z0-9_]+")) && login.length in 5..20 } }
+    var textLoginField by remember { mutableStateOf("") }
+    var textEmailField by remember { mutableStateOf("") }
+    var textPasswordField by remember { mutableStateOf("") }
+    var textRetryPasswordField by remember { mutableStateOf("") }
 
-    val isNotEmailValid by remember {
-        derivedStateOf {
-            email.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(email).matches()
-        }
-    }
-    val isNotPasswordValid by remember { derivedStateOf { password.isNotEmpty() && password.length >= 8 } }
+    val isLoginValid by remember { derivedStateOf { textLoginField.isEmpty() || textLoginField.matches(Regex("[a-zA-Z0-9_]+")) && textLoginField.length in 5..20 } }
+    val isEmailValid by remember { derivedStateOf { textEmailField.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(textEmailField).matches() } }
+    val isPasswordValid by remember { derivedStateOf { textPasswordField.isEmpty() || textPasswordField.length >= 8 } }
+    val isRetryPasswordValid by remember { derivedStateOf { textRetryPasswordField.isEmpty() && textRetryPasswordField == textPasswordField } }
 
-    val isNotVerificationPasswordValid by remember { derivedStateOf { verification.isNotEmpty() && verification == password } }
+    val isLoginNotEmptyAndValid by remember { derivedStateOf { textLoginField.isNotEmpty() && textLoginField.matches(Regex("[a-zA-Z0-9_]+")) && textLoginField.length in 5..20 } }
+    val isEmailNotEmptyAndValid by remember { derivedStateOf { textEmailField.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(textEmailField).matches() } }
+    val isPasswordNotEmptyAndValid by remember { derivedStateOf { textPasswordField.isNotEmpty() && textPasswordField.length >= 8 } }
+    val isRetryPasswordNotEmptyAndValid by remember { derivedStateOf { textRetryPasswordField.isNotEmpty() && textRetryPasswordField == textPasswordField } }
 
-    val inputTexts by remember { derivedStateOf { isLoginValid || isEmailValid || isPasswordValid || isVerificationPasswordValid } }
+    val hasValidInput by remember { derivedStateOf { isLoginValid || isEmailValid || isPasswordValid || isRetryPasswordValid } }
+    val allFieldsAreValid by remember { derivedStateOf { isLoginNotEmptyAndValid && isEmailNotEmptyAndValid && isPasswordNotEmptyAndValid && isRetryPasswordNotEmptyAndValid } }
 
-    val inputNotTexts by remember { derivedStateOf { isNotLoginValid && isNotEmailValid && isNotPasswordValid && isNotVerificationPasswordValid } }
+    var checkTextOnClick by remember { mutableStateOf(false) }
 
-    var pushButtonValue by remember { mutableStateOf(false) }
-
-    var loginCheck by remember {
-        mutableStateOf(false)
-    }
-
-    var emailCheck by remember {
-        mutableStateOf(false)
-    }
-
-    var passwordCheck by remember {
-        mutableStateOf(false)
-    }
-
-    var passwordVerificationCheck by remember {
-        mutableStateOf(false)
-    }
-
-    val verifiedText by remember { derivedStateOf { loginCheck && emailCheck && passwordCheck && passwordVerificationCheck} }
-
+    var loginVerificationResult by remember { mutableStateOf(false) }
+    var emailVerificationResult by remember { mutableStateOf(false) }
+    var passwordVerificationResult by remember { mutableStateOf(false) }
+    var passwordRetryVerificationResult by remember { mutableStateOf(false) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -112,51 +90,50 @@ fun Registration(
         ) {
             Spacer(modifier = Modifier.height(24.dp))
             TextInput(
-                inputText = stringResource(R.string.login_text),
-                onTextChanged = { login = it },
-                validation = { it.matches(Regex("[a-zA-Z0-9_]+")) && it.length in 5..20 },
-                show = pushButtonValue,
-                onShow = { newShow -> pushButtonValue = newShow },
-                returnValidation = { validation -> loginCheck = validation }
+                outputTextHint = stringResource(R.string.login_text),
+                onTextChanged = { textLoginField = it },
+                onTextValidation = { it.matches(Regex("[a-zA-Z0-9_]+")) && it.length in 5..20 },
+                checkTextOnClick = checkTextOnClick,
+                transferVerification = { newShow -> checkTextOnClick = newShow },
+                returnValidation = { validation -> loginVerificationResult = validation }
             )
             Spacer(modifier = Modifier.height(32.dp))
             TextInput(
-                inputText = stringResource(R.string.email_text),
-                onTextChanged = { email = it },
-                validation = { text -> Patterns.EMAIL_ADDRESS.matcher(text).matches() },
-                show = pushButtonValue,
-                onShow = { newShow -> pushButtonValue = newShow },
-                returnValidation = { validation -> emailCheck = validation }
+                outputTextHint = stringResource(R.string.email_text),
+                onTextChanged = { textEmailField = it },
+                onTextValidation = { text -> Patterns.EMAIL_ADDRESS.matcher(text).matches() },
+                checkTextOnClick = checkTextOnClick,
+                transferVerification = { newShow -> checkTextOnClick = newShow },
+                returnValidation = { validation -> emailVerificationResult = validation }
 
             )
             Spacer(modifier = Modifier.height(32.dp))
             TextInput(
-                inputText = stringResource(R.string.password_text),
-                onTextChanged = { password = it },
-                validation = { text -> text.length >= 8 },
-                show = pushButtonValue,
-                onShow = { newShow -> pushButtonValue = newShow },
-                returnValidation = { validation -> passwordCheck = validation }
+                outputTextHint = stringResource(R.string.password_text),
+                onTextChanged = { textPasswordField = it },
+                onTextValidation = { text -> text.length >= 8 },
+                checkTextOnClick = checkTextOnClick,
+                transferVerification = { newShow -> checkTextOnClick = newShow },
+                returnValidation = { validation -> passwordVerificationResult = validation }
             )
             Spacer(modifier = Modifier.height(32.dp))
             TextInput(
-                inputText = stringResource(R.string.verification_text),
-                onTextChanged = { verification = it },
-                validation = { text -> text.isNotEmpty() && text == password },
-                show = pushButtonValue,
-                onShow = { newShow -> pushButtonValue = newShow },
-                returnValidation = { validation -> passwordVerificationCheck = validation }
+                outputTextHint = stringResource(R.string.verification_text),
+                onTextChanged = { textRetryPasswordField = it },
+                onTextValidation = { text -> text.isNotEmpty() && text == textPasswordField },
+                checkTextOnClick = checkTextOnClick,
+                transferVerification = { newShow -> checkTextOnClick = newShow },
+                returnValidation = { validation -> passwordRetryVerificationResult = validation }
             )
         }
         Spacer(modifier = Modifier.height(52.dp))
         PushButton(
             textButton = stringResource(R.string.new_account_text),
-            inputTexts = inputTexts,
-            navController = navController,
-            navigationButton = AppNavigationRoute.BottomAppNavigationBar.route,
-            onButtonClick = { newValue -> pushButtonValue = newValue },
-            verification = verifiedText,
-            show = inputNotTexts
+            fieldCheck = hasValidInput,
+            controller = controller,
+            route = AppNavigationRoute.BottomAppNavigationBar.route,
+            onButtonClick = { newValue -> checkTextOnClick = newValue },
+            fieldValidityCheck = allFieldsAreValid
         )
         Spacer(modifier = Modifier.height(height = 6.dp))
         Text(
@@ -164,7 +141,7 @@ fun Registration(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
-                navController.navigate(AppNavigationRoute.AuthorizationScreen.route)
+                controller.navigate(AppNavigationRoute.AuthorizationScreen.route)
             },
             text = stringResource(R.string.log_in_to_an_existing_text),
             style = TextStyle(

@@ -36,23 +36,23 @@ import com.den.culinarychest.presentation.ui.theme.SoftOrange
 
 @Composable
 fun TextInput(
-    inputText: String,
+    outputTextHint: String,
     onTextChanged: (String) -> Unit,
-    validation: (String) -> Boolean,
-    show: Boolean,
-    onShow: (Boolean) -> Unit,
-    returnValidation: (Boolean) -> Unit
+    onTextValidation: (String) -> Boolean,
+    checkTextOnClick: Boolean,
+    transferVerification: (Boolean) -> Unit, // Нужно подумать насчет этой переменной
+    returnValidation: (Boolean) -> Unit // Нужно подумать насчет этой переменной
 ) {
-    var text by remember { mutableStateOf(TextFieldValue()) }
+    var enteredText by remember { mutableStateOf(TextFieldValue()) }
     var isHintVisible by remember { mutableStateOf(true) }
     var isError by remember { mutableStateOf(false) }
 
-    LaunchedEffect(text, show) {
-        if (show) {
-            isError = !validation(text.text)
-            onShow(false)
+    LaunchedEffect(enteredText, checkTextOnClick) {
+        if (checkTextOnClick) {
+            isError = !onTextValidation(enteredText.text)
+            transferVerification(false)
         }
-        onTextChanged(text.text)
+        onTextChanged(enteredText.text)
     }
 
     if (isError) returnValidation(true)
@@ -66,9 +66,9 @@ fun TextInput(
             .padding(start = 12.dp, top = 15.dp, end = 12.dp, bottom = 16.dp)
     ) {
         BasicTextField(
-            value = text,
+            value = enteredText,
             onValueChange = {
-                text = it
+                enteredText = it
                 isHintVisible = it.text.isEmpty()
             },
             textStyle = TextStyle(
@@ -84,7 +84,7 @@ fun TextInput(
         )
         if (isHintVisible) {
             Text(
-                text = inputText,
+                text = outputTextHint,
                 style = TextStyle(
                     fontSize = 16.sp,
                     color = LightGray
@@ -94,7 +94,7 @@ fun TextInput(
                     .align(Alignment.CenterStart)
             )
         }
-        if (text.text.isNotEmpty()) {
+        if (enteredText.text.isNotEmpty()) {
             Icon(
                 painter = painterResource(id = R.drawable.clear_icon),
                 contentDescription = null,
@@ -104,7 +104,7 @@ fun TextInput(
                     .size(16.dp)
                     .align(Alignment.CenterEnd)
                     .clickable {
-                        text = TextFieldValue("")
+                        enteredText = TextFieldValue("")
                         isHintVisible = true
                     }
             )
