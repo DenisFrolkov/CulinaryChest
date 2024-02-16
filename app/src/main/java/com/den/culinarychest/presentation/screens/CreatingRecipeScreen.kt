@@ -35,9 +35,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.common.TextInput.MiniTextInput
+import com.den.culinarychest.presentation.common.TextInput.SmallTextInput
 import com.den.culinarychest.presentation.common.TextInput.NumberTextInput
-import com.den.culinarychest.presentation.common.TextInput.RecipeTextInput
+import com.den.culinarychest.presentation.common.TextInput.RecipeDetailsTextInput
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
@@ -89,9 +89,9 @@ fun CreatingRecipe(
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
                 NumberTextInput(
-                    inputText = "$itemNumber.",
+                    outputTextHint = "$itemNumber.",
                     onTextChanged = { stepRecipeText = it },
-                    validation = { it.matches(Regex("[а-яА-Я0-9]+")) })
+                    onTextValidation = { it.matches(Regex("[а-яА-Я0-9]+")) })
             }
         }
         item {
@@ -148,16 +148,16 @@ fun RecipeInputs(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 10.dp)
     ) {
-        RecipeTextInput(
-            inputText = stringResource(R.string.enter_title_recipe),
+        RecipeDetailsTextInput(
+            outputTextHint = stringResource(R.string.enter_title_recipe),
             onTextChanged = onTitleTextChanged,
-            validation = { it.matches(Regex("[а-яА-Я0-9]+")) }
+            onTextValidation = { it.matches(Regex("[а-яА-Я0-9]+")) }
         )
         Spacer(modifier = Modifier.height(10.dp))
-        RecipeTextInput(
-            inputText = stringResource(R.string.enter_ingredients_recipe),
+        RecipeDetailsTextInput(
+            outputTextHint = stringResource(R.string.enter_ingredients_recipe),
             onTextChanged = onIngredientsTextChanged,
-            validation = { it.matches(Regex("[а-яА-Я0-9]+")) }
+            onTextValidation = { it.matches(Regex("[а-яА-Я0-9]+")) }
         )
         Spacer(modifier = Modifier.height(10.dp))
         Row(
@@ -170,10 +170,10 @@ fun RecipeInputs(
                     .padding(vertical = 10.dp)
                     .padding(end = 4.dp)
             )
-            MiniTextInput(
-                inputText = stringResource(R.string.in_minutes_recipe),
+            SmallTextInput(
+                outputTextHint = stringResource(R.string.in_minutes_recipe),
                 onTextChanged = onTimeTextChanged,
-                validation = { it.matches(Regex("[0-9]+")) }
+                onTextValidation = { it.matches(Regex("[0-9]+")) }
             )
         }
     }

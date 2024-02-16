@@ -45,17 +45,17 @@ fun TextInput(
 ) {
     var enteredText by remember { mutableStateOf(TextFieldValue()) }
     var isHintVisible by remember { mutableStateOf(true) }
-    var isError by remember { mutableStateOf(false) }
+    var isErrorVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(enteredText, checkTextOnClick) {
         if (checkTextOnClick) {
-            isError = !onTextValidation(enteredText.text)
+            isErrorVisible = !onTextValidation(enteredText.text)
             transferVerification(false)
         }
         onTextChanged(enteredText.text)
     }
 
-    if (isError) returnValidation(true)
+    if (isErrorVisible) returnValidation(true)
 
     Box(
         contentAlignment = Alignment.CenterStart,
@@ -111,7 +111,7 @@ fun TextInput(
         }
     }
 
-    if (isError) {
+    if (isErrorVisible) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(start = 6.dp, top = 6.dp)

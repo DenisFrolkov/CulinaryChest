@@ -34,21 +34,21 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 
 @Composable
-fun RecipeTextInput(
-    inputText: String,
+fun RecipeDetailsTextInput(
+    outputTextHint: String,
     onTextChanged: (String) -> Unit,
-    validation: (String) -> Boolean
+    onTextValidation: (String) -> Boolean
 ) {
-    var text by remember { mutableStateOf(TextFieldValue()) }
+    var enteredText by remember { mutableStateOf(TextFieldValue()) }
     var isHintVisible by remember { mutableStateOf(true) }
-    var isError by remember { mutableStateOf(false) }
+    var isErrorVisible by remember { mutableStateOf(false) }
 
-    LaunchedEffect(text) {
-        isError = !validation(text.text)
-        onTextChanged(text.text)
+    LaunchedEffect(enteredText) {
+        isErrorVisible = !onTextValidation(enteredText.text)
+        onTextChanged(enteredText.text)
     }
 
-    if (text.text.isEmpty()) isError = false
+    if (enteredText.text.isEmpty()) isErrorVisible = false
 
     Box(
         contentAlignment = Alignment.CenterStart,
@@ -59,9 +59,9 @@ fun RecipeTextInput(
             .padding(start = 12.dp, top = 15.dp, end = 12.dp, bottom = 16.dp)
     ) {
         BasicTextField(
-            value = text,
+            value = enteredText,
             onValueChange = {
-                text = it
+                enteredText = it
                 isHintVisible = it.text.isEmpty()
             },
             textStyle = TextStyle(
@@ -77,7 +77,7 @@ fun RecipeTextInput(
         )
         if (isHintVisible) {
             Text(
-                text = inputText,
+                text = outputTextHint,
                 style = TextStyle(
                     fontSize = 16.sp,
                     color = LightGray
@@ -87,7 +87,7 @@ fun RecipeTextInput(
                     .align(Alignment.CenterStart)
             )
         }
-        if (text.text.isNotEmpty()) {
+        if (enteredText.text.isNotEmpty()) {
             Icon(
                 painter = painterResource(id = R.drawable.clear_icon),
                 contentDescription = null,
@@ -97,14 +97,14 @@ fun RecipeTextInput(
                     .size(16.dp)
                     .align(Alignment.CenterEnd)
                     .clickable {
-                        text = TextFieldValue("")
+                        enteredText = TextFieldValue("")
                         isHintVisible = true
                     }
             )
         }
     }
 
-    if (isError) {
+    if (isErrorVisible) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(start = 6.dp, top = 6.dp)

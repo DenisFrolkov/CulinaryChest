@@ -35,21 +35,21 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 
 @Composable
-fun MiniTextInput(
-    inputText: String,
+fun SmallTextInput(
+    outputTextHint: String,
     onTextChanged: (String) -> Unit,
-    validation: (String) -> Boolean,
+    onTextValidation: (String) -> Boolean,
 ) {
-    var text by remember { mutableStateOf(TextFieldValue()) }
+    var enteredText by remember { mutableStateOf(TextFieldValue()) }
     var isHintVisible by remember { mutableStateOf(true) }
-    var isError by remember { mutableStateOf(false) }
+    var isErrorVisible by remember { mutableStateOf(false) }
 
-    LaunchedEffect(text) {
-        isError = !validation(text.text)
-        onTextChanged(text.text)
+    LaunchedEffect(enteredText) {
+        isErrorVisible = !onTextValidation(enteredText.text)
+        onTextChanged(enteredText.text)
     }
 
-    if (text.text.isEmpty()) isError = false
+    if (enteredText.text.isEmpty()) isErrorVisible = false
 
     Box(
         contentAlignment = Alignment.CenterStart,
@@ -60,9 +60,9 @@ fun MiniTextInput(
             .padding(start = 12.dp, top = 15.dp, end = 12.dp, bottom = 16.dp)
     ) {
         BasicTextField(
-            value = text,
+            value = enteredText,
             onValueChange = {
-                text = it
+                enteredText = it
                 isHintVisible = it.text.isEmpty()
             },
             textStyle = TextStyle(
@@ -79,7 +79,7 @@ fun MiniTextInput(
         )
         if (isHintVisible) {
             Text(
-                text = inputText,
+                text = outputTextHint,
                 style = TextStyle(
                     fontSize = 14.sp,
                     color = LightGray
@@ -89,7 +89,7 @@ fun MiniTextInput(
                     .align(Alignment.CenterStart)
             )
         }
-        if (isError) {
+        if (isErrorVisible) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.align(Alignment.CenterEnd)
