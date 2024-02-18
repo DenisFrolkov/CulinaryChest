@@ -16,34 +16,25 @@ import androidx.compose.ui.unit.sp
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 
 @Composable
-fun RecipeInformationItems(
-    iconPainter: Painter,
-    sizeIcon: Int,
-    textInformation: String,
-    paddingStart: Int,
-    paddingTop: Int,
-    paddingEnd: Int,
-    paddingBottom: Int,
-    fontSize: Int
+fun DisplayRecipeInfo(
+    iconRecipeInfo: Painter,
+    sizeRecipeInfoIcon: Int,
+    textRecipeInfo: String,
+    textFontSize: Int
 ) {
-    Row() {
+    Row {
         Image(
-            painter = iconPainter,
+            painter = iconRecipeInfo,
             contentDescription = null,
             contentScale = ContentScale.Fit,
             modifier = Modifier
-                .padding(
-                    start = paddingStart.dp,
-                    top = paddingTop.dp,
-                    end = paddingEnd.dp,
-                    bottom = paddingBottom.dp
-                )
-                .size(size = sizeIcon.dp)
+                .padding(vertical = 8.dp )
+                .size(size = sizeRecipeInfoIcon.dp)
         )
         Text(
-            text = textInformation,
+            text = textRecipeInfo,
             style = TextStyle(
-                fontSize = fontSize.sp,
+                fontSize = textFontSize.sp,
                 color = SoftGray
             ),
             modifier = Modifier

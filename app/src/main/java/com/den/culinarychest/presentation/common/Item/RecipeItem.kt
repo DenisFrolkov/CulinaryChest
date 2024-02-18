@@ -7,9 +7,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,25 +30,25 @@ import com.den.culinarychest.presentation.route.AppNavigationRoute
 
 @Composable
 fun RecipeItem(
-    navController: NavController,
+    controller: NavController,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+            .padding(bottom = 16.dp)
             .clickable {
-                navController.navigate(AppNavigationRoute.RecipeScreen.route)
+                controller.navigate(AppNavigationRoute.RecipeScreen.route)
             }
             .border(width = .15.dp, color = SoftGray, shape = RoundedCornerShape(12.dp))
             .background(SoftOrange, RoundedCornerShape(12.dp))
     ) {
-        Row() {
+        Row {
             Image(
                 painter = painterResource(id = R.drawable.image),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
-                    .padding(start = 16.dp, top = 16.dp, end = 0.dp, bottom = 0.dp)
+                    .padding(start = 16.dp, top = 16.dp)
                     .size(size = 94.dp)
             )
             Column(
@@ -62,53 +64,39 @@ fun RecipeItem(
                 Text(
                     text = "Ингредиенты: макароны, крабовые палочки, чеснок, масло сливочное, сыр твёрдый, сметана, мука... ",
                     style = TextStyle(
-                        fontSize = 10.sp,
+                        fontSize = 12.sp,
                         color = SoftGray
                     ),
                     modifier = Modifier.padding(top = 4.dp),
                 )
             }
         }
-        Row() {
-            Row() {
-                RecipeInformationItems(
-                    iconPainter = painterResource(id = R.drawable.star),
-                    sizeIcon = 16,
-                    textInformation = "4.5",
-                    paddingStart = 23,
-                    paddingTop = 7,
-                    paddingEnd = 0,
-                    paddingBottom = 7,
-                    fontSize = 10
-                )
-            }
-            Row() {
-                RecipeInformationItems(
-                    iconPainter = painterResource(id = R.drawable.time),
-                    sizeIcon = 16,
-                    textInformation = "30 мин",
-                    paddingStart = 14,
-                    paddingTop = 7,
-                    paddingEnd = 0,
-                    paddingBottom = 7,
-                    fontSize = 10
-                )
-            }
+        Row(
+            modifier = Modifier.padding(start = 23.dp, top = 6.dp, end = 8.dp, bottom = 4.dp)
+        ) {
+            DisplayRecipeInfo(
+                iconRecipeInfo = painterResource(id = R.drawable.star),
+                sizeRecipeInfoIcon = 16,
+                textRecipeInfo = "4.5",
+                textFontSize = 10
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            DisplayRecipeInfo(
+                iconRecipeInfo = painterResource(id = R.drawable.time),
+                sizeRecipeInfoIcon = 16,
+                textRecipeInfo = "30 мин",
+                textFontSize = 10
+            )
             Box(
+                contentAlignment = Alignment.CenterEnd,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = 8.dp),
-                contentAlignment = Alignment.CenterEnd
             ) {
-                RecipeInformationItems(
-                    iconPainter = painterResource(id = R.drawable.calendar),
-                    sizeIcon = 16,
-                    textInformation = "23.10.2020",
-                    paddingStart = 0,
-                    paddingTop = 7,
-                    paddingEnd = 0,
-                    paddingBottom = 7,
-                    fontSize = 10
+                DisplayRecipeInfo(
+                    iconRecipeInfo = painterResource(id = R.drawable.calendar),
+                    sizeRecipeInfoIcon = 16,
+                    textRecipeInfo = "23.10.2020",
+                    textFontSize = 10
                 )
             }
         }

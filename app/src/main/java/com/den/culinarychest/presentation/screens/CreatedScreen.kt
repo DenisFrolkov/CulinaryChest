@@ -34,7 +34,7 @@ fun CreatedScreen(
         Column(
             modifier = Modifier.padding(top = 82.dp)
         ) {
-            RecipeItem( navController = navController )
+            RecipeItem( controller = navController )
         }
     }
 }

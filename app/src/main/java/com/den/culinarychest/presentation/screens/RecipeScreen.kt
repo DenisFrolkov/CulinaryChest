@@ -33,7 +33,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.den.culinarychest.presentation.common.Item.RecipeInformationItems
+import com.den.culinarychest.presentation.common.Item.DisplayRecipeInfo
 import com.den.culinarychest.presentation.common.Item.StepRecipeItem
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
@@ -116,25 +116,25 @@ fun Recipe(
                     contentScale = ContentScale.Crop
                 )
                 Row() {
-                    RecipeInformationItems(
-                        iconPainter = painterResource(id = R.drawable.star),
-                        sizeIcon = 24,
-                        textInformation = "4.5",
-                        paddingStart = 18,
-                        paddingTop = 8,
-                        paddingEnd = 0,
-                        paddingBottom = 8,
-                        fontSize = 14
+                    DisplayRecipeInfo(
+                        iconRecipeInfo = painterResource(id = R.drawable.star),
+                        sizeRecipeInfoIcon = 24,
+                        textRecipeInfo = "4.5",
+//                        paddingStart = 18,
+//                        paddingTop = 8,
+//                        paddingEnd = 0,
+//                        paddingBottom = 8,
+                        textFontSize = 14
                     )
-                    RecipeInformationItems(
-                        iconPainter = painterResource(id = R.drawable.time),
-                        sizeIcon = 24,
-                        textInformation = "30 мин",
-                        paddingStart = 10,
-                        paddingTop = 8,
-                        paddingEnd = 0,
-                        paddingBottom = 8,
-                        fontSize = 14
+                    DisplayRecipeInfo(
+                        iconRecipeInfo = painterResource(id = R.drawable.time),
+                        sizeRecipeInfoIcon = 24,
+                        textRecipeInfo = "30 мин",
+//                        paddingStart = 10,
+//                        paddingTop = 8,
+//                        paddingEnd = 0,
+//                        paddingBottom = 8,
+                        textFontSize = 14
                     )
                     Row(
                         modifier = Modifier
@@ -142,15 +142,15 @@ fun Recipe(
                             .padding(end = 18.dp),
                         horizontalArrangement = Arrangement.End
                     ) {
-                        RecipeInformationItems(
-                            iconPainter = painterResource(id = R.drawable.calendar),
-                            sizeIcon = 24,
-                            textInformation = "23.10.2020",
-                            paddingStart = 0,
-                            paddingTop = 8,
-                            paddingEnd = 0,
-                            paddingBottom = 8,
-                            fontSize = 14
+                        DisplayRecipeInfo(
+                            iconRecipeInfo = painterResource(id = R.drawable.calendar),
+                            sizeRecipeInfoIcon = 24,
+                            textRecipeInfo = "23.10.2020",
+//                            paddingStart = 0,
+//                            paddingTop = 8,
+//                            paddingEnd = 0,
+//                            paddingBottom = 8,
+                            textFontSize = 14
                         )
                     }
                 }

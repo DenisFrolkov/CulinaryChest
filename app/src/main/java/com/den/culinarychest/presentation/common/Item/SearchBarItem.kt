@@ -4,114 +4,178 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.den.culinarychest.R
+import com.den.culinarychest.presentation.ui.theme.LightGray
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun SearchBarItem() {
-    val stringResource = LocalContext.current.resources
+fun SearchBarItem(
+    onTextChanged: (String) -> Unit,
+) {
 
-    var textParameter by remember { mutableStateOf("") }
-    var activeParameter by remember { mutableStateOf(false) }
-    val recipeElements = remember {
-        mutableStateListOf(
-            "Пирог с вишней",
-            "Рис с мясом"
-        )
+    var enteredSearchText by remember { mutableStateOf(TextFieldValue()) }
+    var isHintVisible by remember { mutableStateOf(true) }
+    var isHistoryVisible by remember { mutableStateOf(false) }
+
+    val searchHistoryCollection = mutableListOf(
+        "12",
+        "123"
+    )
+
+    LaunchedEffect(enteredSearchText) {
+        onTextChanged(enteredSearchText.text)
     }
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 12.dp)
-            .offset(y = -10.dp)
-    ) {
-        SearchBar(
+    Column {
+        Box(
+            contentAlignment = Alignment.CenterStart,
             modifier = Modifier
                 .fillMaxWidth()
-                .border(width = 0.15.dp, color = SoftGray, shape = RoundedCornerShape(12.dp))
-                .background(color = SoftOrange, shape = RoundedCornerShape(12.dp)),
-            colors = SearchBarDefaults.colors(
-                containerColor = SoftOrange
-            ),
-            query = textParameter,
-            onQueryChange = {
-                textParameter = it
-            },
-            onSearch = {
-                recipeElements.add(it)
-                activeParameter = false
-                textParameter = ""
-            },
-            active = activeParameter,
-            onActiveChange = {
-                activeParameter = it
-            },
-            placeholder = {
-                Text(
-                    text = stringResource.getString(R.string.authorization_text),
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        color = SoftGray
-                    )
+                .background(
+                    color = SoftOrange,
+                    shape =
+                    if ( isHistoryVisible ) {
+                        RoundedCornerShape(topStart = 14.dp, topEnd = 14.dp)
+                    } else RoundedCornerShape(14.dp)
                 )
-            },
-            trailingIcon = {
-
-                Icon(
-                    modifier = Modifier
-                        .clickable {
-                            if (textParameter.isNotEmpty()) {
-                                textParameter = ""
-                            } else activeParameter = false
-                        },
-                    imageVector = if (activeParameter) Icons.Default.Clear else Icons.Default.Search,
-                    contentDescription = null,
-                    tint = SoftGray
+                .border(
+                    width = 0.1.dp,
+                    color = SoftGray,
+                    shape =
+                    if ( isHistoryVisible ) {
+                        RoundedCornerShape(topStart = 14.dp, topEnd = 14.dp)
+                    } else RoundedCornerShape(14.dp)
                 )
-            },
+                .padding(start = 12.dp, top = 15.dp, end = 12.dp, bottom = 16.dp)
         ) {
-            recipeElements.forEach {
-                Row(
+            BasicTextField(
+                value = enteredSearchText,
+                onValueChange = {
+                    enteredSearchText = it
+                    isHintVisible = it.text.isEmpty()
+                },
+                textStyle = TextStyle(
+                    fontSize = 18.sp,
+                    color = Color.Black
+                ),
+                singleLine = true,
+                cursorBrush = SolidColor(Color.Black),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onFocusChanged { isFocused ->
+                        if (isFocused.isFocused) {
+                            isHistoryVisible = true
+                        } else {
+                            isHistoryVisible = false
+                        }
+                    }
+                    .align(Alignment.CenterStart)
+                    .padding(end = 40.dp)
+            )
+            if (isHintVisible) {
+                Text(
+                    text = stringResource(id = R.string.search_text),
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        color = LightGray
+                    ),
                     modifier = Modifier
-                        .padding(all = 14.dp)
-                ) {
-                    Icon(
-                        modifier = Modifier.padding(end = 10.dp),
-                        imageVector = Icons.Default.History,
-                        contentDescription = null
+                        .fillMaxWidth()
+                        .align(Alignment.CenterStart)
+                )
+            }
+            if (enteredSearchText.text.isEmpty()) {
+                Icon(
+                    painter = painterResource(id = R.drawable.seacr_icon),
+                    contentDescription = null,
+                    tint = Color.Black,
+                    modifier = Modifier
+                        .padding(end = 12.dp)
+                        .size(20.dp)
+                        .align(Alignment.CenterEnd)
+                        .clickable {
+                            enteredSearchText = TextFieldValue("")
+                            isHintVisible = true
+                        }
+                )
+            }
+            if (enteredSearchText.text.isNotEmpty()) {
+                Icon(
+                    painter = painterResource(id = R.drawable.clear_icon),
+                    contentDescription = null,
+                    tint = Color.Black,
+                    modifier = Modifier
+                        .padding(end = 12.dp)
+                        .size(18.dp)
+                        .align(Alignment.CenterEnd)
+                        .clickable {
+                            enteredSearchText = TextFieldValue("")
+                            isHintVisible = true
+                        }
+                )
+            }
+        }
+        if (isHistoryVisible) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = SoftOrange)
+                    .border(
+                        width = .5.dp,
+                        color = SoftGray,
+                        shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
                     )
-                    Text(text = it)
+                    .padding(10.dp)
+            ) {
+                Divider(color = Color.Gray, thickness = .5.dp)
+                searchHistoryCollection.forEach { historyTextItem ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                enteredSearchText = TextFieldValue(historyTextItem)
+                            }
+                    ) {
+                        Text(
+                            text = historyTextItem,
+                            style = TextStyle(
+                                fontSize = 18.sp,
+                                color = SoftGray
+                            ),
+                            modifier = Modifier
+                                .padding(10.dp)
+                        )
+                    }
+                    Divider(color = Color.Gray, thickness = .5.dp)
                 }
             }
         }
     }
 }
+

@@ -109,7 +109,7 @@ fun BottomNavigationBar(
             startDestination = BottomNavigationRoute.SearchScreen.route
         ) {
             composable(BottomNavigationRoute.SearchScreen.route) {
-                SearchScreen(navController = navController)
+                SearchScreen(controller = navController)
             }
             composable(BottomNavigationRoute.TopNavigationBar.route) {
                 TopNavigationBar(navController = navController)

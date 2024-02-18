@@ -16,7 +16,7 @@ fun AppNavigation() {
     val appNavigationController = rememberNavController()
     NavHost(
         navController = appNavigationController,
-        startDestination = AppNavigationRoute.AuthorizationScreen.route)
+        startDestination = AppNavigationRoute.BottomAppNavigationBar.route)
     {
         composable(AppNavigationRoute.AuthorizationScreen.route){
             AuthorizationScreen(controller = appNavigationController)
