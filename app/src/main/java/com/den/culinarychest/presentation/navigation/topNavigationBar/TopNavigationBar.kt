@@ -12,7 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -29,13 +29,10 @@ import com.den.culinarychest.presentation.screens.FavoriteScreen
 fun TopNavigationBar(
     navController: NavController
 ) {
-
-    val stringResource = LocalContext.current.resources
-
     val topBarNavController = rememberNavController()
 
-    var favoriteSelected by remember { mutableStateOf(true)}
-    var createdSelected by remember { mutableStateOf(false)}
+    var favoriteSelected by remember { mutableStateOf(true) }
+    var createdSelected by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
             Row(
@@ -46,16 +43,16 @@ fun TopNavigationBar(
             ) {
                 TopBarButtonItem(
                     isSelected = favoriteSelected,
-                    textButton = stringResource.getString(R.string.favorite_text),
+                    textButton = stringResource(R.string.favorite_text),
                     topBarNavController = topBarNavController,
                     buttonNavigation = TopNavigationRoute.FavoriteScreen.route
-                ){
+                ) {
                     favoriteSelected = it
                     createdSelected = !it
                 }
                 TopBarButtonItem(
                     isSelected = createdSelected,
-                    textButton = stringResource.getString(R.string.created_recipe_text),
+                    textButton = stringResource(R.string.created_recipe_text),
                     topBarNavController = topBarNavController,
                     buttonNavigation = TopNavigationRoute.CreatedScreen.route
                 ) {
@@ -70,12 +67,11 @@ fun TopNavigationBar(
             startDestination = TopNavigationRoute.FavoriteScreen.route
         ) {
             composable(TopNavigationRoute.FavoriteScreen.route) {
-                FavoriteScreen()
+                FavoriteScreen(navController = navController)
             }
             composable(TopNavigationRoute.CreatedScreen.route) {
                 CreatedScreen(navController = navController)
             }
         }
-
     }
 }

@@ -32,10 +32,10 @@ import com.den.culinarychest.presentation.ui.theme.SoftPink
 
 @Composable
 fun RegistrationScreen(
-    controller: NavController
+    navController: NavController
 ) {
     Registration(
-        controller = controller
+        controller = navController
     )
 }
 

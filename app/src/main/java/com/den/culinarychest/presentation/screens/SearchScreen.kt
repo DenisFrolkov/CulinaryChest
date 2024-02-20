@@ -53,7 +53,7 @@ fun Search(
             item {
                 Spacer(modifier = Modifier.height(62.dp))
             }
-            items(10) { item ->
+            items(10) {
                 RecipeItem(controller = controller)
             }
         }

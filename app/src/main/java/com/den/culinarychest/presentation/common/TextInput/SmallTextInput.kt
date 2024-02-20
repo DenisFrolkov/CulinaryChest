@@ -95,7 +95,7 @@ fun SmallTextInput(
                 modifier = Modifier.align(Alignment.CenterEnd)
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.mistake_icon),
+                    painter = painterResource(id = R.drawable.red_mistake_icon),
                     contentDescription = null,
                     tint = Color.Red,
                     modifier = Modifier

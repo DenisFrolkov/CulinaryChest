@@ -19,10 +19,10 @@ fun AppNavigation() {
         startDestination = AppNavigationRoute.BottomAppNavigationBar.route)
     {
         composable(AppNavigationRoute.AuthorizationScreen.route){
-            AuthorizationScreen(controller = appNavigationController)
+            AuthorizationScreen(navController = appNavigationController)
         }
         composable(AppNavigationRoute.RegistrationScreen.route){
-            RegistrationScreen(controller = appNavigationController)
+            RegistrationScreen(navController = appNavigationController)
         }
         composable(AppNavigationRoute.BottomAppNavigationBar.route){
             BottomNavigationBar(navController = appNavigationController)

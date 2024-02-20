@@ -117,7 +117,7 @@ fun Recipe(
                 )
                 Row() {
                     DisplayRecipeInfo(
-                        iconRecipeInfo = painterResource(id = R.drawable.star),
+                        iconRecipeInfo = painterResource(id = R.drawable.recipe_info_star_icon),
                         sizeRecipeInfoIcon = 24,
                         textRecipeInfo = "4.5",
 //                        paddingStart = 18,
@@ -127,7 +127,7 @@ fun Recipe(
                         textFontSize = 14
                     )
                     DisplayRecipeInfo(
-                        iconRecipeInfo = painterResource(id = R.drawable.time),
+                        iconRecipeInfo = painterResource(id = R.drawable.recipe_info_time_icon),
                         sizeRecipeInfoIcon = 24,
                         textRecipeInfo = "30 мин",
 //                        paddingStart = 10,
@@ -143,7 +143,7 @@ fun Recipe(
                         horizontalArrangement = Arrangement.End
                     ) {
                         DisplayRecipeInfo(
-                            iconRecipeInfo = painterResource(id = R.drawable.calendar),
+                            iconRecipeInfo = painterResource(id = R.drawable.recipe_info_calendar_icon),
                             sizeRecipeInfoIcon = 24,
                             textRecipeInfo = "23.10.2020",
 //                            paddingStart = 0,

@@ -29,7 +29,6 @@ fun PushButton(
     onButtonClick: (Boolean) -> Unit,
     fieldValidityCheck: Boolean
 ) {
-
     Box(
         modifier = Modifier
             .background(color = SoftOrange, shape = RoundedCornerShape(12.dp))

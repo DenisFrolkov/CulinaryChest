@@ -39,14 +39,14 @@ import com.den.culinarychest.presentation.ui.theme.SoftOrange
 fun SearchBarItem(
     onTextChanged: (String) -> Unit,
 ) {
-
     var enteredSearchText by remember { mutableStateOf(TextFieldValue()) }
     var isHintVisible by remember { mutableStateOf(true) }
     var isHistoryVisible by remember { mutableStateOf(false) }
 
     val searchHistoryCollection = mutableListOf(
-        "12",
-        "123"
+        "Блюдо 1",
+        "Блюдо 2",
+        "Блюдо 3"
     )
 
     LaunchedEffect(enteredSearchText) {
@@ -60,7 +60,7 @@ fun SearchBarItem(
                 .background(
                     color = SoftOrange,
                     shape =
-                    if ( isHistoryVisible ) {
+                    if (isHistoryVisible) {
                         RoundedCornerShape(topStart = 14.dp, topEnd = 14.dp)
                     } else RoundedCornerShape(14.dp)
                 )
@@ -68,7 +68,7 @@ fun SearchBarItem(
                     width = 0.1.dp,
                     color = SoftGray,
                     shape =
-                    if ( isHistoryVisible ) {
+                    if (isHistoryVisible) {
                         RoundedCornerShape(topStart = 14.dp, topEnd = 14.dp)
                     } else RoundedCornerShape(14.dp)
                 )
@@ -78,7 +78,7 @@ fun SearchBarItem(
                 value = enteredSearchText,
                 onValueChange = {
                     enteredSearchText = it
-                    isHintVisible = it.text.isEmpty()
+                    isHintVisible = it.text.isBlank()
                 },
                 textStyle = TextStyle(
                     fontSize = 18.sp,
@@ -98,7 +98,7 @@ fun SearchBarItem(
                     .align(Alignment.CenterStart)
                     .padding(end = 40.dp)
             )
-            if (isHintVisible) {
+            if (enteredSearchText.text.isEmpty()) {
                 Text(
                     text = stringResource(id = R.string.search_text),
                     style = TextStyle(
@@ -112,22 +112,18 @@ fun SearchBarItem(
             }
             if (enteredSearchText.text.isEmpty()) {
                 Icon(
-                    painter = painterResource(id = R.drawable.seacr_icon),
+                    painter = painterResource(id = R.drawable.search_searchbar_icon),
                     contentDescription = null,
                     tint = Color.Black,
                     modifier = Modifier
                         .padding(end = 12.dp)
                         .size(20.dp)
                         .align(Alignment.CenterEnd)
-                        .clickable {
-                            enteredSearchText = TextFieldValue("")
-                            isHintVisible = true
-                        }
                 )
             }
             if (enteredSearchText.text.isNotEmpty()) {
                 Icon(
-                    painter = painterResource(id = R.drawable.clear_icon),
+                    painter = painterResource(id = R.drawable.clear_searchbar_icon),
                     contentDescription = null,
                     tint = Color.Black,
                     modifier = Modifier
@@ -135,7 +131,7 @@ fun SearchBarItem(
                         .size(18.dp)
                         .align(Alignment.CenterEnd)
                         .clickable {
-                            enteredSearchText = TextFieldValue("")
+                            enteredSearchText = TextFieldValue()
                             isHintVisible = true
                         }
                 )
@@ -178,4 +174,3 @@ fun SearchBarItem(
         }
     }
 }
-

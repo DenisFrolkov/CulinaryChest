@@ -126,7 +126,7 @@ fun TopBar(navController: NavController) {
 @Composable
 fun AddRecipePhoto() {
     Image(
-        painter = painterResource(id = R.drawable.add_recipe_photo),
+        painter = painterResource(id = R.drawable.add_recipe_image),
         contentDescription = null,
         contentScale = ContentScale.FillWidth,
         modifier = Modifier
@@ -200,7 +200,7 @@ fun DescribeSteps(
         )
         Box(modifier = Modifier.padding(end = 10.dp)) {
             Icon(
-                painter = painterResource(id = R.drawable.add_button_icon),
+                painter = painterResource(id = R.drawable.add_step_button_icon),
                 contentDescription = null,
                 tint = SoftGray,
                 modifier = Modifier

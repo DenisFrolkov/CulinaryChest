@@ -96,7 +96,7 @@ fun TextInput(
         }
         if (enteredText.text.isNotEmpty()) {
             Icon(
-                painter = painterResource(id = R.drawable.clear_icon),
+                painter = painterResource(id = R.drawable.clear_searchbar_icon),
                 contentDescription = null,
                 tint = Black,
                 modifier = Modifier
@@ -117,7 +117,7 @@ fun TextInput(
             modifier = Modifier.padding(start = 6.dp, top = 6.dp)
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.mistake_icon),
+                painter = painterResource(id = R.drawable.red_mistake_icon),
                 contentDescription = null,
                 tint = Red,
                 modifier = Modifier.size(16.dp)

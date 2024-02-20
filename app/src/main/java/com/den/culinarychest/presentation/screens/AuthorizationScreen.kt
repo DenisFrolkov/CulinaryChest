@@ -33,10 +33,10 @@ import com.den.culinarychest.presentation.ui.theme.SoftPink
 
 @Composable
 fun AuthorizationScreen(
-    controller: NavController
+    navController: NavController
 ) {
 
-    Authorization(controller = controller)
+    Authorization(controller = navController)
 }
 
 

@@ -44,7 +44,7 @@ fun RecipeItem(
     ) {
         Row {
             Image(
-                painter = painterResource(id = R.drawable.image),
+                painter = painterResource(id = R.drawable.recipe_space_image),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
@@ -75,14 +75,14 @@ fun RecipeItem(
             modifier = Modifier.padding(start = 23.dp, top = 6.dp, end = 8.dp, bottom = 4.dp)
         ) {
             DisplayRecipeInfo(
-                iconRecipeInfo = painterResource(id = R.drawable.star),
+                iconRecipeInfo = painterResource(id = R.drawable.recipe_info_star_icon),
                 sizeRecipeInfoIcon = 16,
                 textRecipeInfo = "4.5",
                 textFontSize = 10
             )
             Spacer(modifier = Modifier.width(8.dp))
             DisplayRecipeInfo(
-                iconRecipeInfo = painterResource(id = R.drawable.time),
+                iconRecipeInfo = painterResource(id = R.drawable.recipe_info_time_icon),
                 sizeRecipeInfoIcon = 16,
                 textRecipeInfo = "30 мин",
                 textFontSize = 10
@@ -93,7 +93,7 @@ fun RecipeItem(
                     .fillMaxWidth()
             ) {
                 DisplayRecipeInfo(
-                    iconRecipeInfo = painterResource(id = R.drawable.calendar),
+                    iconRecipeInfo = painterResource(id = R.drawable.recipe_info_calendar_icon),
                     sizeRecipeInfoIcon = 16,
                     textRecipeInfo = "23.10.2020",
                     textFontSize = 10

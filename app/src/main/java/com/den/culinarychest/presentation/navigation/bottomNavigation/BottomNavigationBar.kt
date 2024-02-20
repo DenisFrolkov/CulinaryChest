@@ -25,7 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.navigation.topNavigationBar.TopNavigationBar
 import com.den.culinarychest.presentation.route.BottomNavigationRoute
@@ -40,20 +40,17 @@ import com.den.culinarychest.presentation.сlasses.data_class.BottomNavigationIt
 fun BottomNavigationBar(
     navController: NavController
 ) {
-
-    val stringResource = LocalContext.current.resources
-
-    val bottomNavController = rememberNavController()
+    val bottomController = rememberNavController()
 
     val bottomNavigationItems = listOf(
         BottomNavigationItem(
-            BottomNavigationRoute.SearchScreen.route, R.drawable.search_icon, stringResource.getString(R.string.search_text)
+            BottomNavigationRoute.SearchScreen.route, R.drawable.bottombnavigation_search_icon, stringResource(R.string.search_text)
         ),
         BottomNavigationItem(
-            BottomNavigationRoute.TopNavigationBar.route, R.drawable.favorites_icon, stringResource.getString(R.string.favorite_text)
+            BottomNavigationRoute.TopNavigationBar.route, R.drawable.bottombnavigation_favorites_icon, stringResource(R.string.favorite_text)
         ),
         BottomNavigationItem(
-            BottomNavigationRoute.ProfileScreen.route, R.drawable.profile_icon, stringResource.getString(R.string.profile_text)
+            BottomNavigationRoute.ProfileScreen.route, R.drawable.bottombnavigation_profile_icon, stringResource(R.string.profile_text)
         ),
     )
 
@@ -80,20 +77,20 @@ fun BottomNavigationBar(
                         .fillMaxWidth()
                         .background(color = SoftOrange)
                 ) {
-                    bottomNavigationItems.forEachIndexed { index, item ->
+                    bottomNavigationItems.forEachIndexed { bottomNavigationIndex, bottomNavigationItem ->
                         NavigationBarItem(
-                            selected = selectedItemIndex == index,
+                            selected = selectedItemIndex == bottomNavigationIndex,
                             onClick = {
-                                selectedItemIndex = index
-                                bottomNavController.navigate(item.route)
+                                selectedItemIndex = bottomNavigationIndex
+                                bottomController.navigate(bottomNavigationItem.route)
                             },
                             colors = NavigationBarItemDefaults.colors(
                                 indicatorColor = SoftOrange,
                             ),
                             icon = {
                                 Icon(
-                                    modifier = Modifier.size(if (index == selectedItemIndex) 36.dp else 30.dp),
-                                    painter = painterResource(id = item.icon),
+                                    modifier = Modifier.size(if (bottomNavigationIndex == selectedItemIndex) 36.dp else 30.dp),
+                                    painter = painterResource(id = bottomNavigationItem.icon),
                                     contentDescription = null,
                                     tint = SoftGray
                                 )
@@ -105,8 +102,8 @@ fun BottomNavigationBar(
         },
     ) {
         NavHost(
-            navController = bottomNavController,
-            startDestination = BottomNavigationRoute.SearchScreen.route
+            navController = bottomController,
+            startDestination = BottomNavigationRoute.TopNavigationBar.route
         ) {
             composable(BottomNavigationRoute.SearchScreen.route) {
                 SearchScreen(controller = navController)

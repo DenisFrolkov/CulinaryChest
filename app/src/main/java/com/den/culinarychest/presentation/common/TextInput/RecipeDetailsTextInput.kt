@@ -89,7 +89,7 @@ fun RecipeDetailsTextInput(
         }
         if (enteredText.text.isNotEmpty()) {
             Icon(
-                painter = painterResource(id = R.drawable.clear_icon),
+                painter = painterResource(id = R.drawable.clear_searchbar_icon),
                 contentDescription = null,
                 tint = Color.Black,
                 modifier = Modifier
@@ -110,7 +110,7 @@ fun RecipeDetailsTextInput(
             modifier = Modifier.padding(start = 6.dp, top = 6.dp)
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.mistake_icon),
+                painter = painterResource(id = R.drawable.red_mistake_icon),
                 contentDescription = null,
                 tint = Color.Red,
                 modifier = Modifier.size(16.dp)
