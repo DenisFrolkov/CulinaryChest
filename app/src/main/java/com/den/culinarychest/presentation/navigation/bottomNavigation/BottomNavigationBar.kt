@@ -27,7 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.stringResource
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.navigation.topNavigationBar.TopNavigationBar
+import com.den.culinarychest.presentation.screens.HorizontalPagerScreen
 import com.den.culinarychest.presentation.route.BottomNavigationRoute
 import com.den.culinarychest.presentation.screens.ProfileScreen
 import com.den.culinarychest.presentation.screens.SearchScreen
@@ -109,7 +109,7 @@ fun BottomNavigationBar(
                 SearchScreen(controller = navController)
             }
             composable(BottomNavigationRoute.TopNavigationBar.route) {
-                TopNavigationBar(navController = navController)
+                HorizontalPagerScreen(navController = navController)
             }
             composable(BottomNavigationRoute.ProfileScreen.route) {
                 ProfileScreen()
