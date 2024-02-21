@@ -25,7 +25,7 @@ fun ProfileStatisticsItem(
             text = textStatistic,
             style = TextStyle(
                 color = SoftGray,
-                fontSize = 12.sp
+                fontSize = 14.sp
             )
         )
         Spacer(modifier = Modifier.height(6.dp))
@@ -33,7 +33,7 @@ fun ProfileStatisticsItem(
             text = numberStatistic,
             style = TextStyle(
                 color = SoftGray,
-                fontSize = 14.sp
+                fontSize = 16.sp
             ),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)

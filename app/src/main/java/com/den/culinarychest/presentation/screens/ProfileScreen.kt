@@ -16,11 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.Item.ProfileStatisticsItem
 import com.den.culinarychest.presentation.common.Button.SettingButton
@@ -28,12 +28,10 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 
-@Preview
 @Composable
-fun ProfileScreen() {
-
-    val stringResource = LocalContext.current.resources
-
+fun ProfileScreen(
+    navController: NavController
+) {
     Column {
         Column(
             modifier = Modifier
@@ -68,14 +66,14 @@ fun ProfileScreen() {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 18.dp, top = 12.dp, end = 18.dp, bottom = 8.dp)
+                        .padding(top = 12.dp, bottom = 8.dp).padding(horizontal = 18.dp)
                 ) {
                     ProfileStatisticsItem(
-                        textStatistic = stringResource.getString(R.string.favorite_recipe_text),
+                        textStatistic = stringResource(R.string.favorite_recipe_text),
                         numberStatistic = "12"
                     )
                     ProfileStatisticsItem(
-                        textStatistic = stringResource.getString(R.string.created_recipe_text),
+                        textStatistic = stringResource(R.string.created_recipe_text),
                         numberStatistic = "3"
                     )
                 }
@@ -89,15 +87,16 @@ fun ProfileScreen() {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(horizontal = 88.dp)
             ) {
                 SettingButton(
                     borderColor = SoftGray,
-                    textButton = stringResource.getString(R.string.edit_text),
+                    textButton = stringResource(R.string.edit_text),
                     textColor = SoftGray
                 )
                 SettingButton(
                     borderColor = Color.Red,
-                    textButton = stringResource.getString(R.string.exit_text),
+                    textButton = stringResource(R.string.exit_text),
                     textColor = Color.Red
                 )
             }

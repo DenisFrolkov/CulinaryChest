@@ -26,20 +26,19 @@ fun SettingButton(
 ) {
     Spacer(modifier = Modifier.height(16.dp))
     Box(
+        contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 88.dp)
-            .height(height = 40.dp)
             .background(color = SoftOrange, shape = RoundedCornerShape(12.dp))
             .border(width = 0.5.dp, color = borderColor, shape = RoundedCornerShape(12.dp)),
-        contentAlignment = Alignment.Center
     ) {
         Text(
             text = textButton,
             style = TextStyle(
-                fontSize = 14.sp,
+                fontSize = 16.sp,
                 color = textColor
-            )
+            ),
+            modifier = Modifier.padding(vertical = 12.dp)
         )
     }
 }

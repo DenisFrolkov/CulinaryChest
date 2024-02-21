@@ -18,7 +18,7 @@ import com.den.culinarychest.presentation.ui.theme.SoftPink
 
 @Composable
 fun FavoriteScreen(
-    navController: NavController
+    controller: NavController
 ) {
     Box(
         modifier = Modifier

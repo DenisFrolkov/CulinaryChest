@@ -18,13 +18,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.den.culinarychest.presentation.common.Item.RecipeItem
 import com.den.culinarychest.presentation.common.Item.SearchBarItem
+import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 
 @Composable
 fun SearchScreen(
-    controller: NavController
+    navController: NavController
 ) {
-    Search(controller = controller)
+    Search(controller = navController)
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -54,7 +55,10 @@ fun Search(
                 Spacer(modifier = Modifier.height(62.dp))
             }
             items(10) {
-                RecipeItem(controller = controller)
+                RecipeItem(
+                    controller = controller,
+                    textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route
+                )
             }
         }
     }

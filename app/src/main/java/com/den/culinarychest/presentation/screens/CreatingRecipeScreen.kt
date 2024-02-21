@@ -56,12 +56,12 @@ fun CreatingRecipe(
     navController: NavController
 ) {
 
-    var titleText by remember { mutableStateOf("") }
-    var ingredientsText by remember { mutableStateOf("") }
-    var timeText by remember { mutableStateOf("") }
-    var stepRecipeText by remember { mutableStateOf("") }
+    var textTitle by remember { mutableStateOf("") }
+    var textIngredient by remember { mutableStateOf("") }
+    var textTime by remember { mutableStateOf("") }
+    var textRecipeStep by remember { mutableStateOf("") }
 
-    var count by remember { mutableIntStateOf(3) }
+    var countRecipeSteps by remember { mutableIntStateOf(1) }
 
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -73,32 +73,34 @@ fun CreatingRecipe(
             TopBar(navController = navController)
             AddRecipePhoto()
             RecipeInputs(
-                onTitleTextChanged = { titleText = it },
-                onIngredientsTextChanged = { ingredientsText = it },
-                onTimeTextChanged = { timeText = it }
+                onTitleTextChanged = { textTitle = it },
+                onIngredientsTextChanged = { textIngredient = it },
+                onTimeTextChanged = { textTime = it }
             )
-            DescribeSteps(
-                count = count,
-                onCountChange = { newCount -> count = newCount }
+            DescribeStepsRecipe(
+                count = countRecipeSteps,
+                onCountChange = { newCount -> countRecipeSteps = newCount }
             )
         }
-        items(count) { index ->
-            val itemNumber = index + 1
+        items(countRecipeSteps) { recipeStepIndex ->
+            val itemNumber = recipeStepIndex + 1
             Spacer(modifier = Modifier.height(height = 10.dp))
             Column(
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
                 NumberTextInput(
                     outputTextHint = "$itemNumber.",
-                    onTextChanged = { stepRecipeText = it },
+                    onTextChanged = { textRecipeStep = it },
                     onTextValidation = { it.matches(Regex("[а-яА-Я0-9]+")) })
             }
         }
         item {
             Box(
-                modifier = Modifier.padding(top = 24.dp, bottom = 16.dp)
+                modifier = Modifier
+                    .padding(top = 24.dp, bottom = 16.dp)
+                    .padding(horizontal = 80.dp)
             ) {
-                SaveButton()
+                SaveRecipeButton()
             }
         }
     }
@@ -180,7 +182,7 @@ fun RecipeInputs(
 }
 
 @Composable
-fun DescribeSteps(
+fun DescribeStepsRecipe(
     count: Int,
     onCountChange: (Int) -> Unit
 ) {
@@ -198,7 +200,10 @@ fun DescribeSteps(
                 .padding(vertical = 10.dp)
                 .padding(end = 4.dp)
         )
-        Box(modifier = Modifier.padding(end = 10.dp)) {
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 28.dp)
+        ) {
             Icon(
                 painter = painterResource(id = R.drawable.add_step_button_icon),
                 contentDescription = null,
@@ -212,21 +217,23 @@ fun DescribeSteps(
 }
 
 @Composable
-fun SaveButton() {
+fun SaveRecipeButton() {
     Box(
         modifier = Modifier
+            .fillMaxWidth()
             .background(color = SoftOrange, shape = RoundedCornerShape(12.dp))
             .border(width = 0.1.dp, color = SoftGray, shape = RoundedCornerShape(12.dp))
             .clip(shape = RoundedCornerShape(12.dp))
-            .clickable { }
+            .clickable { },
+        contentAlignment = Alignment.Center
     ) {
         Text(
             text = stringResource(id = R.string.save_recipe_text),
             style = TextStyle(
-                fontSize = 14.sp,
+                fontSize = 16.sp,
                 color = SoftGray
             ),
-            modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp)
+            modifier = Modifier.padding(vertical = 16.dp)
         )
     }
 }

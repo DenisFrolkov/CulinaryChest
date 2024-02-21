@@ -26,18 +26,18 @@ import androidx.navigation.NavController
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.route.AppNavigationRoute
 
 @Composable
 fun RecipeItem(
     controller: NavController,
+    textRouteNavigation: String
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 16.dp)
             .clickable {
-                controller.navigate(AppNavigationRoute.RecipeScreen.route)
+                controller.navigate(textRouteNavigation)
             }
             .border(width = .15.dp, color = SoftGray, shape = RoundedCornerShape(12.dp))
             .background(SoftOrange, RoundedCornerShape(12.dp))
@@ -76,16 +76,16 @@ fun RecipeItem(
         ) {
             DisplayRecipeInfo(
                 iconRecipeInfo = painterResource(id = R.drawable.recipe_info_star_icon),
-                sizeRecipeInfoIcon = 16,
+                sizeRecipeInfoIcon = 20,
                 textRecipeInfo = "4.5",
-                textFontSize = 10
+                textFontSize = 12
             )
             Spacer(modifier = Modifier.width(8.dp))
             DisplayRecipeInfo(
                 iconRecipeInfo = painterResource(id = R.drawable.recipe_info_time_icon),
-                sizeRecipeInfoIcon = 16,
+                sizeRecipeInfoIcon = 20,
                 textRecipeInfo = "30 мин",
-                textFontSize = 10
+                textFontSize = 12
             )
             Box(
                 contentAlignment = Alignment.CenterEnd,

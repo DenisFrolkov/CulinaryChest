@@ -63,10 +63,10 @@ fun HorizontalPager(
             }
         }
     ) {
-        HorizontalPager(state = pagerState) { pageCount ->
-            when ( pageCount ) {
-                0 -> FavoriteScreen(navController = controller)
-                1 -> CreatedScreen(navController = controller)
+        HorizontalPager(state = pagerState) { page ->
+            when (page) {
+                0 -> FavoriteScreen(controller = controller)
+                1 -> CreatedScreen(controller = controller)
             }
         }
     }

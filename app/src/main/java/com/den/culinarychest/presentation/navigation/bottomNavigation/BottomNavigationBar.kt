@@ -103,16 +103,16 @@ fun BottomNavigationBar(
     ) {
         NavHost(
             navController = bottomController,
-            startDestination = BottomNavigationRoute.TopNavigationBar.route
+            startDestination = BottomNavigationRoute.SearchScreen.route
         ) {
             composable(BottomNavigationRoute.SearchScreen.route) {
-                SearchScreen(controller = navController)
+                SearchScreen(navController = navController)
             }
             composable(BottomNavigationRoute.TopNavigationBar.route) {
                 HorizontalPagerScreen(navController = navController)
             }
             composable(BottomNavigationRoute.ProfileScreen.route) {
-                ProfileScreen()
+                ProfileScreen(navController = navController)
             }
         }
     }

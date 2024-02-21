@@ -12,11 +12,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.den.culinarychest.presentation.common.Item.FAB
 import com.den.culinarychest.presentation.common.Item.RecipeItem
+import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 
 @Composable
 fun CreatedScreen(
-    navController: NavController
+    controller: NavController
 ) {
     Box(
         modifier = Modifier
@@ -29,12 +30,15 @@ fun CreatedScreen(
                 .fillMaxSize()
                 .padding(end = 16.dp, bottom = 66.dp)
         ) {
-            FAB(navController = navController)
+            FAB(navController = controller)
         }
         Column(
-            modifier = Modifier.padding(top = 82.dp)
+            modifier = Modifier.padding(top = 82.dp).padding(horizontal = 16.dp)
         ) {
-            RecipeItem( controller = navController )
+            RecipeItem(
+                controller = controller,
+                textRouteNavigation = AppNavigationRoute.FetchUserRecipeScreen.route
+            )
         }
     }
 }

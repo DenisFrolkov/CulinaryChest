@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,7 +32,7 @@ fun StepRecipeItem(
             modifier = Modifier.padding(all = 6.dp),
             text = "$numberStep.",
             style = TextStyle(
-                fontSize = 12.sp,
+                fontSize = 16.sp,
                 color = SoftGray
             )
         )
@@ -41,7 +42,7 @@ fun StepRecipeItem(
             text = textStep,
             style = TextStyle(
                 fontSize = 16.sp,
-                color = SoftGray
+                color = Color.Black
             )
         )
     }
