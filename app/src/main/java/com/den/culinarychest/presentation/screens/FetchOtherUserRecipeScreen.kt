@@ -93,7 +93,7 @@ fun FetchOtherUserRecipeTopBar(
             .fillMaxWidth()
             .background(color = SoftOrange)
             .border(width = 0.1.dp, color = SoftGray)
-            .padding(horizontal = 16.dp, vertical = 14.dp)
+            .padding(horizontal = 20.dp, vertical = 14.dp)
     ) {
         Image(
             painter = painterResource(id = R.drawable.back_icon),

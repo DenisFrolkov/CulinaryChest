@@ -7,6 +7,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +23,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -38,6 +41,7 @@ import androidx.navigation.NavController
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.Item.DisplayRecipeInfo
 import com.den.culinarychest.presentation.common.Item.StepRecipeItem
+import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
@@ -53,6 +57,7 @@ fun FetchUserRecipeScreen(
 fun FetchUserRecipe(
     controller: NavController
 ) {
+
     val recipeIngredients = """
         Макароны – 100 г, Крабовые палочки – 100 г, Чеснок – 1 зубчик, Масло сливочное – 10 г, Сыр твёрдый – 10 г, Сметана – 2 ст. ложки, Мука – 1/4 ч. ложки, Травы прованские сушеные – 1/2 ч. ложки, Соль – по вкусу, Перец чёрный молотый – по вкусу;
     """.trimIndent()
@@ -61,9 +66,19 @@ fun FetchUserRecipe(
         "Начинаем с приготовления макарон. В небольшую кастрюлю наливаем воду, добавляем 1 щепотку соли, доводим до кипения. Опускаем макароны в кипящую воду, перемешиваем и варим, периодически помешивая, примерно 8-10 минут или согласно инструкции на упаковке, до мягкости. Отваренные макароны откидываем на дуршлаг, даём стечь лишней жидкости.",
         "С крабовых палочек снимаем упаковку. Нарезаем крабовые палочки кружочками. Чеснок очищаем и нарезаем мелкими кусочками."
     )
+
+    val dropDownMenuItems = arrayOf(
+        "Редактировать",
+        "Удалить"
+    )
+
+    var mappingDropdownMenu by remember { mutableStateOf(false) }
+
     Column {
         FetchUserRecipeTopBar(
             controller = controller,
+            mappingDropdownMenu = mappingDropdownMenu,
+            onClickParametersIcon = { newValue -> mappingDropdownMenu = newValue }
         )
         LazyColumn(
             modifier = Modifier
@@ -79,12 +94,38 @@ fun FetchUserRecipe(
             }
         }
     }
+    if (mappingDropdownMenu) {
+        Box(
+            contentAlignment = Alignment.TopEnd,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 52.dp)
+        ) {
+            RecipeDropDownMenu(
+                dropDownMenuItems = dropDownMenuItems,
+                onClickParameters = { newValueParameters -> mappingDropdownMenu = newValueParameters },
+                onItemClick = { selectedItem ->
+                    when (selectedItem) {
+                        "Редактировать" -> {
+                            controller.navigate(AppNavigationRoute.CreatingRecipeScreen.route)
+                        }
+
+                        "Удалить" -> {
+                            controller.popBackStack()
+                        }
+                    }
+                }
+            )
+        }
+    }
 }
 
 @SuppressLint("UnrememberedMutableInteractionSource")
 @Composable
 fun FetchUserRecipeTopBar(
     controller: NavController,
+    mappingDropdownMenu: Boolean,
+    onClickParametersIcon: (Boolean) -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -110,17 +151,20 @@ fun FetchUserRecipeTopBar(
             modifier = Modifier
                 .size(24.dp)
                 .clickable(
-                    interactionSource = MutableInteractionSource(),
+                    interactionSource = remember { MutableInteractionSource() },
                     indication = null
-                ) {  },
+                ) {
+                    onClickParametersIcon(!mappingDropdownMenu)
+                },
             painter = painterResource(id = R.drawable.recipe_paraments_icon),
             contentDescription = null
         )
     }
 }
 
+
 @Composable
-fun FetchUserRecipeImage(  ) {
+fun FetchUserRecipeImage() {
     Image(
         modifier = Modifier
             .fillMaxWidth()
@@ -134,7 +178,7 @@ fun FetchUserRecipeImage(  ) {
 
 @Composable
 fun FetchUserRecipeMiniInformation(
-    
+
 ) {
     Row(
         modifier = Modifier
@@ -239,5 +283,37 @@ fun FetchUserRecipeSteps(
             numberStep = "$elementNumber",
             textStep = recipeSteps[number]
         )
+    }
+}
+
+@Composable
+fun RecipeDropDownMenu(
+    dropDownMenuItems: Array<String>,
+    onClickParameters: (Boolean) -> Unit,
+    onItemClick: (String) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .background(color = Color.White, shape = RoundedCornerShape(bottomStart = 12.dp))
+    ) {
+        dropDownMenuItems.forEach { dropDownMenuItem ->
+            Text(
+                text = dropDownMenuItem,
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    color = Color.Black
+                ),
+                modifier = Modifier
+                    .clickable(
+                        interactionSource = MutableInteractionSource(),
+                        indication = null
+                    ) {
+                        onClickParameters(false)
+                        onItemClick(dropDownMenuItem)
+                    }
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
+        }
     }
 }

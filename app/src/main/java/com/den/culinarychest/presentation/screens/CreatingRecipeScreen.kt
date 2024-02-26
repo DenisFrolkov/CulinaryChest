@@ -1,9 +1,11 @@
 package com.den.culinarychest.presentation.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -106,6 +108,7 @@ fun CreatingRecipe(
     }
 }
 
+@SuppressLint("UnrememberedMutableInteractionSource")
 @Composable
 fun TopBar(navController: NavController) {
     Row(
@@ -113,14 +116,19 @@ fun TopBar(navController: NavController) {
             .fillMaxWidth()
             .background(color = SoftOrange)
             .border(width = 0.1.dp, color = SoftGray)
-            .padding(horizontal = 12.dp, vertical = 14.dp)
+            .padding(horizontal = 20.dp, vertical = 14.dp)
     ) {
         Image(
             painter = painterResource(id = R.drawable.back_icon),
             contentDescription = null,
             modifier = Modifier
                 .size(24.dp)
-                .clickable { navController.popBackStack() }
+                .clickable(
+                    interactionSource = MutableInteractionSource(),
+                    indication = null
+                ) {
+                    navController.popBackStack()
+                }
         )
     }
 }

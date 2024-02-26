@@ -8,6 +8,7 @@ import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.navigation.bottomNavigation.BottomNavigationBar
 import com.den.culinarychest.presentation.screens.AuthorizationScreen
 import com.den.culinarychest.presentation.screens.CreatingRecipeScreen
+import com.den.culinarychest.presentation.screens.EditRecipeScreen
 import com.den.culinarychest.presentation.screens.FetchOtherUserRecipeScreen
 import com.den.culinarychest.presentation.screens.FetchUserRecipeScreen
 import com.den.culinarychest.presentation.screens.RegistrationScreen
@@ -17,7 +18,7 @@ fun AppNavigation() {
     val appNavigationController = rememberNavController()
     NavHost(
         navController = appNavigationController,
-        startDestination = AppNavigationRoute.FetchUserRecipeScreen.route)
+        startDestination = AppNavigationRoute.EditRecipeScreen.route)
     {
         composable(AppNavigationRoute.AuthorizationScreen.route){
             AuthorizationScreen(navController = appNavigationController)
@@ -33,6 +34,9 @@ fun AppNavigation() {
         }
         composable(AppNavigationRoute.FetchUserRecipeScreen.route){
             FetchUserRecipeScreen(navController = appNavigationController)
+        }
+        composable(AppNavigationRoute.EditRecipeScreen.route){
+            EditRecipeScreen(navController = appNavigationController)
         }
         composable(AppNavigationRoute.CreatingRecipeScreen.route){
             CreatingRecipeScreen(navController = appNavigationController)

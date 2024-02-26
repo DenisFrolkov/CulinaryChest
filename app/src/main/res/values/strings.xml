@@ -30,4 +30,5 @@
     <string name="сreated_text">Созданное</string>
     <string name="profile_text">Профиль</string>
     <string name="nothing"> </string>
+    <string name="click_change_image">Нажмите что бы изменить изображение</string>
 </resources>
