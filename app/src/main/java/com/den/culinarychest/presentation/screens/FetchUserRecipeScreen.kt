@@ -248,8 +248,6 @@ fun FetchUserRecipeIngredient(
             )
         )
         Text(
-            modifier = Modifier
-                .padding(start = 14.dp, end = 6.dp, bottom = 6.dp),
             text = buildAnnotatedString {
                 withStyle(
                     style =
@@ -260,7 +258,9 @@ fun FetchUserRecipeIngredient(
                 ) {
                     append(recipeIngredients.replace(", ", "\n"))
                 }
-            }
+            },
+            modifier = Modifier
+                .padding(start = 14.dp, end = 6.dp, bottom = 6.dp)
         )
     }
 }
