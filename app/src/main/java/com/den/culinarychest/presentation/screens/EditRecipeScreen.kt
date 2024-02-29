@@ -9,18 +9,14 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -35,7 +31,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -50,6 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
+import com.den.culinarychest.presentation.common.Button.SaveButton
+import com.den.culinarychest.presentation.common.Item.StepRecipeItem
 import com.den.culinarychest.presentation.ui.theme.EditRecipeColor
 import com.den.culinarychest.presentation.ui.theme.LightGray
 import com.den.culinarychest.presentation.ui.theme.LightRed
@@ -109,7 +106,18 @@ fun EditRecipe(
                 Spacer(modifier = Modifier.height(12.dp))
                 EditRecipeIngredients(ingredientsRecipeText = recipeIngredients)
                 Spacer(modifier = Modifier.height(12.dp))
-                //                FetchUserRecipeSteps(recipeSteps = recipeSteps)
+                EditRecipeSteps(recipeStepsText = recipeSteps)
+                Box(
+                    modifier = Modifier
+                        .padding(top = 10.dp, bottom = 10.dp)
+                        .padding(horizontal = 80.dp)
+                ) {
+                    SaveButton(
+                        buttonText = stringResource(id = R.string.save_recipe_changes),
+                        colorButtonText = Color.Black,
+                        buttonColor = EditRecipeColor
+                    )
+                }
             }
         }
     }
@@ -317,7 +325,7 @@ fun EditRecipeIngredients(
     ingredientsRecipeText: String
 ) {
 
-    val MAX_LENGTH = 120
+    val MAX_LENGTH = 130
 
     val truncateText = if (ingredientsRecipeText.length > MAX_LENGTH) {
         ingredientsRecipeText.take(MAX_LENGTH) + "…"
@@ -356,7 +364,8 @@ fun EditRecipeIngredients(
                     }
                 },
                 modifier = Modifier
-                    .padding(horizontal = 18.dp).padding(bottom = 10.dp)
+                    .padding(horizontal = 18.dp)
+                    .padding(bottom = 10.dp)
             )
         }
         Box(
@@ -371,10 +380,101 @@ fun EditRecipeIngredients(
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
-                    .padding(horizontal = 10.dp, vertical = 76.dp)
+                    .padding(horizontal = 10.dp, vertical = 88.dp)
                     .align(Alignment.Center)
                     .size(36.dp)
             )
         }
     }
+}
+
+@Composable
+fun EditRecipeSteps(
+    recipeStepsText: Array<String>
+) {
+    Column {
+        Spacer(modifier = Modifier.height(height = 16.dp))
+        Text(
+            text = stringResource(id = R.string.preparation_steps_text),
+            style = TextStyle(
+                fontSize = 18.sp,
+                color = SoftGray
+            )
+        )
+        Spacer(modifier = Modifier.height(height = 8.dp))
+        repeat(recipeStepsText.size) { number ->
+            val elementNumber = number + 1
+            EditRecipeStepItem(
+                numberStep = "$elementNumber",
+                textStep = recipeStepsText[number]
+            )
+            Spacer(modifier = Modifier.height(height = 10.dp))
+        }
+    }
+}
+
+@Composable
+fun EditRecipeStepItem(
+    numberStep: String,
+    textStep: String
+) {
+    val MAX_LENGTH = 67
+
+    val truncateText = if (textStep.length > MAX_LENGTH) {
+        textStep.take(MAX_LENGTH) + "…"
+    } else {
+        textStep
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .alpha(0.7f)
+            .background(color = Color.White, shape = RoundedCornerShape(12.dp))
+            .clip(shape = RoundedCornerShape(12.dp)),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+        ) {
+            Text(
+                text = "$numberStep.",
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    color = SoftGray
+                ),
+                modifier = Modifier.padding(start = 5.dp, top = 5.dp)
+            )
+            Text(
+                text = truncateText,
+                style = TextStyle(
+                    fontSize = 15.sp,
+                    color = SoftGray,
+                ),
+                modifier = Modifier
+                    .padding(start = 14.dp, top = 8.dp, bottom = 6.dp)
+            )
+
+        }
+        Box(
+            modifier = Modifier
+                .background(color = EditRecipeColor)
+                .align(Alignment.CenterVertically)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.edit_recipe_icon),
+                contentDescription = null,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(horizontal = 10.dp, vertical = 20.dp)
+                    .size(36.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun EditRecipeMenu(modifier: Modifier = Modifier) {
+    
 }

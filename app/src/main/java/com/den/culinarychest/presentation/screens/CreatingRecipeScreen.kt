@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
+import com.den.culinarychest.presentation.common.Button.SaveButton
 import com.den.culinarychest.presentation.common.TextInput.SmallTextInput
 import com.den.culinarychest.presentation.common.TextInput.NumberTextInput
 import com.den.culinarychest.presentation.common.TextInput.RecipeDetailsTextInput
@@ -102,7 +103,11 @@ fun CreatingRecipe(
                     .padding(top = 24.dp, bottom = 16.dp)
                     .padding(horizontal = 80.dp)
             ) {
-                SaveRecipeButton()
+                SaveButton(
+                    buttonText = stringResource(id = R.string.save_recipe_text),
+                    colorButtonText = SoftGray,
+                    buttonColor = SoftOrange
+                )
             }
         }
     }
@@ -224,27 +229,7 @@ fun DescribeStepsRecipe(
     }
 }
 
-@Composable
-fun SaveRecipeButton() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = SoftOrange, shape = RoundedCornerShape(12.dp))
-            .border(width = 0.1.dp, color = SoftGray, shape = RoundedCornerShape(12.dp))
-            .clip(shape = RoundedCornerShape(12.dp))
-            .clickable { },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = stringResource(id = R.string.save_recipe_text),
-            style = TextStyle(
-                fontSize = 16.sp,
-                color = SoftGray
-            ),
-            modifier = Modifier.padding(vertical = 16.dp)
-        )
-    }
-}
+
 
 
 
