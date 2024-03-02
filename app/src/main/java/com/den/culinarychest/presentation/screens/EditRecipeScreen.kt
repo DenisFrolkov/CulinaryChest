@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,10 +45,10 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.Button.SaveButton
-import com.den.culinarychest.presentation.common.Item.StepRecipeItem
 import com.den.culinarychest.presentation.ui.theme.EditRecipeColor
 import com.den.culinarychest.presentation.ui.theme.LightGray
 import com.den.culinarychest.presentation.ui.theme.LightRed
@@ -68,19 +70,9 @@ fun EditRecipeScreen(
 fun EditRecipe(
 //    controller: NavController
 ) {
-
-    val recipeTitle = "Макароны с крабовыми палочками, сметаной и чесноком"
-
-    val recipeIngredients = """
-        Макароны – 100 г, Крабовые палочки – 100 г, Чеснок – 1 зубчик, Масло сливочное – 10 г, Сыр твёрдый – 10 г, Сметана – 2 ст. ложки, Мука – 1/4 ч. ложки, Травы прованские сушеные – 1/2 ч. ложки, Соль – по вкусу, Перец чёрный молотый – по вкусу;
-    """.trimIndent()
-    val recipeSteps = arrayOf(
-        "Подготавливаем все необходимые продукты.",
-        "Начинаем с приготовления макарон. В небольшую кастрюлю наливаем воду, добавляем 1 щепотку соли, доводим до кипения. Опускаем макароны в кипящую воду, перемешиваем и варим, периодически помешивая, примерно 8-10 минут или согласно инструкции на упаковке, до мягкости. Отваренные макароны откидываем на дуршлаг, даём стечь лишней жидкости.",
-        "С крабовых палочек снимаем упаковку. Нарезаем крабовые палочки кружочками. Чеснок очищаем и нарезаем мелкими кусочками."
-    )
-
     var timeRecipeText by remember { mutableStateOf("30") }
+
+    var showEditRecipeMenu by remember { mutableStateOf(false) }
 
     Column {
         EditRecipeTopBar(
@@ -101,12 +93,22 @@ fun EditRecipe(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 EditRecipeTitle(
-                    recipeTitleText = recipeTitle
+                    clickShowEditRecipeMenu = { newValueShowEditRecipeMenu ->
+                        showEditRecipeMenu = newValueShowEditRecipeMenu
+                    }
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                EditRecipeIngredients(ingredientsRecipeText = recipeIngredients)
+                EditRecipeIngredients(
+                    clickShowEditRecipeMenu = { newValueShowEditRecipeMenu ->
+                        showEditRecipeMenu = newValueShowEditRecipeMenu
+                    }
+                )
                 Spacer(modifier = Modifier.height(12.dp))
-                EditRecipeSteps(recipeStepsText = recipeSteps)
+                EditRecipeSteps(
+                    clickShowEditRecipeMenu = { newValueShowEditRecipeMenu ->
+                        showEditRecipeMenu = newValueShowEditRecipeMenu
+                    }
+                )
                 Box(
                     modifier = Modifier
                         .padding(top = 10.dp, bottom = 10.dp)
@@ -120,6 +122,12 @@ fun EditRecipe(
                 }
             }
         }
+        EditRecipeMenu(
+            showDialog = showEditRecipeMenu,
+            onDismiss = { newValueShowEditRecipeMenu ->
+                showEditRecipeMenu = newValueShowEditRecipeMenu
+            }
+        )
     }
 }
 
@@ -270,8 +278,11 @@ fun EditRecipeTime(
 
 @Composable
 fun EditRecipeTitle(
-    recipeTitleText: String
+    clickShowEditRecipeMenu: (Boolean) -> Unit
 ) {
+
+    val recipeTitleText = "Макароны с крабовыми палочками, сметаной и чесноком"
+
     val MAX_LENGTH = 67
 
     val truncateText = if (recipeTitleText.length > MAX_LENGTH) {
@@ -279,12 +290,16 @@ fun EditRecipeTitle(
     } else {
         recipeTitleText
     }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .alpha(0.7f)
             .background(color = Color.White, shape = RoundedCornerShape(12.dp))
-            .clip(shape = RoundedCornerShape(12.dp)),
+            .clip(shape = RoundedCornerShape(12.dp))
+            .clickable {
+                clickShowEditRecipeMenu(true)
+            },
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Box(
@@ -322,8 +337,12 @@ fun EditRecipeTitle(
 
 @Composable
 fun EditRecipeIngredients(
-    ingredientsRecipeText: String
+    clickShowEditRecipeMenu: (Boolean) -> Unit
 ) {
+
+    val ingredientsRecipeText = """
+        Макароны – 100 г, Крабовые палочки – 100 г, Чеснок – 1 зубчик, Масло сливочное – 10 г, Сыр твёрдый – 10 г, Сметана – 2 ст. ложки, Мука – 1/4 ч. ложки, Травы прованские сушеные – 1/2 ч. ложки, Соль – по вкусу, Перец чёрный молотый – по вкусу;
+    """.trimIndent()
 
     val MAX_LENGTH = 130
 
@@ -339,6 +358,9 @@ fun EditRecipeIngredients(
             .alpha(0.7f)
             .background(color = Color.White, shape = RoundedCornerShape(12.dp))
             .clip(shape = RoundedCornerShape(12.dp))
+            .clickable {
+                clickShowEditRecipeMenu(true)
+            }
     ) {
         Column(
             modifier = Modifier
@@ -390,8 +412,14 @@ fun EditRecipeIngredients(
 
 @Composable
 fun EditRecipeSteps(
-    recipeStepsText: Array<String>
+    clickShowEditRecipeMenu: (Boolean) -> Unit
 ) {
+    val recipeStepsText = arrayOf(
+        "Подготавливаем все необходимые продукты.",
+        "Начинаем с приготовления макарон. В небольшую кастрюлю наливаем воду, добавляем 1 щепотку соли, доводим до кипения. Опускаем макароны в кипящую воду, перемешиваем и варим, периодически помешивая, примерно 8-10 минут или согласно инструкции на упаковке, до мягкости. Отваренные макароны откидываем на дуршлаг, даём стечь лишней жидкости.",
+        "С крабовых палочек снимаем упаковку. Нарезаем крабовые палочки кружочками. Чеснок очищаем и нарезаем мелкими кусочками."
+    )
+
     Column {
         Spacer(modifier = Modifier.height(height = 16.dp))
         Text(
@@ -406,7 +434,10 @@ fun EditRecipeSteps(
             val elementNumber = number + 1
             EditRecipeStepItem(
                 numberStep = "$elementNumber",
-                textStep = recipeStepsText[number]
+                textStep = recipeStepsText[number],
+                clickShowEditRecipeMenu = { newValueShowEditRecipeMenu ->
+                    clickShowEditRecipeMenu(newValueShowEditRecipeMenu)
+                }
             )
             Spacer(modifier = Modifier.height(height = 10.dp))
         }
@@ -416,7 +447,8 @@ fun EditRecipeSteps(
 @Composable
 fun EditRecipeStepItem(
     numberStep: String,
-    textStep: String
+    textStep: String,
+    clickShowEditRecipeMenu: (Boolean) -> Unit
 ) {
     val MAX_LENGTH = 67
 
@@ -431,7 +463,10 @@ fun EditRecipeStepItem(
             .fillMaxWidth()
             .alpha(0.7f)
             .background(color = Color.White, shape = RoundedCornerShape(12.dp))
-            .clip(shape = RoundedCornerShape(12.dp)),
+            .clip(shape = RoundedCornerShape(12.dp))
+            .clickable {
+                clickShowEditRecipeMenu(true)
+            },
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Column(
@@ -474,7 +509,86 @@ fun EditRecipeStepItem(
     }
 }
 
+
 @Composable
-fun EditRecipeMenu(modifier: Modifier = Modifier) {
-    
+fun EditRecipeMenu(
+    showDialog: Boolean,
+    onDismiss: (Boolean) -> Unit
+) {
+    var editText by remember { mutableStateOf("") }
+
+    var isHintVisible by remember { mutableStateOf(true) }
+
+    if (showDialog) {
+        Dialog(onDismissRequest = { onDismiss(false) }) {
+            Surface(
+                modifier = Modifier
+                    .padding(all = 18.dp)
+                    .clip(shape = RoundedCornerShape(12.dp))
+            ) {
+                Column(
+                    modifier = Modifier
+                        .background(color = SoftPink)
+                ) {
+                    Text(
+                        text = "Редактирование названия рецепта",
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            color = SoftGray,
+                            textAlign = TextAlign.Center
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .background(color = Color.White)
+                            .padding(vertical = 14.dp)
+                    ) {
+                        BasicTextField(
+                            value = editText,
+                            onValueChange = {
+                                editText = it
+                                isHintVisible = it.isEmpty()
+                            },
+                            textStyle = TextStyle(
+                                fontSize = 16.sp,
+                                color = Color.Black
+                            ),
+                            singleLine = false,
+                            cursorBrush = SolidColor(Color.Black),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 6.dp)
+                        )
+                        if (isHintVisible) {
+                            Text(
+                                text = "Введите новое название рецепта",
+                                style = TextStyle(
+                                    fontSize = 16.sp,
+                                    color = LightGray
+                                ),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 6.dp)
+                            )
+                        }
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = SoftOrange)
+                            .clickable {
+                                onDismiss(false)
+                            }
+                            .padding(all = 16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "Сохранить")
+                    }
+                }
+            }
+        }
+    }
 }
