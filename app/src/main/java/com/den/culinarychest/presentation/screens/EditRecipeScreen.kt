@@ -24,6 +24,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -70,6 +71,8 @@ fun EditRecipeScreen(
 fun EditRecipe(
 //    controller: NavController
 ) {
+    var titleEditRecipeMenu by remember { mutableStateOf("") }
+
     var timeRecipeText by remember { mutableStateOf("30") }
 
     var showEditRecipeMenu by remember { mutableStateOf(false) }
@@ -95,19 +98,22 @@ fun EditRecipe(
                 EditRecipeTitle(
                     clickShowEditRecipeMenu = { newValueShowEditRecipeMenu ->
                         showEditRecipeMenu = newValueShowEditRecipeMenu
-                    }
+                    },
+                    passedEditRecipeMenuTitle = { getTitleEditRecipeMenu -> titleEditRecipeMenu = getTitleEditRecipeMenu}
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 EditRecipeIngredients(
                     clickShowEditRecipeMenu = { newValueShowEditRecipeMenu ->
                         showEditRecipeMenu = newValueShowEditRecipeMenu
-                    }
+                    },
+                    passedEditRecipeMenuTitle = { getTitleEditRecipeMenu -> titleEditRecipeMenu = getTitleEditRecipeMenu}
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 EditRecipeSteps(
                     clickShowEditRecipeMenu = { newValueShowEditRecipeMenu ->
                         showEditRecipeMenu = newValueShowEditRecipeMenu
-                    }
+                    },
+                    passedEditRecipeMenuTitle = { getTitleEditRecipeMenu -> titleEditRecipeMenu = getTitleEditRecipeMenu}
                 )
                 Box(
                     modifier = Modifier
@@ -123,6 +129,7 @@ fun EditRecipe(
             }
         }
         EditRecipeMenu(
+            titleEditRecipeMenu = titleEditRecipeMenu,
             showDialog = showEditRecipeMenu,
             onDismiss = { newValueShowEditRecipeMenu ->
                 showEditRecipeMenu = newValueShowEditRecipeMenu
@@ -278,10 +285,11 @@ fun EditRecipeTime(
 
 @Composable
 fun EditRecipeTitle(
-    clickShowEditRecipeMenu: (Boolean) -> Unit
+    clickShowEditRecipeMenu: (Boolean) -> Unit,
+    passedEditRecipeMenuTitle: (String) -> Unit
 ) {
 
-    val recipeTitleText = "Макароны с крабовыми палочками, сметаной и чесноком"
+    var recipeTitleText by remember { mutableStateOf("Макароны с крабовыми палочками, сметаной и чесноком") }
 
     val MAX_LENGTH = 67
 
@@ -299,6 +307,7 @@ fun EditRecipeTitle(
             .clip(shape = RoundedCornerShape(12.dp))
             .clickable {
                 clickShowEditRecipeMenu(true)
+                passedEditRecipeMenuTitle("Редактирование названия рецепта")
             },
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -337,7 +346,8 @@ fun EditRecipeTitle(
 
 @Composable
 fun EditRecipeIngredients(
-    clickShowEditRecipeMenu: (Boolean) -> Unit
+    clickShowEditRecipeMenu: (Boolean) -> Unit,
+    passedEditRecipeMenuTitle: (String) -> Unit
 ) {
 
     val ingredientsRecipeText = """
@@ -360,6 +370,7 @@ fun EditRecipeIngredients(
             .clip(shape = RoundedCornerShape(12.dp))
             .clickable {
                 clickShowEditRecipeMenu(true)
+                passedEditRecipeMenuTitle("Редактирование ингредиентов рецепта")
             }
     ) {
         Column(
@@ -412,13 +423,18 @@ fun EditRecipeIngredients(
 
 @Composable
 fun EditRecipeSteps(
-    clickShowEditRecipeMenu: (Boolean) -> Unit
+    clickShowEditRecipeMenu: (Boolean) -> Unit,
+    passedEditRecipeMenuTitle: (String) -> Unit
 ) {
+
+    var titleEditRecipeMenuText by remember { mutableStateOf("") }
+
     val recipeStepsText = arrayOf(
         "Подготавливаем все необходимые продукты.",
         "Начинаем с приготовления макарон. В небольшую кастрюлю наливаем воду, добавляем 1 щепотку соли, доводим до кипения. Опускаем макароны в кипящую воду, перемешиваем и варим, периодически помешивая, примерно 8-10 минут или согласно инструкции на упаковке, до мягкости. Отваренные макароны откидываем на дуршлаг, даём стечь лишней жидкости.",
         "С крабовых палочек снимаем упаковку. Нарезаем крабовые палочки кружочками. Чеснок очищаем и нарезаем мелкими кусочками."
     )
+    passedEditRecipeMenuTitle(titleEditRecipeMenuText)
 
     Column {
         Spacer(modifier = Modifier.height(height = 16.dp))
@@ -437,6 +453,8 @@ fun EditRecipeSteps(
                 textStep = recipeStepsText[number],
                 clickShowEditRecipeMenu = { newValueShowEditRecipeMenu ->
                     clickShowEditRecipeMenu(newValueShowEditRecipeMenu)
+                },
+                passedEditRecipeMenuTitle = { newTitleEditRecipeMenuText -> titleEditRecipeMenuText = newTitleEditRecipeMenuText
                 }
             )
             Spacer(modifier = Modifier.height(height = 10.dp))
@@ -448,7 +466,8 @@ fun EditRecipeSteps(
 fun EditRecipeStepItem(
     numberStep: String,
     textStep: String,
-    clickShowEditRecipeMenu: (Boolean) -> Unit
+    clickShowEditRecipeMenu: (Boolean) -> Unit,
+    passedEditRecipeMenuTitle: (String) -> Unit
 ) {
     val MAX_LENGTH = 67
 
@@ -466,6 +485,7 @@ fun EditRecipeStepItem(
             .clip(shape = RoundedCornerShape(12.dp))
             .clickable {
                 clickShowEditRecipeMenu(true)
+                passedEditRecipeMenuTitle("Редактирование шага №$numberStep рецепта")
             },
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -512,12 +532,14 @@ fun EditRecipeStepItem(
 
 @Composable
 fun EditRecipeMenu(
+    titleEditRecipeMenu: String,
     showDialog: Boolean,
     onDismiss: (Boolean) -> Unit
 ) {
+
     var editText by remember { mutableStateOf("") }
 
-    var isHintVisible by remember { mutableStateOf(true) }
+    var isHintVisible by remember { mutableStateOf(false) }
 
     if (showDialog) {
         Dialog(onDismissRequest = { onDismiss(false) }) {
@@ -531,7 +553,7 @@ fun EditRecipeMenu(
                         .background(color = SoftPink)
                 ) {
                     Text(
-                        text = "Редактирование названия рецепта",
+                        text = titleEditRecipeMenu,
                         style = TextStyle(
                             fontSize = 16.sp,
                             color = SoftGray,
