@@ -1,4 +1,4 @@
-package com.den.culinarychest.data
+package com.example.culinarychest.data
 
 import org.junit.Test
 

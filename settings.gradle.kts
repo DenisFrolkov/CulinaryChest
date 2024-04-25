@@ -21,5 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "CulinaryChest"
 include(":app")
-include(":data")
-include(":domain")
+include(":data:data")
+include(":domain:domain")

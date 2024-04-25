@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.den.culinarychest.data"
+    namespace = "com.example.culinarychest.data"
     compileSdk = 34
 
     defaultConfig {
