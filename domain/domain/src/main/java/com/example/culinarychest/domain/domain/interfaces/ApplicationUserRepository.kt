@@ -7,6 +7,6 @@ import retrofit2.Response
 
 interface ApplicationUserRepository {
     suspend fun registrationApplicationUser(username: String, email: String, password: String, roles: List<String>)
-    suspend fun authorizationApplicationUser(username: String, password: String): Response<Token>
+    suspend fun authorizationApplicationUser(username: String, password: String): ProcessingResult<Token>
     suspend fun getApplicationUserId(): ProcessingResult<ApplicationUser>
 }

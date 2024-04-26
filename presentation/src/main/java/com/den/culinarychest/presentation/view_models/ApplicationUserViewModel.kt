@@ -32,6 +32,21 @@ class ApplicationUserViewModel(
             }
         }
     }
+
+    fun authorizeUser(username: String, password: String) {
+        viewModelScope.launch {
+            try {
+                val result = applicationUserRepository.authorizationApplicationUser(username, password)
+                if (result is ProcessingResult.Success) {
+
+                } else {
+                    _showErrorToastChannel.send(true)
+                }
+            } catch (e: Exception) {
+                _showErrorToastChannel.send(true)
+            }
+        }
+    }
 }
 
 

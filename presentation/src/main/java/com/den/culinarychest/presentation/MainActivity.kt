@@ -4,7 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.Column
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.den.culinarychest.presentation.ui.theme.CulinaryChestTheme
@@ -28,7 +29,9 @@ class MainActivity : ComponentActivity() {
     private val applicationUserViewModel by viewModels<ApplicationUserViewModel>(factoryProducer = {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return ApplicationUserViewModel(ApplicationUserRepositoryImpl(RetrofitInstance.culinaryChestApi))
+                return ApplicationUserViewModel(ApplicationUserRepositoryImpl(
+                    RetrofitInstance.culinaryChestApi
+                ))
                         as T
             }
         }
@@ -45,9 +48,15 @@ class MainActivity : ComponentActivity() {
                 val password = "1234567891234"
                 val roles = listOf("User")
 
-                Button(onClick = { applicationUserViewModel.registerApplicationUser(username, email, password, roles) }) {
-
+                Column {
+                    LaunchedEffect(Unit) {
+                        applicationUserViewModel.authorizeUser(username, password)
+                    }
                 }
+
+//                Button(onClick = { applicationUserViewModel.registerApplicationUser(username, email, password, roles) }) {
+//
+//                }
 //                AppNavigation()
             }
         }
