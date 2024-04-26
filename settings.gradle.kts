@@ -20,6 +20,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "CulinaryChest"
-include(":app")
-include(":data:data")
+include(":presentation")
 include(":domain:domain")
+include(":data:data")
