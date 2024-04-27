@@ -17,5 +17,6 @@ dependencies{
     //Okhttp
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation(libs.kotlinx.coroutines.core)
 
 }

@@ -4,12 +4,15 @@ import androidx.lifecycle.ViewModel
 import com.example.culinarychest.domain.domain.ProcessingResult
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.domain.dataclasses.Recipe
+import com.example.culinarychest.domain.domain.dataclasses.Token
 import com.example.culinarychest.domain.domain.interfaces.RecipeRepository
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class RecipeViewModel(
@@ -22,21 +25,20 @@ class RecipeViewModel(
     private val _showErrorToastChannel = Channel<Boolean>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
 
-    init {
-        getRecipes()
-    }
-
-    fun getRecipes() {
+    fun getRecipes(token: String) {
         viewModelScope.launch {
-            try {
-                val result = recipeRepository.getRecipes()
-                if (result is ProcessingResult.Success) {
-                    _recipes.value = result.data ?: emptyList()
-                } else {
-                    _showErrorToastChannel.send(true)
+            recipeRepository.getRecipes(token).collectLatest { result ->
+                when (result) {
+                    is ProcessingResult.Error -> {
+                        _showErrorToastChannel.send(true)
+                    }
+
+                    is ProcessingResult.Success -> {
+                        result.data?.let { recipes ->
+                            _recipes.update { recipes }
+                        }
+                    }
                 }
-            } catch (e: Exception) {
-                _showErrorToastChannel.send(true)
             }
         }
     }

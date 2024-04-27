@@ -10,6 +10,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -33,7 +34,7 @@ interface CulinaryChestAPI {
     suspend fun deleteApplicationUserFavoriteRecipe(): FavoriteRecipe
 
     @GET("/api/recipe")
-    suspend fun getRecipes(): List<Recipe>
+    suspend fun getRecipes(@Header ("Authorization") token: String): List<Recipe>
     @GET("/api/recipe/{recipeId}")
     suspend fun getRecipeById( @Path("recipeId") recipeId: String): Recipe
 

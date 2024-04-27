@@ -6,13 +6,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.domain.ProcessingResult
 import com.example.culinarychest.domain.domain.dataclasses.ApplicationUser
+import com.example.culinarychest.domain.domain.dataclasses.Token
 import com.example.culinarychest.domain.domain.interfaces.ApplicationUserRepository
+import com.example.culinarychest.domain.domain.interfaces.RecipeRepository
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class ApplicationUserViewModel(
-    private val applicationUserRepository: ApplicationUserRepository
+    private val applicationUserRepository: ApplicationUserRepository,
+    private val recipeViewModel: RecipeViewModel
 ) : ViewModel() {
 
     private val _registrationResult = MutableLiveData<ProcessingResult<ApplicationUser>>()
@@ -20,6 +25,9 @@ class ApplicationUserViewModel(
 
     private val _showErrorToastChannel = Channel<Boolean>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
+
+    private var _token = MutableStateFlow<String>("")
+    val token: StateFlow<String> = _token
 
     fun registerApplicationUser(username: String, email: String, password: String, roles: List<String>) {
         viewModelScope.launch {
@@ -38,7 +46,7 @@ class ApplicationUserViewModel(
             try {
                 val result = applicationUserRepository.authorizationApplicationUser(username, password)
                 if (result is ProcessingResult.Success) {
-
+                    recipeViewModel.getRecipes(token = "Bearer ${result.data?.token ?: ""}")
                 } else {
                     _showErrorToastChannel.send(true)
                 }
