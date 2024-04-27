@@ -6,14 +6,26 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.den.culinarychest.presentation.ui.theme.CulinaryChestTheme
@@ -22,9 +34,8 @@ import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import com.example.culinarychest.data.data.api.RetrofitInstance
 import com.example.culinarychest.data.data.repository.ApplicationUserRepositoryImpl
 import com.example.culinarychest.data.data.repository.RecipeRepositoryImpl
+import com.example.culinarychest.domain.domain.dataclasses.Recipe
 import kotlinx.coroutines.flow.collectLatest
-
-private const val s = "Denis123456"
 
 class MainActivity : ComponentActivity() {
 
@@ -35,7 +46,8 @@ class MainActivity : ComponentActivity() {
                         as T
             }
         }
-    })
+    }
+    )
 
     private val applicationUserViewModel by viewModels<ApplicationUserViewModel>(factoryProducer = {
         object : ViewModelProvider.Factory {
@@ -51,7 +63,6 @@ class MainActivity : ComponentActivity() {
         }
     })
 
-    @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -62,23 +73,42 @@ class MainActivity : ComponentActivity() {
                 val password = "1234567891234"
                 val roles = listOf("User")
 
-                applicationUserViewModel.authorizeUser(username, password)
+                Column {
+                    Button(onClick = {
+                        applicationUserViewModel.authorizeUser(username, password)
+                    }) {
 
-                val recipeList = recipeViewModel.recipes.collectAsState().value
-                val context = LocalContext.current
-                LaunchedEffect(key1 = recipeViewModel.showErrorToastChannel)
-                {
-                    recipeViewModel.showErrorToastChannel.collectLatest { show ->
-                        if (show) {
-                            Toast.makeText( context, "Error", Toast.LENGTH_SHORT )
-                                .show()
+                    }
+
+                    val recipeList = recipeViewModel.recipes.collectAsState().value
+                    val context = LocalContext.current
+                    LaunchedEffect(key1 = recipeViewModel.showErrorToastChannel)
+                    {
+                        recipeViewModel.showErrorToastChannel.collectLatest { show ->
+                            if (show) {
+                                Toast.makeText( context, "Error", Toast.LENGTH_SHORT )
+                                    .show()
+                            }
                         }
                     }
-                }
 
-                LazyColumn {
-                    items(recipeList) { recipe ->
-                        Text(text = recipe.title, color = Color.Black)
+                    if (recipeList.isEmpty()) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }} else {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            contentPadding = PaddingValues(16.dp)
+                        ) {
+                            items(recipeList) { index ->
+                                Recipe(index)
+                                Spacer(modifier = Modifier.height(9.dp))
+                            }
+                        }
                     }
                 }
 
@@ -91,3 +121,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+@Composable
+fun Recipe(recipe: Recipe?) {
+    if (recipe != null) {
+        Text(text = recipe.title ?: "Unknown Title")
+    } else {
+        // Handle null recipe case, such as displaying a placeholder or error message
+        Text(text = "Recipe not available")
+    }
+}
+
+

@@ -1,15 +1,24 @@
 package com.example.culinarychest.domain.domain.dataclasses
 
-import com.example.culinarychest.domain.domain.dataclasses.Step
+import com.google.gson.annotations.SerializedName
 
 data class Recipe(
-    val creationDate: String,
+    @SerializedName("RecipeId")
+    val recipeId: String,
+    @SerializedName("Id")
     val id: String,
-    val ingredients: String,
-    val preparationTime: String,
-    val recipeId: Int,
+    @SerializedName("Title")
+    val title: String,
+    @SerializedName("RecipeImage")
     val recipeImage: String,
-    val savedCount: Int,
+    @SerializedName("Ingredients")
+    val ingredients: String,
+    @SerializedName("Steps")
     val steps: List<Step>,
-    val title: String
+    @SerializedName("CreationDate")
+    val creationDate: String,
+    @SerializedName("PreparationTime")
+    val preparationTime: String,
+    @SerializedName("SavedCount")
+    val savedCount: Int
 )

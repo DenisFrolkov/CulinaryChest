@@ -28,11 +28,10 @@ class RecipeViewModel(
     fun getRecipes(token: String) {
         viewModelScope.launch {
             recipeRepository.getRecipes(token).collectLatest { result ->
-                when (result) {
+                when(result){
                     is ProcessingResult.Error -> {
                         _showErrorToastChannel.send(true)
                     }
-
                     is ProcessingResult.Success -> {
                         result.data?.let { recipes ->
                             _recipes.update { recipes }
@@ -42,25 +41,5 @@ class RecipeViewModel(
             }
         }
     }
-
-    fun getRecipeById(recipeId: String) {
-        viewModelScope.launch {
-            try {
-                val result = recipeRepository.getRecipeById(recipeId)
-                if (result is ProcessingResult.Success) {
-                    result
-                } else {
-                    _showErrorToastChannel.send(true)
-                }
-            } catch (e: Exception) {
-                _showErrorToastChannel.send(true)
-            }
-        }
-    }
-
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelScope.cancel()
-    }
 }
+
