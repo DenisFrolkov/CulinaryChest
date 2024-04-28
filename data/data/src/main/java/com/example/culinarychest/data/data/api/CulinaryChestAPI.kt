@@ -1,6 +1,7 @@
 package com.example.culinarychest.data.data.api
 
 import com.example.culinarychest.domain.domain.dataclasses.ApplicationUser
+import com.example.culinarychest.domain.domain.dataclasses.ApplicationUserInfo
 import com.example.culinarychest.domain.domain.dataclasses.FavoriteRecipe
 import com.example.culinarychest.domain.domain.dataclasses.Login
 import com.example.culinarychest.domain.domain.dataclasses.Recipe
@@ -24,7 +25,7 @@ interface CulinaryChestAPI {
     @POST("/api/authentication/login")
     suspend fun authorizationApplicationUser(@Body login: Login): Response<Token>
     @GET("/api/authentication/user")
-    suspend fun getApplicationUserInfo(): ApplicationUser
+    suspend fun getApplicationUserInfo(@Header ("Authorization") token: String): ApplicationUserInfo
 
     @GET("/api/applicationUser/favoriteRecipe")
     suspend fun getApplicationUserFavoriteRecipes(): List<FavoriteRecipe>

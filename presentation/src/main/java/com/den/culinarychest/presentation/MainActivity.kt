@@ -1,8 +1,6 @@
 package com.den.culinarychest.presentation
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -18,13 +16,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -34,20 +28,22 @@ import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import com.example.culinarychest.data.data.api.RetrofitInstance
 import com.example.culinarychest.data.data.repository.ApplicationUserRepositoryImpl
 import com.example.culinarychest.data.data.repository.RecipeRepositoryImpl
+import com.example.culinarychest.domain.domain.dataclasses.ApplicationUserInfo
 import com.example.culinarychest.domain.domain.dataclasses.Recipe
-import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : ComponentActivity() {
 
     private val recipeViewModel by viewModels<RecipeViewModel>(factoryProducer = {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return RecipeViewModel(RecipeRepositoryImpl(RetrofitInstance.culinaryChestApi))
+                return RecipeViewModel(
+                    RecipeRepositoryImpl(RetrofitInstance.culinaryChestApi),
+                    applicationUserViewModel = applicationUserViewModel
+                )
                         as T
             }
         }
-    }
-    )
+    })
 
     private val applicationUserViewModel by viewModels<ApplicationUserViewModel>(factoryProducer = {
         object : ViewModelProvider.Factory {
@@ -55,8 +51,7 @@ class MainActivity : ComponentActivity() {
                 return ApplicationUserViewModel(
                     ApplicationUserRepositoryImpl(
                         RetrofitInstance.culinaryChestApi
-                    ),
-                    recipeViewModel
+                    )
                 )
                         as T
             }
@@ -81,6 +76,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     val recipeList = recipeViewModel.recipes.collectAsState().value
+                    val userInfo = applicationUserViewModel.userInfoResult.collectAsState().value
 
                     if (recipeList.isEmpty()) {
                         Box(
@@ -88,7 +84,8 @@ class MainActivity : ComponentActivity() {
                             contentAlignment = Alignment.Center
                         ) {
                             CircularProgressIndicator()
-                        }} else {
+                        }
+                    } else {
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -97,6 +94,9 @@ class MainActivity : ComponentActivity() {
                             items(recipeList) { index ->
                                 Recipe(index)
                                 Spacer(modifier = Modifier.height(9.dp))
+                            }
+                            item {
+                                UserInfoText(userInfo)
                             }
                         }
                     }
@@ -110,7 +110,13 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    @Composable
+    private fun UserInfoText(userInfo: ApplicationUserInfo?) {
+        userInfo?.let { Text(text = it.userName) }
+    }
 }
+
 @Composable
 fun Recipe(recipe: Recipe?) {
     recipe?.let { Text(text = it.title) }

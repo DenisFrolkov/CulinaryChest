@@ -3,6 +3,7 @@ package com.example.culinarychest.data.data.repository
 import com.example.culinarychest.data.data.api.CulinaryChestAPI
 import com.example.culinarychest.domain.domain.ProcessingResult
 import com.example.culinarychest.domain.domain.dataclasses.ApplicationUser
+import com.example.culinarychest.domain.domain.dataclasses.ApplicationUserInfo
 import com.example.culinarychest.domain.domain.dataclasses.Login
 import com.example.culinarychest.domain.domain.dataclasses.Token
 import com.example.culinarychest.domain.domain.interfaces.ApplicationUserRepository
@@ -46,9 +47,9 @@ class ApplicationUserRepositoryImpl(
         }
     }
 
-    override suspend fun getApplicationUserId(): Flow<ProcessingResult<ApplicationUser>> {
+    override suspend fun getApplicationUserId(token: String): Flow<ProcessingResult<ApplicationUserInfo>> {
         return safeApiCall {
-            culinaryChestAPI.getApplicationUserInfo()
+            culinaryChestAPI.getApplicationUserInfo(token = token)
         }
     }
 }
