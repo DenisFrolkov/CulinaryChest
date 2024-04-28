@@ -4,24 +4,25 @@ import com.example.culinarychest.data.data.api.CulinaryChestAPI
 import com.example.culinarychest.domain.domain.ProcessingResult
 import com.example.culinarychest.domain.domain.dataclasses.FavoriteRecipe
 import com.example.culinarychest.domain.domain.interfaces.ApplicationUserFavoriteRecipeRepository
+import kotlinx.coroutines.flow.Flow
 
 class ApplicationUserFavoriteRecipeRepositoryImpl(
     private val culinaryChestAPI: CulinaryChestAPI
 ) : ApplicationUserFavoriteRecipeRepository {
 
-    override suspend fun getApplicationUserFavoriteRecipes(): ProcessingResult<List<FavoriteRecipe>> {
+    override suspend fun getApplicationUserFavoriteRecipes(): Flow<ProcessingResult<List<FavoriteRecipe>>> {
         return safeApiCall {
             culinaryChestAPI.getApplicationUserFavoriteRecipes()
         }
     }
 
-    override suspend fun createApplicationUserFavoriteRecipes(): ProcessingResult<List<FavoriteRecipe>> {
+    override suspend fun createApplicationUserFavoriteRecipes(): Flow<ProcessingResult<List<FavoriteRecipe>>> {
         return safeApiCall {
             culinaryChestAPI.createApplicationUserFavoriteRecipes()
         }
     }
 
-    override suspend fun deleteApplicationUserFavoriteRecipe(): ProcessingResult<FavoriteRecipe> {
+    override suspend fun deleteApplicationUserFavoriteRecipe(): Flow<ProcessingResult<FavoriteRecipe>> {
         return safeApiCall {
             culinaryChestAPI.deleteApplicationUserFavoriteRecipe()
         }

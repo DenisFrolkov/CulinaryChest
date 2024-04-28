@@ -1,8 +1,14 @@
 package com.example.culinarychest.domain.domain.dataclasses
 
+import com.google.gson.annotations.SerializedName
+
 data class FavoriteRecipe(
-    val addedDate: String,
+    @SerializedName("FavoriteRecipeId")
     val favoriteRecipeId: Int,
+    @SerializedName("Id")
     val id: String,
-    val recipeId: Int
+    @SerializedName("RecipeId")
+    val recipeId: Int,
+    @SerializedName("AddedDate")
+    val addedDate: String,
 )

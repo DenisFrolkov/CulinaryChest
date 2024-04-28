@@ -8,6 +8,6 @@ import kotlinx.coroutines.flow.Flow
 interface RecipeRepository {
 
     suspend fun getRecipes(token: String): Flow<ProcessingResult<List<Recipe>>>
-    suspend fun getRecipeById(recipeId: String): ProcessingResult<Recipe>
+    suspend fun getRecipeById(recipeId: String): Flow<ProcessingResult<Recipe>>
 
 }

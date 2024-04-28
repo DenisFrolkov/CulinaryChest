@@ -24,7 +24,7 @@ interface CulinaryChestAPI {
     @POST("/api/authentication/login")
     suspend fun authorizationApplicationUser(@Body login: Login): Response<Token>
     @GET("/api/authentication/user")
-    suspend fun getApplicationUserId(): ApplicationUser
+    suspend fun getApplicationUserInfo(): ApplicationUser
 
     @GET("/api/applicationUser/favoriteRecipe")
     suspend fun getApplicationUserFavoriteRecipes(): List<FavoriteRecipe>

@@ -6,6 +6,7 @@ import com.example.culinarychest.domain.domain.dataclasses.ApplicationUser
 import com.example.culinarychest.domain.domain.dataclasses.Login
 import com.example.culinarychest.domain.domain.dataclasses.Token
 import com.example.culinarychest.domain.domain.interfaces.ApplicationUserRepository
+import kotlinx.coroutines.flow.Flow
 
 class ApplicationUserRepositoryImpl(
     private val culinaryChestAPI: CulinaryChestAPI
@@ -45,9 +46,9 @@ class ApplicationUserRepositoryImpl(
         }
     }
 
-    override suspend fun getApplicationUserId(): ProcessingResult<ApplicationUser> {
+    override suspend fun getApplicationUserId(): Flow<ProcessingResult<ApplicationUser>> {
         return safeApiCall {
-            culinaryChestAPI.getApplicationUserId()
+            culinaryChestAPI.getApplicationUserInfo()
         }
     }
 }

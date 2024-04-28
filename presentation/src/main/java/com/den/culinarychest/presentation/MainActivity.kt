@@ -81,16 +81,6 @@ class MainActivity : ComponentActivity() {
                     }
 
                     val recipeList = recipeViewModel.recipes.collectAsState().value
-                    val context = LocalContext.current
-                    LaunchedEffect(key1 = recipeViewModel.showErrorToastChannel)
-                    {
-                        recipeViewModel.showErrorToastChannel.collectLatest { show ->
-                            if (show) {
-                                Toast.makeText( context, "Error", Toast.LENGTH_SHORT )
-                                    .show()
-                            }
-                        }
-                    }
 
                     if (recipeList.isEmpty()) {
                         Box(
@@ -123,12 +113,7 @@ class MainActivity : ComponentActivity() {
 }
 @Composable
 fun Recipe(recipe: Recipe?) {
-    if (recipe != null) {
-        Text(text = recipe.title ?: "Unknown Title")
-    } else {
-        // Handle null recipe case, such as displaying a placeholder or error message
-        Text(text = "Recipe not available")
-    }
+    recipe?.let { Text(text = it.title) }
 }
 
 

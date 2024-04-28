@@ -14,26 +14,11 @@ class RecipeRepositoryImpl(
 ) : RecipeRepository {
 
     override suspend fun getRecipes(token: String): Flow<ProcessingResult<List<Recipe>>> {
-        return flow {
-            val recipesFromCulinaryChestApi = try {
-                culinaryChestAPI.getRecipes(token = token)
-            } catch (e: IOException) {
-                e.printStackTrace()
-                emit(ProcessingResult.Error(message = "Error loading recipes"))
-                return@flow
-            } catch (e: HttpException) {
-                e.printStackTrace()
-                emit(ProcessingResult.Error(message = "Error loading http"))
-                return@flow
-            } catch (e: Exception) {
-                e.printStackTrace()
-                emit(ProcessingResult.Error(message = "Error loading recipes"))
-                return@flow
-            }
-            emit(ProcessingResult.Success(recipesFromCulinaryChestApi))
+        return safeApiCall {
+            culinaryChestAPI.getRecipes(token)
         }
     }
-    override suspend fun getRecipeById(recipeId: String): ProcessingResult<Recipe> {
+    override suspend fun getRecipeById(recipeId: String): Flow<ProcessingResult<Recipe>> {
         return safeApiCall {
             culinaryChestAPI.getRecipeById(recipeId)
         }
