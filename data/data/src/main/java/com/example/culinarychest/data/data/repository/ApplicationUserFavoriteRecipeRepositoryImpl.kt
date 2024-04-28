@@ -10,9 +10,9 @@ class ApplicationUserFavoriteRecipeRepositoryImpl(
     private val culinaryChestAPI: CulinaryChestAPI
 ) : ApplicationUserFavoriteRecipeRepository {
 
-    override suspend fun getApplicationUserFavoriteRecipes(): Flow<ProcessingResult<List<FavoriteRecipe>>> {
+    override suspend fun getApplicationUserFavoriteRecipes(token: String): Flow<ProcessingResult<List<FavoriteRecipe>>> {
         return safeApiCall {
-            culinaryChestAPI.getApplicationUserFavoriteRecipes()
+            culinaryChestAPI.getApplicationUserFavoriteRecipes(token = token)
         }
     }
 

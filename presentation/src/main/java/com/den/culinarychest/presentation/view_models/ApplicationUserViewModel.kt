@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ApplicationUserViewModel(
-    private val applicationUserRepository: ApplicationUserRepository,
+    private val applicationUserRepository: ApplicationUserRepository
 ) : ViewModel() {
 
     private val _registrationResult = MutableLiveData<ProcessingResult<ApplicationUser>>()
@@ -82,7 +82,7 @@ class ApplicationUserViewModel(
         }
     }
 
-    fun getApplicationUserInfo(token: String) {
+    private fun getApplicationUserInfo(token: String) {
         viewModelScope.launch {
             applicationUserRepository.getApplicationUserId(token = token).collectLatest { result ->
                 when (result) {

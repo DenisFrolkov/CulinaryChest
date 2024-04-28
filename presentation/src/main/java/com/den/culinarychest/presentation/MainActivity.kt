@@ -23,15 +23,29 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.den.culinarychest.presentation.ui.theme.CulinaryChestTheme
+import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import com.example.culinarychest.data.data.api.RetrofitInstance
+import com.example.culinarychest.data.data.repository.ApplicationUserFavoriteRecipeRepositoryImpl
 import com.example.culinarychest.data.data.repository.ApplicationUserRepositoryImpl
 import com.example.culinarychest.data.data.repository.RecipeRepositoryImpl
 import com.example.culinarychest.domain.domain.dataclasses.ApplicationUserInfo
+import com.example.culinarychest.domain.domain.dataclasses.FavoriteRecipe
 import com.example.culinarychest.domain.domain.dataclasses.Recipe
 
 class MainActivity : ComponentActivity() {
+
+    private val applicationUserViewModel by viewModels<ApplicationUserViewModel>(factoryProducer = {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return ApplicationUserViewModel(
+                    ApplicationUserRepositoryImpl(RetrofitInstance.culinaryChestApi)
+                )
+                        as T
+            }
+        }
+    })
 
     private val recipeViewModel by viewModels<RecipeViewModel>(factoryProducer = {
         object : ViewModelProvider.Factory {
@@ -45,18 +59,18 @@ class MainActivity : ComponentActivity() {
         }
     })
 
-    private val applicationUserViewModel by viewModels<ApplicationUserViewModel>(factoryProducer = {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return ApplicationUserViewModel(
-                    ApplicationUserRepositoryImpl(
-                        RetrofitInstance.culinaryChestApi
+    private val favoriteRecipeViewModel by viewModels<ApplicationUserFavoriteRecipeViewModel>(
+        factoryProducer = {
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return ApplicationUserFavoriteRecipeViewModel(
+                        ApplicationUserFavoriteRecipeRepositoryImpl(RetrofitInstance.culinaryChestApi),
+                        applicationUserViewModel = applicationUserViewModel
                     )
-                )
-                        as T
+                            as T
+                }
             }
-        }
-    })
+        })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,36 +82,30 @@ class MainActivity : ComponentActivity() {
                 val password = "1234567891234"
                 val roles = listOf("User")
 
-                Column {
-                    Button(onClick = {
-                        applicationUserViewModel.authorizeUser(username, password)
-                    }) {
 
+                val recipeList = recipeViewModel.recipes.collectAsState().value
+                val userInfo = applicationUserViewModel.userInfoResult.collectAsState().value
+                val favoriteRecipe =
+                    favoriteRecipeViewModel.userFavoriteRecipes.collectAsState().value
+
+                if (recipeList.isEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
                     }
-
-                    val recipeList = recipeViewModel.recipes.collectAsState().value
-                    val userInfo = applicationUserViewModel.userInfoResult.collectAsState().value
-
-                    if (recipeList.isEmpty()) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        contentPadding = PaddingValues(16.dp)
+                    ) {
+                        items(favoriteRecipe) { index ->
+                            FavoriteRecipe(index)
                         }
-                    } else {
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            contentPadding = PaddingValues(16.dp)
-                        ) {
-                            items(recipeList) { index ->
-                                Recipe(index)
-                                Spacer(modifier = Modifier.height(9.dp))
-                            }
-                            item {
-                                UserInfoText(userInfo)
-                            }
+                        item {
+                            UserInfoText(userInfo)
                         }
                     }
                 }
@@ -120,6 +128,11 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Recipe(recipe: Recipe?) {
     recipe?.let { Text(text = it.title) }
+}
+
+@Composable
+fun FavoriteRecipe(favoriteRecipe: FavoriteRecipe) {
+    favoriteRecipe?.let { Text(text = it.id) }
 }
 
 

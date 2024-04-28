@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ApplicationUserFavoriteRecipeRepository {
 
-    suspend fun getApplicationUserFavoriteRecipes(): Flow<ProcessingResult<List<FavoriteRecipe>>>
+    suspend fun getApplicationUserFavoriteRecipes(token: String): Flow<ProcessingResult<List<FavoriteRecipe>>>
     suspend fun createApplicationUserFavoriteRecipes(): Flow<ProcessingResult<List<FavoriteRecipe>>>
     suspend fun deleteApplicationUserFavoriteRecipe(): Flow<ProcessingResult<FavoriteRecipe>>
 
