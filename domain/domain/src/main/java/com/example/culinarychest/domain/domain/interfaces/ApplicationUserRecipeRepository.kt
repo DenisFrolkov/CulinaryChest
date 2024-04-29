@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ApplicationUserRecipeRepository {
 
-    suspend fun getApplicationUserRecipes(): Flow<ProcessingResult<List<Recipe>>>
+    suspend fun getApplicationUserRecipes(token: String): Flow<ProcessingResult<List<Recipe>>>
     suspend fun createApplicationUserRecipe(): Flow<ProcessingResult<List<Recipe>>>
     suspend fun updateApplicationUserRecipe(): Flow<ProcessingResult<Recipe>>
     suspend fun deleteApplicationUserRecipe(): Flow<ProcessingResult<Recipe>>

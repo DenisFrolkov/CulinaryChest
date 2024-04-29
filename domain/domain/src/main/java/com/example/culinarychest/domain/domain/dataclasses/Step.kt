@@ -3,12 +3,12 @@ package com.example.culinarychest.domain.domain.dataclasses
 import com.google.gson.annotations.SerializedName
 
 data class Step(
-    @SerializedName("StepId")
+    @SerializedName("StepId", alternate = ["stepId"])
     val stepId: Int,
-    @SerializedName("Description")
+    @SerializedName("Description", alternate = ["description"])
     val description: String,
-    @SerializedName("Order")
+    @SerializedName("Order", alternate = ["order"])
     val order: Int,
-    @SerializedName("RecipeId")
+    @SerializedName("RecipeId", alternate = ["recipeId"])
     val recipeId: Int
 )

@@ -3,22 +3,22 @@ package com.example.culinarychest.domain.domain.dataclasses
 import com.google.gson.annotations.SerializedName
 
 data class Recipe(
-    @SerializedName("RecipeId")
+    @SerializedName("RecipeId", alternate = ["recipeId"])
     val recipeId: String,
-    @SerializedName("Id")
+    @SerializedName("Id", alternate = ["id"])
     val id: String,
-    @SerializedName("Title")
+    @SerializedName("Title", alternate = ["title"])
     val title: String,
-    @SerializedName("RecipeImage")
+    @SerializedName("RecipeImage", alternate = ["recipeImage"])
     val recipeImage: String,
-    @SerializedName("Ingredients")
+    @SerializedName("Ingredients", alternate = ["ingredients"])
     val ingredients: String,
-    @SerializedName("Steps")
+    @SerializedName("Steps", alternate = ["steps"])
     val steps: List<Step>,
-    @SerializedName("CreationDate")
+    @SerializedName("CreationDate", alternate = ["creationDate"])
     val creationDate: String,
-    @SerializedName("PreparationTime")
+    @SerializedName("PreparationTime", alternate = ["preparationTime"])
     val preparationTime: String,
-    @SerializedName("SavedCount")
+    @SerializedName("SavedCount", alternate = ["savedCount"])
     val savedCount: Int
 )

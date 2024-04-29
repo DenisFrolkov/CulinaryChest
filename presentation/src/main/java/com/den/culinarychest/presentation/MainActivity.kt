@@ -24,15 +24,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.den.culinarychest.presentation.ui.theme.CulinaryChestTheme
 import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
+import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import com.example.culinarychest.data.data.api.RetrofitInstance
 import com.example.culinarychest.data.data.repository.ApplicationUserFavoriteRecipeRepositoryImpl
+import com.example.culinarychest.data.data.repository.ApplicationUserRecipeRepositoryImpl
 import com.example.culinarychest.data.data.repository.ApplicationUserRepositoryImpl
 import com.example.culinarychest.data.data.repository.RecipeRepositoryImpl
 import com.example.culinarychest.domain.domain.dataclasses.ApplicationUserInfo
 import com.example.culinarychest.domain.domain.dataclasses.FavoriteRecipe
 import com.example.culinarychest.domain.domain.dataclasses.Recipe
+import com.example.culinarychest.domain.domain.dataclasses.Step
 
 class MainActivity : ComponentActivity() {
 
@@ -59,7 +62,7 @@ class MainActivity : ComponentActivity() {
         }
     })
 
-    private val favoriteRecipeViewModel by viewModels<ApplicationUserFavoriteRecipeViewModel>(
+    private val applicationUserFavoriteRecipeViewModel by viewModels<ApplicationUserFavoriteRecipeViewModel>(
         factoryProducer = {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -70,64 +73,87 @@ class MainActivity : ComponentActivity() {
                             as T
                 }
             }
-        })
+        }
+    )
+
+    private val applicationUserRecipeViewModel by viewModels<ApplicationUserRecipeViewModel>(
+        factoryProducer = {
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return ApplicationUserRecipeViewModel(
+                        ApplicationUserRecipeRepositoryImpl(RetrofitInstance.culinaryChestApi)
+                    )
+                            as T
+                }
+            }
+        }
+    )
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             CulinaryChestTheme {
 
-                val username = "Denis123456"
+                val username = "Denis12"
                 val email = "denis12345@mail.ru"
                 val password = "1234567891234"
                 val roles = listOf("User")
 
+                Column {
 
-                val recipeList = recipeViewModel.recipes.collectAsState().value
-                val userInfo = applicationUserViewModel.userInfoResult.collectAsState().value
-                val favoriteRecipe =
-                    favoriteRecipeViewModel.userFavoriteRecipes.collectAsState().value
 
-                if (recipeList.isEmpty()) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
+                    Button(onClick = {
+                        applicationUserViewModel.authorizeUser(
+                            username,
+                            password
+                        )
+                    }) {
+
                     }
-                } else {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        contentPadding = PaddingValues(16.dp)
-                    ) {
-                        items(favoriteRecipe) { index ->
-                            FavoriteRecipe(index)
+                    Button(onClick = {
+                        applicationUserViewModel.token.observeForever { token ->
+                            if (token != null) {
+                                applicationUserRecipeViewModel.getApplicationUserRecipes(token)
+                            }
                         }
-                        item {
-                            UserInfoText(userInfo)
+                    }) {
+
+                    }
+                    val recipeList = applicationUserRecipeViewModel.applicationUserRecipes.collectAsState().value
+                    LazyColumn {
+                        items(recipeList) {recipe ->
+                            Recipe(recipe)
                         }
                     }
                 }
-
-
-//                Button(onClick = { applicationUserViewModel.registerApplicationUser(username, email, password, roles) }) {
-//
-//                }
-//                AppNavigation()
             }
+//                AppNavigation()
         }
     }
-
     @Composable
     private fun UserInfoText(userInfo: ApplicationUserInfo?) {
         userInfo?.let { Text(text = it.userName) }
     }
 }
 
+
 @Composable
-fun Recipe(recipe: Recipe?) {
-    recipe?.let { Text(text = it.title) }
+fun Recipe(recipe: Recipe) {
+    Column {
+        recipe.let { Text(text = it.title) }
+        if (recipe.steps != null) {
+            recipe.steps.forEach { step ->
+                StepItem(step = step)
+            }
+        }
+    }
+}
+
+
+@Composable
+fun StepItem(step: Step) {
+    Text(text = "${step.order}. ${step.description}")
 }
 
 @Composable

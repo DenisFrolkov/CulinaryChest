@@ -10,9 +10,9 @@ class ApplicationUserRecipeRepositoryImpl(
     private val culinaryChestAPI: CulinaryChestAPI
 ) : ApplicationUserRecipeRepository {
 
-    override suspend fun getApplicationUserRecipes(): Flow<ProcessingResult<List<Recipe>>> {
+    override suspend fun getApplicationUserRecipes(token: String): Flow<ProcessingResult<List<Recipe>>> {
         return safeApiCall {
-            culinaryChestAPI.getApplicationUserRecipes()
+            culinaryChestAPI.getApplicationUserRecipes(token = token)
         }
     }
     override suspend fun createApplicationUserRecipe(): Flow<ProcessingResult<List<Recipe>>> {

@@ -40,7 +40,7 @@ interface CulinaryChestAPI {
     suspend fun getRecipeById( @Path("recipeId") recipeId: String): Recipe
 
     @GET("/api/applicationUser/recipe")
-    suspend fun getApplicationUserRecipes(): List<Recipe>
+    suspend fun getApplicationUserRecipes(@Header("Authorization") token: String): List<Recipe>
     @POST("/api/applicationUser/recipe")
     suspend fun createApplicationUserRecipe(): List<Recipe>
     @PUT("/api/applicationUser/Recipe/{recipeId}")
