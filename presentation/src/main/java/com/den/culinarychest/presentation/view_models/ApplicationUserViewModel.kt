@@ -37,18 +37,12 @@ class ApplicationUserViewModel(
 
 
     fun registerApplicationUser(
-        username: String,
-        email: String,
-        password: String,
-        roles: List<String>
+        user: ApplicationUser
     ) {
         viewModelScope.launch {
             try {
                 applicationUserRepository.registrationApplicationUser(
-                    username,
-                    email,
-                    password,
-                    roles
+                    user = user
                 )
                 _registrationResult.value = ProcessingResult.Success(null)
             } catch (e: Exception) {
@@ -75,7 +69,7 @@ class ApplicationUserViewModel(
         }
     }
 
-    private fun getApplicationUserInfo(token: String) {
+    fun getApplicationUserInfo(token: String) {
         viewModelScope.launch {
             applicationUserRepository.getApplicationUserId(token = token).collectLatest { result ->
                 when (result) {

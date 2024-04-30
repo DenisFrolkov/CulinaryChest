@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
 interface ApplicationUserRepository {
-    suspend fun registrationApplicationUser(username: String, email: String, password: String, roles: List<String>)
+    suspend fun registrationApplicationUser(user: ApplicationUser)
     suspend fun authorizationApplicationUser(username: String, password: String): ProcessingResult<Token>
     suspend fun getApplicationUserId(token: String): Flow<ProcessingResult<ApplicationUserInfo>>
 }

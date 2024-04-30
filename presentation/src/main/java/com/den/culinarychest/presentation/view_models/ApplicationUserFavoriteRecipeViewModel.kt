@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.domain.ProcessingResult
-import com.example.culinarychest.domain.domain.dataclasses.FavoriteRecipe
-import com.example.culinarychest.domain.domain.dataclasses.BodyRequest
+import com.example.culinarychest.domain.domain.dataclasses.favorite_recipe.FavoriteRecipe
+import com.example.culinarychest.domain.domain.dataclasses.favorite_recipe.CreateFavoriteRecipe
 import com.example.culinarychest.domain.domain.interfaces.ApplicationUserFavoriteRecipeRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,10 +46,10 @@ class ApplicationUserFavoriteRecipeViewModel(
             }
         }
     }
-    fun createApplicationUserFavoriteRecipes(token: String, recipeId: Int, bodyRequest: BodyRequest) {
+    fun createApplicationUserFavoriteRecipes(token: String, recipeId: Int, addedDate: CreateFavoriteRecipe) {
         viewModelScope.launch {
             try {
-                favoriteRecipeRepository.createApplicationUserFavoriteRecipes(token, recipeId, bodyRequest)
+                favoriteRecipeRepository.createApplicationUserFavoriteRecipes(token, recipeId, addedDate)
             } catch (e: Exception) {
 
             }

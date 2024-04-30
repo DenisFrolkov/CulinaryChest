@@ -2,7 +2,7 @@ package com.example.culinarychest.data.data.repository
 
 import com.example.culinarychest.data.data.api.CulinaryChestAPI
 import com.example.culinarychest.domain.domain.ProcessingResult
-import com.example.culinarychest.domain.domain.dataclasses.Step
+import com.example.culinarychest.domain.domain.dataclasses.step.Step
 import com.example.culinarychest.domain.domain.interfaces.RecipeStepsRepository
 import kotlinx.coroutines.flow.Flow
 

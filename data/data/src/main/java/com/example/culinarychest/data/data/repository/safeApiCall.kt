@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
 
-suspend fun <T : Any> safeApiCall(apiCall: suspend () -> T): Flow<ProcessingResult<T>> {
+suspend fun <T : Any?> safeApiCall(apiCall: suspend () -> T): Flow<ProcessingResult<T>> {
     return flow {
         try {
             val result = apiCall.invoke()

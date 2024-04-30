@@ -44,6 +44,7 @@ import com.den.culinarychest.presentation.common.TextInput.RecipeDetailsTextInpu
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
+import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
 
 @Composable
 fun CreatingRecipeScreen(

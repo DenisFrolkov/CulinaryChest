@@ -2,7 +2,7 @@ package com.example.culinarychest.data.data.repository
 
 import com.example.culinarychest.data.data.api.CulinaryChestAPI
 import com.example.culinarychest.domain.domain.ProcessingResult
-import com.example.culinarychest.domain.domain.dataclasses.Recipe
+import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
 import com.example.culinarychest.domain.domain.interfaces.ApplicationUserRecipeRepository
 import kotlinx.coroutines.flow.Flow
 
@@ -12,10 +12,10 @@ class ApplicationUserRecipeRepositoryImpl(
 
     override suspend fun getApplicationUserRecipes(token: String): Flow<ProcessingResult<List<Recipe>>> {
         return safeApiCall {
-            culinaryChestAPI.getApplicationUserRecipes(token = token)
+            culinaryChestAPI.getApplicationUserRecipes(token)
         }
     }
-    override suspend fun createApplicationUserRecipe(): Flow<ProcessingResult<List<Recipe>>> {
+    override suspend fun createApplicationUserRecipe() : Flow<ProcessingResult<String>> {
         return safeApiCall {
             culinaryChestAPI.createApplicationUserRecipe()
         }

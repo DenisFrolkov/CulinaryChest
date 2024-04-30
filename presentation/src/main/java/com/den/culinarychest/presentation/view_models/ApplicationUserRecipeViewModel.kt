@@ -3,7 +3,7 @@ package com.den.culinarychest.presentation.view_models
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.domain.ProcessingResult
-import com.example.culinarychest.domain.domain.dataclasses.Recipe
+import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
 import com.example.culinarychest.domain.domain.interfaces.ApplicationUserRecipeRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,19 +25,20 @@ class ApplicationUserRecipeViewModel(
 
     fun getApplicationUserRecipes(token: String) {
         viewModelScope.launch {
-            applicationUserRecipeRepository.getApplicationUserRecipes(token).collectLatest { result ->
-                when(result) {
-                    is ProcessingResult.Error -> {
-                        _showErrorToastChannel.send(true)
-                    }
-                    is ProcessingResult.Success -> {
-                        result.data?.let { applicationUserRecipes ->
-                            _applicationUserRecipes.update { applicationUserRecipes }
+            applicationUserRecipeRepository.getApplicationUserRecipes(token)
+                .collectLatest { result ->
+                    when (result) {
+                        is ProcessingResult.Error -> {
+                            _showErrorToastChannel.send(true)
+                        }
+
+                        is ProcessingResult.Success -> {
+                            result.data?.let { applicationUserRecipes ->
+                                _applicationUserRecipes.update { applicationUserRecipes }
+                            }
                         }
                     }
                 }
-            }
         }
     }
-
 }

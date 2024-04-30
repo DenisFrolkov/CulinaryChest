@@ -14,22 +14,17 @@ class ApplicationUserRepositoryImpl(
 ) : ApplicationUserRepository {
 
     override suspend fun registrationApplicationUser(
-        username: String,
-        email: String,
-        password: String,
-        roles: List<String>
+        user: ApplicationUser
     ) {
         culinaryChestAPI.registrationApplicationUser(
-            applicationUser = ApplicationUser(
-                userName = username,
-                email = email,
-                password = password,
-                roles = roles
-            )
+            applicationUser = user
         )
     }
 
-    override suspend fun authorizationApplicationUser(username: String, password: String): ProcessingResult<Token> {
+    override suspend fun authorizationApplicationUser(
+        username: String,
+        password: String
+    ): ProcessingResult<Token> {
         return try {
             val response = culinaryChestAPI.authorizationApplicationUser(Login(username, password))
             if (response.isSuccessful) {
