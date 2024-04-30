@@ -35,13 +35,6 @@ class ApplicationUserViewModel(
     private val _showErrorToastChannel = Channel<Boolean>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
 
-    init {
-        token.observeForever() { token ->
-            if (token != null) {
-                getApplicationUserInfo(token = token)
-            }
-        }
-    }
 
     fun registerApplicationUser(
         username: String,

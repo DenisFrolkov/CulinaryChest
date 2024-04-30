@@ -5,10 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.domain.ProcessingResult
 import com.example.culinarychest.domain.domain.dataclasses.FavoriteRecipe
-import com.example.culinarychest.domain.domain.dataclasses.Recipe
+import com.example.culinarychest.domain.domain.dataclasses.BodyRequest
 import com.example.culinarychest.domain.domain.interfaces.ApplicationUserFavoriteRecipeRepository
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -30,13 +29,6 @@ class ApplicationUserFavoriteRecipeViewModel(
     private val _showErrorToastChannel = Channel<Boolean>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
 
-    init {
-        applicationUserViewModel.token.observeForever { token ->
-            if (token != null) {
-                getApplicationUserFavoriteRecipes(token = token)
-            }
-        }
-    }
 
     fun getApplicationUserFavoriteRecipes(token: String) {
         viewModelScope.launch {
@@ -54,8 +46,14 @@ class ApplicationUserFavoriteRecipeViewModel(
             }
         }
     }
-    fun createApplicationUserFavoriteRecipes() {
+    fun createApplicationUserFavoriteRecipes(token: String, recipeId: Int, bodyRequest: BodyRequest) {
+        viewModelScope.launch {
+            try {
+                favoriteRecipeRepository.createApplicationUserFavoriteRecipes(token, recipeId, bodyRequest)
+            } catch (e: Exception) {
 
+            }
+        }
     }
     fun deleteApplicationUserFavoriteRecipe() {
 
