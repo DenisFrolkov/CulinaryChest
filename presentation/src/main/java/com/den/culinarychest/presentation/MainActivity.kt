@@ -28,6 +28,7 @@ import com.example.culinarychest.domain.domain.dataclasses.ApplicationUserInfo
 import com.example.culinarychest.domain.domain.dataclasses.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.domain.dataclasses.recipe.CreateRecipe
 import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
+import com.example.culinarychest.domain.domain.dataclasses.recipe.UpdateRecipe
 import com.example.culinarychest.domain.domain.dataclasses.step.CreateStep
 import com.example.culinarychest.domain.domain.dataclasses.step.Step
 import java.time.LocalDateTime
@@ -98,14 +99,14 @@ class MainActivity : ComponentActivity() {
                 val roles = listOf("User")
 
 
-                val recipeId3 = "3"
-                val favoriteRecipeId = "6"
+                val recipeId = "8"
+                val favoriteRecipeId = "7"
 
-                val createRecipe = CreateRecipe(
-                    title = "Htwt",
+                val createRecipe = UpdateRecipe(
+                    title = "denis",
                     recipeImage = "MHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA=",
                     ingredients = "12345",
-                    steps = listOf(CreateStep(description = "123", order = 1)),
+//                    steps = listOf(CreateStep(description = "123", order = 1)),
                     creationDate = LocalDateTime.now().toString(),
                     preparationTime = "123456",
                     savedCount = 0
@@ -136,7 +137,7 @@ class MainActivity : ComponentActivity() {
                         applicationUserViewModel.token.observeForever { token ->
 
                             if (token != null) {
-                                applicationUserFavoriteRecipeViewModel.deleteApplicationUserFavoriteRecipe(token, favoriteRecipeId)
+                                applicationUserRecipeViewModel.updateApplicationUserRecipe(token, recipeId, createRecipe)
                             }
                         }
 

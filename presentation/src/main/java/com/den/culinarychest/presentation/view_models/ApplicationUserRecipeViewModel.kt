@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.domain.ProcessingResult
-import com.example.culinarychest.domain.domain.dataclasses.ApplicationUser
 import com.example.culinarychest.domain.domain.dataclasses.recipe.CreateRecipe
 import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
+import com.example.culinarychest.domain.domain.dataclasses.recipe.UpdateRecipe
 import com.example.culinarychest.domain.domain.interfaces.ApplicationUserRecipeRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -61,17 +61,31 @@ class ApplicationUserRecipeViewModel(
                     ProcessingResult.Error(message = "Error create recipe: ${e.message}")
                 _showErrorToastChannel.send(true)
             }
+        }
+    }
 
-//            applicationUserRecipeRepository.createApplicationUserRecipe(token, recipe).collectLatest { result ->
-//                when(result) {
-//                    is ProcessingResult.Error -> {
-//                        _showErrorToastChannel.send(true)
-//                    }
-//                    is ProcessingResult.Success -> {
-//                        _createdRecipeResult.value = ProcessingResult.Error(message = "${result.data}")
-//                    }
-//                }
-//            }
+    fun updateApplicationUserRecipe(token: String, recipeId: String, recipe: UpdateRecipe) {
+        viewModelScope.launch {
+            try {
+                applicationUserRecipeRepository.updateApplicationUserRecipe(
+                    token, recipeId, recipe
+                )
+            } catch (e: Exception) {
+
+            }
+        }
+    }
+
+    fun deleteApplicationUserRecipe(token: String, recipeId: String) {
+        viewModelScope.launch {
+            try {
+                applicationUserRecipeRepository.deleteApplicationUserRecipe(
+                    token,
+                    recipeId
+                )
+            } catch (e: Exception) {
+
+            }
         }
     }
 }

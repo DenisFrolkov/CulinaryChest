@@ -9,6 +9,7 @@ import com.example.culinarychest.domain.domain.dataclasses.step.Step
 import com.example.culinarychest.domain.domain.dataclasses.favorite_recipe.CreateFavoriteRecipe
 import com.example.culinarychest.domain.domain.dataclasses.Token
 import com.example.culinarychest.domain.domain.dataclasses.recipe.CreateRecipe
+import com.example.culinarychest.domain.domain.dataclasses.recipe.UpdateRecipe
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -38,7 +39,7 @@ interface CulinaryChestAPI {
         @Body addedDate: CreateFavoriteRecipe
     ) //Completed
     @DELETE("/api/applicationUser/favoriteRecipe/{favoriteRecipeId}")
-    suspend fun deleteApplicationUserFavoriteRecipe(@Header("Authorization") token: String, @Path("favoriteRecipeId") favoriteRecipeId: String)
+    suspend fun deleteApplicationUserFavoriteRecipe(@Header("Authorization") token: String, @Path("favoriteRecipeId") favoriteRecipeId: String) //Completed
 
     @GET("/api/recipe")
     suspend fun getRecipes(@Header("Authorization") token: String): List<Recipe> //Completed
@@ -50,9 +51,9 @@ interface CulinaryChestAPI {
     @POST("/api/applicationUser/recipe")
     suspend fun createApplicationUserRecipe(@Header ("Authorization") token: String, @Body recipe: CreateRecipe) //Completed
     @PUT("/api/applicationUser/Recipe/{recipeId}")
-    suspend fun updateApplicationUserRecipe(): Recipe
+    suspend fun updateApplicationUserRecipe(@Header ("Authorization") token: String, @Path("recipeId") recipeId: String, @Body recipe: UpdateRecipe)
     @DELETE("/api/applicationUser/Recipe/{recipeId}")
-    suspend fun deleteApplicationUserRecipe(): Recipe
+    suspend fun deleteApplicationUserRecipe(@Header("Authorization") token: String, @Path("recipeId") recipeId: String) //Completed
 
     @GET("/api/recipe/{recipeId}/steps")
     suspend fun getRecipeSteps(): List<Step>
