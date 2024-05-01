@@ -32,31 +32,51 @@ class ApplicationUserFavoriteRecipeViewModel(
 
     fun getApplicationUserFavoriteRecipes(token: String) {
         viewModelScope.launch {
-            favoriteRecipeRepository.getApplicationUserFavoriteRecipes(token).collectLatest { result ->
-                when(result) {
-                    is ProcessingResult.Error -> {
-                        _showErrorToastChannel.send(true)
-                    }
-                    is ProcessingResult.Success -> {
-                        result.data?.let { favoriteRecipe ->
-                            _userFavoriteRecipes.update { favoriteRecipe }
+            favoriteRecipeRepository.getApplicationUserFavoriteRecipes(token)
+                .collectLatest { result ->
+                    when (result) {
+                        is ProcessingResult.Error -> {
+                            _showErrorToastChannel.send(true)
+                        }
+
+                        is ProcessingResult.Success -> {
+                            result.data?.let { favoriteRecipe ->
+                                _userFavoriteRecipes.update { favoriteRecipe }
+                            }
                         }
                     }
                 }
-            }
         }
     }
-    fun createApplicationUserFavoriteRecipes(token: String, recipeId: Int, addedDate: CreateFavoriteRecipe) {
+
+    fun createApplicationUserFavoriteRecipes(
+        token: String,
+        recipeId: Int,
+        addedDate: CreateFavoriteRecipe
+    ) {
         viewModelScope.launch {
             try {
-                favoriteRecipeRepository.createApplicationUserFavoriteRecipes(token, recipeId, addedDate)
+                favoriteRecipeRepository.createApplicationUserFavoriteRecipes(
+                    token,
+                    recipeId,
+                    addedDate
+                )
             } catch (e: Exception) {
 
             }
         }
     }
-    fun deleteApplicationUserFavoriteRecipe() {
 
+    fun deleteApplicationUserFavoriteRecipe(token: String, favoriteRecipeId: String) {
+        viewModelScope.launch {
+            try {
+                favoriteRecipeRepository.deleteApplicationUserFavoriteRecipe(
+                    token,
+                    favoriteRecipeId
+                )
+            } catch (e: Exception) {
+
+            }
+        }
     }
-
 }

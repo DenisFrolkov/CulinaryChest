@@ -23,9 +23,12 @@ import com.example.culinarychest.data.data.repository.ApplicationUserFavoriteRec
 import com.example.culinarychest.data.data.repository.ApplicationUserRecipeRepositoryImpl
 import com.example.culinarychest.data.data.repository.ApplicationUserRepositoryImpl
 import com.example.culinarychest.data.data.repository.RecipeRepositoryImpl
+import com.example.culinarychest.domain.domain.dataclasses.ApplicationUser
 import com.example.culinarychest.domain.domain.dataclasses.ApplicationUserInfo
 import com.example.culinarychest.domain.domain.dataclasses.favorite_recipe.FavoriteRecipe
+import com.example.culinarychest.domain.domain.dataclasses.recipe.CreateRecipe
 import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
+import com.example.culinarychest.domain.domain.dataclasses.step.CreateStep
 import com.example.culinarychest.domain.domain.dataclasses.step.Step
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -89,13 +92,24 @@ class MainActivity : ComponentActivity() {
         setContent {
             CulinaryChestTheme {
 
-                val username = "Denis1214"
-                val email = "124@mail.ru"
+                val username = "denis12"
+                val email = "denis@mail.ru"
                 val password = "1234567891234"
                 val roles = listOf("User")
 
 
                 val recipeId3 = "3"
+                val favoriteRecipeId = "6"
+
+                val createRecipe = CreateRecipe(
+                    title = "Htwt",
+                    recipeImage = "MHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA=",
+                    ingredients = "12345",
+                    steps = listOf(CreateStep(description = "123", order = 1)),
+                    creationDate = LocalDateTime.now().toString(),
+                    preparationTime = "123456",
+                    savedCount = 0
+                )
 
                 Column {
                     Button(onClick = {
@@ -103,6 +117,30 @@ class MainActivity : ComponentActivity() {
                             username,
                             password
                         )
+                    }) {
+
+                    }
+                    Button(onClick = {
+                        applicationUserViewModel.registerApplicationUser(
+                            user = ApplicationUser(
+                                username,
+                                email,
+                                password,
+                                roles
+                            )
+                        )
+                    }) {
+
+                    }
+                    Button(onClick = {
+                        applicationUserViewModel.token.observeForever { token ->
+
+                            if (token != null) {
+                                applicationUserFavoriteRecipeViewModel.deleteApplicationUserFavoriteRecipe(token, favoriteRecipeId)
+                            }
+                        }
+
+
                     }) {
 
                     }

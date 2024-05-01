@@ -9,6 +9,6 @@ interface ApplicationUserFavoriteRecipeRepository {
 
     suspend fun getApplicationUserFavoriteRecipes(token: String): Flow<ProcessingResult<List<FavoriteRecipe>>>
     suspend fun createApplicationUserFavoriteRecipes(token: String, recipeId: Int, addedDate: CreateFavoriteRecipe)
-    suspend fun deleteApplicationUserFavoriteRecipe(): Flow<ProcessingResult<FavoriteRecipe>>
+    suspend fun deleteApplicationUserFavoriteRecipe(token: String, favoriteRecipeId: String)
 
 }

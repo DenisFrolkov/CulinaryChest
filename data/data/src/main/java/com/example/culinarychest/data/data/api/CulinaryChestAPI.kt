@@ -8,6 +8,7 @@ import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
 import com.example.culinarychest.domain.domain.dataclasses.step.Step
 import com.example.culinarychest.domain.domain.dataclasses.favorite_recipe.CreateFavoriteRecipe
 import com.example.culinarychest.domain.domain.dataclasses.Token
+import com.example.culinarychest.domain.domain.dataclasses.recipe.CreateRecipe
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -22,32 +23,32 @@ const val BASE_URL = "https://10.0.2.2:7286"
 interface CulinaryChestAPI {
 
     @POST("/api/authentication/register")
-    suspend fun registrationApplicationUser(@Body applicationUser: ApplicationUser)
+    suspend fun registrationApplicationUser(@Body applicationUser: ApplicationUser) //Completed
     @POST("/api/authentication/login")
-    suspend fun authorizationApplicationUser(@Body login: Login): Response<Token>
+    suspend fun authorizationApplicationUser(@Body login: Login): Response<Token> //Completed
     @GET("/api/authentication/user")
-    suspend fun getApplicationUserInfo(@Header("Authorization") token: String): ApplicationUserInfo
+    suspend fun getApplicationUserInfo(@Header("Authorization") token: String): ApplicationUserInfo //Completed
 
     @GET("/api/applicationUser/favoriteRecipe")
-    suspend fun getApplicationUserFavoriteRecipes(@Header("Authorization") token: String): List<FavoriteRecipe>
+    suspend fun getApplicationUserFavoriteRecipes(@Header("Authorization") token: String): List<FavoriteRecipe> //Completed
     @POST("/api/applicationUser/favoriteRecipe/{recipeId}")
     suspend fun createApplicationUserFavoriteRecipes(
         @Header("Authorization") token: String,
         @Path("recipeId") recipeId: Int,
         @Body addedDate: CreateFavoriteRecipe
-    )
+    ) //Completed
     @DELETE("/api/applicationUser/favoriteRecipe/{favoriteRecipeId}")
-    suspend fun deleteApplicationUserFavoriteRecipe(): FavoriteRecipe
+    suspend fun deleteApplicationUserFavoriteRecipe(@Header("Authorization") token: String, @Path("favoriteRecipeId") favoriteRecipeId: String)
 
     @GET("/api/recipe")
-    suspend fun getRecipes(@Header("Authorization") token: String): List<Recipe>
+    suspend fun getRecipes(@Header("Authorization") token: String): List<Recipe> //Completed
     @GET("/api/recipe/{recipeId}")
-    suspend fun getRecipeById(@Header("Authorization") token: String, @Path("recipeId") recipeId: String): List<Recipe>
+    suspend fun getRecipeById(@Header("Authorization") token: String, @Path("recipeId") recipeId: String): List<Recipe> //Completed
 
     @GET("/api/applicationUser/recipe")
-    suspend fun getApplicationUserRecipes(@Header("Authorization") token: String): List<Recipe>
+    suspend fun getApplicationUserRecipes(@Header ("Authorization") token: String): List<Recipe> //Completed
     @POST("/api/applicationUser/recipe")
-    suspend fun createApplicationUserRecipe() : String
+    suspend fun createApplicationUserRecipe(@Header ("Authorization") token: String, @Body recipe: CreateRecipe) //Completed
     @PUT("/api/applicationUser/Recipe/{recipeId}")
     suspend fun updateApplicationUserRecipe(): Recipe
     @DELETE("/api/applicationUser/Recipe/{recipeId}")

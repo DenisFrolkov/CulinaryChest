@@ -21,10 +21,8 @@ class ApplicationUserFavoriteRecipeRepositoryImpl(
         culinaryChestAPI.createApplicationUserFavoriteRecipes(token, recipeId, addedDate)
     }
 
-    override suspend fun deleteApplicationUserFavoriteRecipe(): Flow<ProcessingResult<FavoriteRecipe>> {
-        return safeApiCall {
-            culinaryChestAPI.deleteApplicationUserFavoriteRecipe()
-        }
+    override suspend fun deleteApplicationUserFavoriteRecipe(token: String, favoriteRecipeId: String) {
+        culinaryChestAPI.deleteApplicationUserFavoriteRecipe(token, favoriteRecipeId)
     }
 
 }
