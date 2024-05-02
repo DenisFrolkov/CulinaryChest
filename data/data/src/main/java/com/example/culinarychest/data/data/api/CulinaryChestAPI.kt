@@ -10,6 +10,7 @@ import com.example.culinarychest.domain.domain.dataclasses.favorite_recipe.Creat
 import com.example.culinarychest.domain.domain.dataclasses.Token
 import com.example.culinarychest.domain.domain.dataclasses.recipe.CreateRecipe
 import com.example.culinarychest.domain.domain.dataclasses.recipe.UpdateRecipe
+import com.example.culinarychest.domain.domain.dataclasses.step.CreateStep
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -51,16 +52,16 @@ interface CulinaryChestAPI {
     @POST("/api/applicationUser/recipe")
     suspend fun createApplicationUserRecipe(@Header ("Authorization") token: String, @Body recipe: CreateRecipe) //Completed
     @PUT("/api/applicationUser/Recipe/{recipeId}")
-    suspend fun updateApplicationUserRecipe(@Header ("Authorization") token: String, @Path("recipeId") recipeId: String, @Body recipe: UpdateRecipe)
+    suspend fun updateApplicationUserRecipe(@Header ("Authorization") token: String, @Path("recipeId") recipeId: String, @Body recipe: UpdateRecipe) //Completed
     @DELETE("/api/applicationUser/Recipe/{recipeId}")
     suspend fun deleteApplicationUserRecipe(@Header("Authorization") token: String, @Path("recipeId") recipeId: String) //Completed
 
     @GET("/api/recipe/{recipeId}/steps")
-    suspend fun getRecipeSteps(): List<Step>
+    suspend fun getRecipeSteps(@Header ("Authorization") token: String, @Path("recipeId") recipeId: String): List<Step> //Completed
     @POST("/api/recipe/{recipeId}/steps")
-    suspend fun createRecipeStep(): Step
+    suspend fun createRecipeStep(@Header ("Authorization") token: String, @Path("recipeId") recipeId: String, @Body step: CreateStep) //Completed
     @PUT("/api/recipe/{recipeId}/steps/{stepId}")
-    suspend fun updateRecipeStep(): Step
+    suspend fun updateRecipeStep(@Header ("Authorization") token: String, @Path("recipeId") recipeId: String, @Path("stepId") stepId: String, @Body updateStep: CreateStep) //Completed
     @DELETE("/api/recipe/{recipeId}/steps/{stepId}")
-    suspend fun deleteRecipeStep(): Step
+    suspend fun deleteRecipeStep(@Header ("Authorization") token: String, recipeId: String, stepId: String) //Completed
 }

@@ -17,16 +17,16 @@ import com.den.culinarychest.presentation.ui.theme.CulinaryChestTheme
 import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
+import com.den.culinarychest.presentation.view_models.RecipeStepsViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import com.example.culinarychest.data.data.api.RetrofitInstance
 import com.example.culinarychest.data.data.repository.ApplicationUserFavoriteRecipeRepositoryImpl
 import com.example.culinarychest.data.data.repository.ApplicationUserRecipeRepositoryImpl
 import com.example.culinarychest.data.data.repository.ApplicationUserRepositoryImpl
 import com.example.culinarychest.data.data.repository.RecipeRepositoryImpl
+import com.example.culinarychest.data.data.repository.RecipeStepsRepositoryImpl
 import com.example.culinarychest.domain.domain.dataclasses.ApplicationUser
-import com.example.culinarychest.domain.domain.dataclasses.ApplicationUserInfo
 import com.example.culinarychest.domain.domain.dataclasses.favorite_recipe.FavoriteRecipe
-import com.example.culinarychest.domain.domain.dataclasses.recipe.CreateRecipe
 import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
 import com.example.culinarychest.domain.domain.dataclasses.recipe.UpdateRecipe
 import com.example.culinarychest.domain.domain.dataclasses.step.CreateStep
@@ -35,6 +35,71 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class MainActivity : ComponentActivity() {
+
+    @SuppressLint("StateFlowValueCalledInComposition")
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            CulinaryChestTheme {
+
+                val username = "denis12"
+                val email = "denis@mail.ru"
+                val password = "1234567891234"
+                val roles = listOf("User")
+
+
+                val recipeId = "8"
+                val favoriteRecipeId = "7"
+
+                val createRecipe = UpdateRecipe(
+                    title = "denis",
+                    recipeImage = "MHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA=",
+                    ingredients = "12345",
+//                    steps = listOf(CreateStep(description = "123", order = 1)),
+                    creationDate = LocalDateTime.now().toString(),
+                    preparationTime = "123456",
+                    savedCount = 0
+                )
+
+                val createStep = CreateStep(
+                    description = "123",
+                    order = 3,
+                )
+
+                Column {
+                    Button(onClick = {
+                        applicationUserViewModel.authorizeUser(
+                            username,
+                            password
+                        )
+                    }) {
+
+                    }
+                    Button(onClick = {
+                        applicationUserViewModel.registerApplicationUser(
+                            user = ApplicationUser(
+                                username,
+                                email,
+                                password,
+                                roles
+                            )
+                        )
+                    }) {
+
+                    }
+                    applicationUserViewModel.token.observeForever { token ->
+                        if (token != null) {
+                            recipeStepsViewModel.createRecipeSteps(token, recipeId, createStep)
+                        }
+                    }
+                }
+            }
+//                AppNavigation()
+        }
+    }
+
+
 
     private val applicationUserViewModel by viewModels<ApplicationUserViewModel>(factoryProducer = {
         object : ViewModelProvider.Factory {
@@ -85,76 +150,18 @@ class MainActivity : ComponentActivity() {
         }
     )
 
-
-    @SuppressLint("StateFlowValueCalledInComposition")
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            CulinaryChestTheme {
-
-                val username = "denis12"
-                val email = "denis@mail.ru"
-                val password = "1234567891234"
-                val roles = listOf("User")
-
-
-                val recipeId = "8"
-                val favoriteRecipeId = "7"
-
-                val createRecipe = UpdateRecipe(
-                    title = "denis",
-                    recipeImage = "MHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA=",
-                    ingredients = "12345",
-//                    steps = listOf(CreateStep(description = "123", order = 1)),
-                    creationDate = LocalDateTime.now().toString(),
-                    preparationTime = "123456",
-                    savedCount = 0
-                )
-
-                Column {
-                    Button(onClick = {
-                        applicationUserViewModel.authorizeUser(
-                            username,
-                            password
-                        )
-                    }) {
-
-                    }
-                    Button(onClick = {
-                        applicationUserViewModel.registerApplicationUser(
-                            user = ApplicationUser(
-                                username,
-                                email,
-                                password,
-                                roles
-                            )
-                        )
-                    }) {
-
-                    }
-                    Button(onClick = {
-                        applicationUserViewModel.token.observeForever { token ->
-
-                            if (token != null) {
-                                applicationUserRecipeViewModel.updateApplicationUserRecipe(token, recipeId, createRecipe)
-                            }
-                        }
-
-
-                    }) {
-
-                    }
+    private val recipeStepsViewModel by viewModels<RecipeStepsViewModel>(
+        factoryProducer = {
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return RecipeStepsViewModel(
+                        RecipeStepsRepositoryImpl(RetrofitInstance.culinaryChestApi)
+                    )
+                            as T
                 }
             }
-//                AppNavigation()
         }
-    }
-
-    @Composable
-    private fun UserInfoText(userInfo: ApplicationUserInfo?) {
-        userInfo?.let { Text(text = it.userName) }
-    }
+    )
 }
 
 

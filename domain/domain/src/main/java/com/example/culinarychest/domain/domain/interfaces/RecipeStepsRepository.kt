@@ -1,12 +1,13 @@
 package com.example.culinarychest.domain.domain.interfaces
 
 import com.example.culinarychest.domain.domain.ProcessingResult
+import com.example.culinarychest.domain.domain.dataclasses.step.CreateStep
 import com.example.culinarychest.domain.domain.dataclasses.step.Step
 import kotlinx.coroutines.flow.Flow
 
 interface RecipeStepsRepository {
-    suspend fun getRecipeSteps(): Flow<ProcessingResult<List<Step>>>
-    suspend fun createRecipeStep(): Flow<ProcessingResult<Step>>
-    suspend fun updateRecipeStep(): Flow<ProcessingResult<Step>>
-    suspend fun deleteRecipeStep(): Flow<ProcessingResult<Step>>
+    suspend fun getRecipeSteps(token: String, recipeId: String): Flow<ProcessingResult<List<Step>>>
+    suspend fun createRecipeStep(token: String, recipeId: String, step: CreateStep)
+    suspend fun updateRecipeStep(token: String, recipeId: String, stepId: String, updateStep: CreateStep)
+    suspend fun deleteRecipeStep(token: String, recipeId: String, stepId: String)
 }
