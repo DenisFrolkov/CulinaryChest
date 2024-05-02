@@ -14,6 +14,8 @@ import com.den.culinarychest.presentation.common.Item.FAB
 import com.den.culinarychest.presentation.common.Item.RecipeItem
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftPink
+import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
+import com.example.culinarychest.domain.domain.dataclasses.step.Step
 
 @Composable
 fun CreatedScreen(
@@ -37,7 +39,10 @@ fun CreatedScreen(
         ) {
             RecipeItem(
                 controller = controller,
-                textRouteNavigation = AppNavigationRoute.FetchUserRecipeScreen.route
+                textRouteNavigation = AppNavigationRoute.FetchUserRecipeScreen.route,
+                recipe = Recipe(recipeId = "1", id = "12", title = "12", recipeImage = "12", ingredients = "12", savedCount = 1, creationDate = "12", preparationTime = "12",
+                    steps = listOf(Step(stepId = 1, description = "12", 1, recipeId = 1))
+                )
             )
         }
     }

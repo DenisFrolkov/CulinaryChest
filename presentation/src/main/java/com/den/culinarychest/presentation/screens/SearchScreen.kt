@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,18 +21,28 @@ import com.den.culinarychest.presentation.common.Item.RecipeItem
 import com.den.culinarychest.presentation.common.Item.SearchBarItem
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftPink
+import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
+import com.den.culinarychest.presentation.view_models.RecipeViewModel
 
 @Composable
 fun SearchScreen(
-    navController: NavController
+    navController: NavController,
+    applicationUserViewModel: ApplicationUserViewModel,
+    recipeViewModel: RecipeViewModel
 ) {
-    Search(controller = navController)
+    Search(
+        controller = navController,
+        applicationUserViewModel = applicationUserViewModel,
+        recipeViewModel = recipeViewModel
+    )
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Search(
-    controller: NavController
+    controller: NavController,
+    applicationUserViewModel: ApplicationUserViewModel,
+    recipeViewModel: RecipeViewModel
 ) {
 
     var searchText by remember { mutableStateOf("") }
@@ -54,11 +65,17 @@ fun Search(
             item {
                 Spacer(modifier = Modifier.height(62.dp))
             }
-            items(10) {
-                RecipeItem(
-                    controller = controller,
-                    textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route
-                )
+            applicationUserViewModel.token.observeForever { token ->
+                if (token != null) {
+                    recipeViewModel.getRecipes(token)
+                }
+                items(recipeViewModel.recipes.value) {recipe ->
+                    RecipeItem(
+                        controller = controller,
+                        textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
+                        recipe = recipe
+                    )
+                }
             }
         }
     }

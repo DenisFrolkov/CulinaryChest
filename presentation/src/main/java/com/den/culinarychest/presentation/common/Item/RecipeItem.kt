@@ -26,11 +26,13 @@ import androidx.navigation.NavController
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.R
+import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
 
 @Composable
 fun RecipeItem(
     controller: NavController,
-    textRouteNavigation: String
+    textRouteNavigation: String,
+    recipe: Recipe
 ) {
     Column(
         modifier = Modifier
@@ -55,14 +57,14 @@ fun RecipeItem(
                 modifier = Modifier.padding(start = 10.dp, top = 12.dp)
             ) {
                 Text(
-                    text = "Макароны с крабовыми палочками, сметаной и чесноком",
+                    text = recipe.title,
                     style = TextStyle(
                         fontSize = 16.sp,
                         color = SoftGray
                     )
                 )
                 Text(
-                    text = "Ингредиенты: макароны, крабовые палочки, чеснок, масло сливочное, сыр твёрдый, сметана, мука... ",
+                    text = recipe.ingredients,
                     style = TextStyle(
                         fontSize = 12.sp,
                         color = SoftGray
@@ -77,14 +79,14 @@ fun RecipeItem(
             DisplayRecipeInfo(
                 iconRecipeInfo = painterResource(id = R.drawable.recipe_info_star_icon),
                 sizeRecipeInfoIcon = 20,
-                textRecipeInfo = "4.5",
+                textRecipeInfo = "${recipe.savedCount}",
                 textFontSize = 12
             )
             Spacer(modifier = Modifier.width(8.dp))
             DisplayRecipeInfo(
                 iconRecipeInfo = painterResource(id = R.drawable.recipe_info_time_icon),
                 sizeRecipeInfoIcon = 20,
-                textRecipeInfo = "30 мин",
+                textRecipeInfo = recipe.preparationTime,
                 textFontSize = 12
             )
             Box(
@@ -95,7 +97,7 @@ fun RecipeItem(
                 DisplayRecipeInfo(
                     iconRecipeInfo = painterResource(id = R.drawable.recipe_info_calendar_icon),
                     sizeRecipeInfoIcon = 16,
-                    textRecipeInfo = "23.10.2020",
+                    textRecipeInfo = recipe.creationDate.takeWhile { it != 'T' },
                     textFontSize = 10
                 )
             }

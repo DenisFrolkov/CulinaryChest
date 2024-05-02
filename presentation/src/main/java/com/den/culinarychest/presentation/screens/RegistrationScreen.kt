@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.Button.PushButton
@@ -29,34 +30,38 @@ import com.den.culinarychest.presentation.common.TextInput.TextInput
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftPink
+import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 
 @Composable
 fun RegistrationScreen(
-    navController: NavController
+    navController: NavController,
+    applicationUserViewModel: ApplicationUserViewModel
 ) {
     Registration(
-        controller = navController
+        controller = navController,
+        applicationUserViewModel = applicationUserViewModel
     )
 }
 
 @Composable
 fun Registration(
-    controller: NavController
+    controller: NavController,
+    applicationUserViewModel: ApplicationUserViewModel
 ) {
 
     // Придумать как оптимизировать эти переменные
 
-    var textLoginField by remember { mutableStateOf("") }
+    var textUserNameField by remember { mutableStateOf("") }
     var textEmailField by remember { mutableStateOf("") }
     var textPasswordField by remember { mutableStateOf("") }
     var textRetryPasswordField by remember { mutableStateOf("") }
 
-    val isLoginValid by remember { derivedStateOf { textLoginField.isEmpty() || textLoginField.matches(Regex("[a-zA-Z0-9_]+")) && textLoginField.length in 5..20 } }
+    val isLoginValid by remember { derivedStateOf { textUserNameField.isEmpty() || textUserNameField.matches(Regex("[a-zA-Z0-9_]+")) && textUserNameField.length in 5..20 } }
     val isEmailValid by remember { derivedStateOf { textEmailField.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(textEmailField).matches() } }
     val isPasswordValid by remember { derivedStateOf { textPasswordField.isEmpty() || textPasswordField.length >= 8 } }
     val isRetryPasswordValid by remember { derivedStateOf { textRetryPasswordField.isEmpty() && textRetryPasswordField == textPasswordField } }
 
-    val isLoginNotEmptyAndValid by remember { derivedStateOf { textLoginField.isNotEmpty() && textLoginField.matches(Regex("[a-zA-Z0-9_]+")) && textLoginField.length in 5..20 } }
+    val isLoginNotEmptyAndValid by remember { derivedStateOf { textUserNameField.isNotEmpty() && textUserNameField.matches(Regex("[a-zA-Z0-9_]+")) && textUserNameField.length in 5..20 } }
     val isEmailNotEmptyAndValid by remember { derivedStateOf { textEmailField.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(textEmailField).matches() } }
     val isPasswordNotEmptyAndValid by remember { derivedStateOf { textPasswordField.isNotEmpty() && textPasswordField.length >= 8 } }
     val isRetryPasswordNotEmptyAndValid by remember { derivedStateOf { textRetryPasswordField.isNotEmpty() && textRetryPasswordField == textPasswordField } }
@@ -91,7 +96,7 @@ fun Registration(
             Spacer(modifier = Modifier.height(24.dp))
             TextInput(
                 outputTextHint = stringResource(R.string.login_text),
-                onTextChanged = { textLoginField = it },
+                onTextChanged = { textUserNameField = it },
                 onTextValidation = { it.matches(Regex("[a-zA-Z0-9_]+")) && it.length in 5..20 },
                 checkTextOnClick = checkTextOnClick,
                 transferVerification = { newShow -> checkTextOnClick = newShow },
@@ -99,7 +104,7 @@ fun Registration(
             )
             Spacer(modifier = Modifier.height(32.dp))
             TextInput(
-                outputTextHint = stringResource(R.string.email_text),
+                outputTextHint = stringResource(R.string.user_name_text),
                 onTextChanged = { textEmailField = it },
                 onTextValidation = { text -> Patterns.EMAIL_ADDRESS.matcher(text).matches() },
                 checkTextOnClick = checkTextOnClick,
@@ -133,7 +138,10 @@ fun Registration(
             controller = controller,
             route = AppNavigationRoute.BottomAppNavigationBar.route,
             onButtonClick = { newValue -> checkTextOnClick = newValue },
-            fieldValidityCheck = allFieldsAreValid
+            fieldValidityCheck = allFieldsAreValid,
+            textUserNameField,
+            textPasswordField,
+            applicationUserViewModel
         )
         Spacer(modifier = Modifier.height(height = 6.dp))
         Text(

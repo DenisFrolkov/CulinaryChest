@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.den.culinarychest.presentation.navigation.appNavigation.AppNavigation
 import com.den.culinarychest.presentation.ui.theme.CulinaryChestTheme
 import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
@@ -36,69 +37,21 @@ import java.time.format.DateTimeFormatter
 
 class MainActivity : ComponentActivity() {
 
-    @SuppressLint("StateFlowValueCalledInComposition")
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             CulinaryChestTheme {
-
-                val username = "denis12"
-                val email = "denis@mail.ru"
-                val password = "1234567891234"
-                val roles = listOf("User")
-
-
-                val recipeId = "8"
-                val favoriteRecipeId = "7"
-
-                val createRecipe = UpdateRecipe(
-                    title = "denis",
-                    recipeImage = "MHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDA=",
-                    ingredients = "12345",
-//                    steps = listOf(CreateStep(description = "123", order = 1)),
-                    creationDate = LocalDateTime.now().toString(),
-                    preparationTime = "123456",
-                    savedCount = 0
+                AppNavigation(
+                    applicationUserViewModel,
+                    recipeViewModel,
+                    applicationUserFavoriteRecipeViewModel,
+                    applicationUserRecipeViewModel,
+                    recipeStepsViewModel
                 )
 
-                val createStep = CreateStep(
-                    description = "123",
-                    order = 3,
-                )
-
-                Column {
-                    Button(onClick = {
-                        applicationUserViewModel.authorizeUser(
-                            username,
-                            password
-                        )
-                    }) {
-
-                    }
-                    Button(onClick = {
-                        applicationUserViewModel.registerApplicationUser(
-                            user = ApplicationUser(
-                                username,
-                                email,
-                                password,
-                                roles
-                            )
-                        )
-                    }) {
-
-                    }
-                    applicationUserViewModel.token.observeForever { token ->
-                        if (token != null) {
-                            recipeStepsViewModel.createRecipeSteps(token, recipeId, createStep)
-                        }
-                    }
-                }
             }
-//                AppNavigation()
         }
     }
-
 
 
     private val applicationUserViewModel by viewModels<ApplicationUserViewModel>(factoryProducer = {
@@ -163,33 +116,3 @@ class MainActivity : ComponentActivity() {
         }
     )
 }
-
-
-@Composable
-fun Recipe(recipe: Recipe) {
-    Column {
-        Text(text = recipe.title)
-        recipe.steps.forEach { step ->
-            StepItem(step = step)
-        }
-    }
-}
-
-
-@Composable
-fun StepItem(step: Step) {
-    Text(text = "${step.order}. ${step.description}")
-}
-
-@Composable
-fun FavoriteRecipe(favoriteRecipe: FavoriteRecipe) {
-    favoriteRecipe?.let { it.id?.let { Text(text = it) } }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-fun getCurrentDateTime(): String {
-    val currentDateTime = LocalDateTime.now()
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS Z")
-    return currentDateTime.format(formatter)
-}
-

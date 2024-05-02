@@ -33,12 +33,16 @@ import com.den.culinarychest.presentation.screens.ProfileScreen
 import com.den.culinarychest.presentation.screens.SearchScreen
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
+import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
+import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import com.den.culinarychest.presentation.сlasses.data_class.BottomNavigationItem
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun BottomNavigationBar(
-    navController: NavController
+    navController: NavController,
+    applicationUserViewModel: ApplicationUserViewModel,
+    recipeViewModel: RecipeViewModel
 ) {
     val bottomController = rememberNavController()
 
@@ -106,7 +110,11 @@ fun BottomNavigationBar(
             startDestination = BottomNavigationRoute.SearchScreen.route
         ) {
             composable(BottomNavigationRoute.SearchScreen.route) {
-                SearchScreen(navController = navController)
+                SearchScreen(
+                    navController = navController,
+                    applicationUserViewModel = applicationUserViewModel,
+                    recipeViewModel = recipeViewModel
+                )
             }
             composable(BottomNavigationRoute.TopNavigationBar.route) {
                 HorizontalPagerScreen(navController = navController)

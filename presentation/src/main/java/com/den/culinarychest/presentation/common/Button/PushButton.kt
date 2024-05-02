@@ -15,10 +15,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.den.culinarychest.presentation.ui.theme.LightGray
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
+import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 
 @Composable
 fun PushButton(
@@ -27,7 +30,10 @@ fun PushButton(
     controller: NavController,
     route: String,
     onButtonClick: (Boolean) -> Unit,
-    fieldValidityCheck: Boolean
+    fieldValidityCheck: Boolean,
+    textUserNameField: String,
+    textPasswordField: String,
+    applicationUserViewModel: ApplicationUserViewModel
 ) {
     Box(
         modifier = Modifier
@@ -35,8 +41,9 @@ fun PushButton(
             .border(width = 0.3.dp, color = Color.Gray, shape = RoundedCornerShape(12.dp))
             .clip(shape = RoundedCornerShape(12.dp))
             .clickable {
-                if (fieldValidityCheck) controller.navigate(route)
-                if (fieldCheck) onButtonClick(true) else onButtonClick(false)
+                applicationUserViewModel.authorizeUser(textUserNameField, textPasswordField)
+                if (fieldValidityCheck && applicationUserViewModel.token != null) controller.navigate(route)
+                if (fieldCheck && applicationUserViewModel.token != null) onButtonClick(true) else onButtonClick(false)
             },
     ) {
         Text(

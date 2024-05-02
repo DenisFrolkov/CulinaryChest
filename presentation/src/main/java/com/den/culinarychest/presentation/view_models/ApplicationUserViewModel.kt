@@ -1,5 +1,6 @@
 package com.den.culinarychest.presentation.view_models
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class ApplicationUserViewModel(
     private val applicationUserRepository: ApplicationUserRepository
@@ -32,7 +34,7 @@ class ApplicationUserViewModel(
     private val _userInfoResult = MutableStateFlow<ApplicationUserInfo?>(null)
     val userInfoResult = _userInfoResult.asStateFlow()
 
-    private val _showErrorToastChannel = Channel<Boolean>()
+    private val _showErrorToastChannel = Channel<String>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
 
 
@@ -48,7 +50,7 @@ class ApplicationUserViewModel(
             } catch (e: Exception) {
                 _registrationResult.value =
                     ProcessingResult.Error(message = "Error registering user: ${e.message}")
-                _showErrorToastChannel.send(true)
+//                _showErrorToastChannel.send("Error")
             }
         }
     }
@@ -56,25 +58,32 @@ class ApplicationUserViewModel(
     fun authorizeUser(username: String, password: String) {
         viewModelScope.launch {
             try {
-                val result =
-                    applicationUserRepository.authorizationApplicationUser(username, password)
+                val result = applicationUserRepository.authorizationApplicationUser(username, password)
                 if (result is ProcessingResult.Success) {
                     setToken("Bearer ${result.data?.token ?: ""}")
                 } else {
-                    _showErrorToastChannel.send(true)
                 }
             } catch (e: Exception) {
-                _showErrorToastChannel.send(true)
+                val errorMessage = when (e) {
+                    is HttpException -> when (e.code()) {
+                        401 -> "Неправильное имя пользователя или пароль"
+                        else -> "Произошла ошибка при авторизации! Но мы скоро все починим ;)"
+                    }
+                    else -> "Произошла ошибка при авторизации! Но мы скоро все починим ;)"
+                }
+                _showErrorToastChannel.send(errorMessage)
             }
         }
     }
+
+
 
     fun getApplicationUserInfo(token: String) {
         viewModelScope.launch {
             applicationUserRepository.getApplicationUserId(token = token).collectLatest { result ->
                 when (result) {
                     is ProcessingResult.Error -> {
-                        _showErrorToastChannel.send(true)
+//                        _showErrorToastChannel.send("Error")
                     }
 
                     is ProcessingResult.Success -> {

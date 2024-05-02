@@ -1,6 +1,7 @@
 package com.den.culinarychest.presentation.screens
 
 import android.util.Patterns
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -12,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -30,34 +34,46 @@ import com.den.culinarychest.presentation.common.TextInput.TextInput
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftPink
+import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
 @Composable
 fun AuthorizationScreen(
-    navController: NavController
+    navController: NavController,
+    applicationUserViewModel: ApplicationUserViewModel
 ) {
 
-    Authorization(controller = navController)
+    Authorization(controller = navController, applicationUserViewModel = applicationUserViewModel)
 }
 
 
 @Composable
 fun Authorization(
-    controller: NavController
+    controller: NavController,
+    applicationUserViewModel: ApplicationUserViewModel
+
 ) {
-
-    // Придумать как оптимизировать эти переменные
-
-    var textEmailField by remember { mutableStateOf("") }
+    var textUserNameField by remember { mutableStateOf("") }
     var textPasswordField by remember { mutableStateOf("") }
 
-    val isEmailValid by remember { derivedStateOf { textEmailField.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(textEmailField).matches() } }
-    val isPasswordValid by remember { derivedStateOf { textPasswordField.isNotEmpty() && textPasswordField.length >= 8 } }
+    val isUserNameValid by remember {
+        derivedStateOf {
+            textUserNameField.isEmpty()
+        }
+    }
+    val isPasswordValid by remember { derivedStateOf { textPasswordField.isNotEmpty() && textPasswordField.length >= 13 } }
 
-    val isEmailNotEmptyAndValid by remember { derivedStateOf { textEmailField.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(textEmailField).matches() } }
-    val isPasswordNotEmptyAndValid by remember { derivedStateOf { textPasswordField.isNotEmpty() && textPasswordField.length >=  8 } }
+    val isUserNameNotEmptyAndValid by remember {
+        derivedStateOf {
+            textUserNameField.isNotEmpty()
+        }
+    }
+    val isPasswordNotEmptyAndValid by remember { derivedStateOf { textPasswordField.isNotEmpty() && textPasswordField.length >= 13 } }
 
-    val hasValidInput by remember { derivedStateOf { isEmailValid || isPasswordValid } }
-    val allFieldsAreValid by remember { derivedStateOf { isEmailNotEmptyAndValid && isPasswordNotEmptyAndValid } }
+    val hasValidInput by remember { derivedStateOf { isUserNameValid || isPasswordValid } }
+    val allFieldsAreValid by remember { derivedStateOf { isUserNameNotEmptyAndValid && isPasswordNotEmptyAndValid } }
 
     var checkTextOnClick by remember { mutableStateOf(false) }
 
@@ -84,8 +100,8 @@ fun Authorization(
                 .padding(horizontal = 16.dp)
         ) {
             TextInput(
-                outputTextHint = stringResource(R.string.email_text),
-                onTextChanged = { inputEmail -> textEmailField = inputEmail },
+                outputTextHint = stringResource(R.string.user_name_text),
+                onTextChanged = { inputUserName -> textUserNameField = inputUserName },
                 onTextValidation = { text -> Patterns.EMAIL_ADDRESS.matcher(text).matches() },
                 checkTextOnClick = checkTextOnClick,
                 transferVerification = { newShow -> checkTextOnClick = newShow },
@@ -93,7 +109,7 @@ fun Authorization(
             )
             Spacer(modifier = Modifier.height(16.dp))
             TextInput(
-                outputTextHint = stringResource(R.string.verification_text),
+                outputTextHint = stringResource(R.string.password_text),
                 onTextChanged = { inputPass -> textPasswordField = inputPass },
                 onTextValidation = { text -> text.length >= 8 },
                 checkTextOnClick = checkTextOnClick,
@@ -108,7 +124,10 @@ fun Authorization(
             controller = controller,
             route = AppNavigationRoute.BottomAppNavigationBar.route,
             onButtonClick = { newValue -> checkTextOnClick = newValue },
-            fieldValidityCheck = allFieldsAreValid
+            fieldValidityCheck = allFieldsAreValid,
+            textUserNameField,
+            textPasswordField,
+            applicationUserViewModel
         )
         Spacer(modifier = Modifier.height(height = 6.dp))
         Text(
@@ -126,3 +145,6 @@ fun Authorization(
         )
     }
 }
+
+
+

@@ -5,5 +5,6 @@ sealed class ProcessingResult<T>(
     val message: String? = null
 ) {
     class Success<T>(data: T?) : ProcessingResult<T>(data)
-    class Error<T>(data: T? = null, message: String) : ProcessingResult<T>(data, message)
+    class Error<T>(message: String, data: T? = null) : ProcessingResult<T>(data, message)
 }
+
