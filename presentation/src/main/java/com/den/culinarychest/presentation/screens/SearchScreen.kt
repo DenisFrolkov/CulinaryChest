@@ -33,13 +33,8 @@ fun SearchScreen(
     recipeViewModel: RecipeViewModel,
     tokenManager: TokenManager
 ) {
-    val token = tokenManager.getToken()
-    token?.let { recipeViewModel.getRecipes(it) }
-
-
     Search(
         controller = navController,
-        applicationUserViewModel = applicationUserViewModel,
         recipeViewModel = recipeViewModel
     )
 }
@@ -48,7 +43,6 @@ fun SearchScreen(
 @Composable
 fun Search(
     controller: NavController,
-    applicationUserViewModel: ApplicationUserViewModel,
     recipeViewModel: RecipeViewModel
 ) {
     var searchText by remember { mutableStateOf("") }

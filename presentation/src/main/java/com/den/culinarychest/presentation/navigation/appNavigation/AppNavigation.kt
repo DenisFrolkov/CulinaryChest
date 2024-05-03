@@ -65,12 +65,16 @@ fun AppNavigation(
             )
         }
         composable(AppNavigationRoute.BottomAppNavigationBar.route) {
+
+            tokenManager.getToken()?.let { recipeViewModel.getRecipes(it) }
+
             BottomNavigationBar(
                 navController = appNavigationController,
                 applicationUserViewModel = applicationUserViewModel,
                 recipeViewModel = recipeViewModel,
                 applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
-                tokenManager = tokenManager
+                tokenManager = tokenManager,
+                applicationUserRecipeViewModel = applicationUserRecipeViewModel
             )
         }
         composable(AppNavigationRoute.FetchOtherUserRecipeScreen.route) {
@@ -83,7 +87,8 @@ fun AppNavigation(
             FetchUserRecipeScreen(
                 navController = appNavigationController,
                 applicationUserViewModel = applicationUserViewModel,
-                applicationUserRecipeViewModel = applicationUserRecipeViewModel)
+                applicationUserRecipeViewModel = applicationUserRecipeViewModel
+            )
         }
         composable(AppNavigationRoute.EditRecipeScreen.route) {
             EditRecipeScreen(navController = appNavigationController)

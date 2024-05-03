@@ -34,6 +34,7 @@ import com.den.culinarychest.presentation.screens.SearchScreen
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
+import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import com.den.culinarychest.presentation.сlasses.data_class.BottomNavigationItem
@@ -46,6 +47,7 @@ fun BottomNavigationBar(
     applicationUserViewModel: ApplicationUserViewModel,
     recipeViewModel: RecipeViewModel,
     applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
+    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
     tokenManager: TokenManager
 ) {
     val bottomController = rememberNavController()
@@ -128,14 +130,13 @@ fun BottomNavigationBar(
                 )
             }
             composable(BottomNavigationRoute.TopNavigationBar.route) {
-                applicationUserViewModel.token.observeForever { token ->
-                    token?.let { applicationUserFavoriteRecipeViewModel.getApplicationUserFavoriteRecipes(it) }
-                }
+                tokenManager.getToken()?.let { applicationUserFavoriteRecipeViewModel.getApplicationUserFavoriteRecipes(it) }
                 HorizontalPagerScreen(
                     navController = navController,
                     applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
-                    applicationUserViewModel = applicationUserViewModel,
-                    recipeViewModel = recipeViewModel
+                    applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+                    recipeViewModel = recipeViewModel,
+                    tokenManager = tokenManager
                 )
             }
             composable(BottomNavigationRoute.ProfileScreen.route) {

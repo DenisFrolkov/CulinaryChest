@@ -10,6 +10,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -18,8 +19,10 @@ import androidx.navigation.NavController
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.Item.TopBarButtonItem
 import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
+import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
+import com.example.culinarychest.data.data.TokenManager
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -27,14 +30,16 @@ import kotlinx.coroutines.launch
 fun HorizontalPagerScreen(
     navController: NavController,
     applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
-    applicationUserViewModel: ApplicationUserViewModel,
-    recipeViewModel: RecipeViewModel
+    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
+    recipeViewModel: RecipeViewModel,
+    tokenManager: TokenManager
 ) {
     HorizontalPager(
         controller = navController,
         applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
-        applicationUserViewModel = applicationUserViewModel,
-        recipeViewModel = recipeViewModel
+        applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+        recipeViewModel = recipeViewModel,
+        tokenManager = tokenManager
     )
 }
 
@@ -44,10 +49,12 @@ fun HorizontalPagerScreen(
 fun HorizontalPager(
     controller: NavController,
     applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
-    applicationUserViewModel: ApplicationUserViewModel,
-    recipeViewModel: RecipeViewModel
+    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
+    recipeViewModel: RecipeViewModel,
+    tokenManager: TokenManager
 ) {
     val pagerState = rememberPagerState(pageCount = { 2 })
+
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
@@ -82,11 +89,15 @@ fun HorizontalPager(
                 0 -> FavoriteScreen(
                     controller = controller,
                     applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
-                    applicationUserViewModel = applicationUserViewModel,
-                    recipeViewModel = recipeViewModel
+                    recipeViewModel = recipeViewModel,
+                    tokenManager = tokenManager
                 )
 
-                1 -> CreatedScreen(controller = controller)
+                1 -> CreatedScreen(
+                    controller = controller,
+                    applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+                    tokenManager = tokenManager
+                )
             }
         }
     }

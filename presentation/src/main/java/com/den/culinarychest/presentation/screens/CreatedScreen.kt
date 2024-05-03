@@ -14,12 +14,16 @@ import com.den.culinarychest.presentation.common.Item.FAB
 import com.den.culinarychest.presentation.common.Item.RecipeItem
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftPink
+import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
+import com.example.culinarychest.data.data.TokenManager
 import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
 import com.example.culinarychest.domain.domain.dataclasses.step.Step
 
 @Composable
 fun CreatedScreen(
-    controller: NavController
+    controller: NavController,
+    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
+    tokenManager: TokenManager
 ) {
     Box(
         modifier = Modifier

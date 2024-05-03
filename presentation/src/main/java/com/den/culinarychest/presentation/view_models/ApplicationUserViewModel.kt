@@ -68,9 +68,9 @@ class ApplicationUserViewModel(
                 val result = applicationUserRepository.authorizationApplicationUser(username, password)
                 if (result is ProcessingResult.Success) {
                     val token = result.data?.token ?: ""
-                    tokenManager.saveToken("Bearer $token")
-                } else{
-                    // Доделайте обработку ошибки
+                    tokenManager.saveToken(token)
+                } else {
+
                 }
             } catch (e: Exception) {
                 val errorMessage = when (e) {
