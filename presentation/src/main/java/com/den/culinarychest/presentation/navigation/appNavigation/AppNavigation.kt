@@ -1,6 +1,7 @@
 package com.den.culinarychest.presentation.navigation.appNavigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,6 +19,7 @@ import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewM
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.den.culinarychest.presentation.view_models.RecipeStepsViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
+import com.example.culinarychest.data.data.TokenManager
 
 @Composable
 fun AppNavigation(
@@ -26,37 +28,62 @@ fun AppNavigation(
     applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
     applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
     recipeStepsViewModel: RecipeStepsViewModel,
+    tokenManager: TokenManager
 ) {
+
+    val token = remember { tokenManager.getToken() }
+
+    val isUserAuthorized = token != null
+
+    val navController = rememberNavController()
+
+    val startDestination = if (isUserAuthorized) {
+        AppNavigationRoute.BottomAppNavigationBar.route
+    } else {
+        AppNavigationRoute.AuthorizationScreen.route
+    }
+
     val appNavigationController = rememberNavController()
     NavHost(
         navController = appNavigationController,
-        startDestination = AppNavigationRoute.AuthorizationScreen.route
+        startDestination = startDestination
     )
     {
         composable(AppNavigationRoute.AuthorizationScreen.route) {
             AuthorizationScreen(
                 navController = appNavigationController,
-                applicationUserViewModel = applicationUserViewModel
+                applicationUserViewModel = applicationUserViewModel,
+                tokenManager = tokenManager
             )
+
         }
         composable(AppNavigationRoute.RegistrationScreen.route) {
             RegistrationScreen(
                 navController = appNavigationController,
-                applicationUserViewModel = applicationUserViewModel
+                applicationUserViewModel = applicationUserViewModel,
+                tokenManager = tokenManager
             )
         }
         composable(AppNavigationRoute.BottomAppNavigationBar.route) {
             BottomNavigationBar(
                 navController = appNavigationController,
                 applicationUserViewModel = applicationUserViewModel,
-                recipeViewModel = recipeViewModel
+                recipeViewModel = recipeViewModel,
+                applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
+                tokenManager = tokenManager
             )
         }
         composable(AppNavigationRoute.FetchOtherUserRecipeScreen.route) {
-            FetchOtherUserRecipeScreen(navController = appNavigationController)
+            FetchOtherUserRecipeScreen(
+                navController = appNavigationController,
+                recipeViewModel = recipeViewModel
+            )
         }
         composable(AppNavigationRoute.FetchUserRecipeScreen.route) {
-            FetchUserRecipeScreen(navController = appNavigationController)
+            FetchUserRecipeScreen(
+                navController = appNavigationController,
+                applicationUserViewModel = applicationUserViewModel,
+                applicationUserRecipeViewModel = applicationUserRecipeViewModel)
         }
         composable(AppNavigationRoute.EditRecipeScreen.route) {
             EditRecipeScreen(navController = appNavigationController)

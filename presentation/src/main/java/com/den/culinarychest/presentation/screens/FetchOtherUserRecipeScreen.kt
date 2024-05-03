@@ -40,10 +40,12 @@ import com.den.culinarychest.presentation.common.Item.StepRecipeItem
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
+import com.den.culinarychest.presentation.view_models.RecipeViewModel
 
 @Composable
 fun FetchOtherUserRecipeScreen(
     navController: NavController,
+    recipeViewModel: RecipeViewModel
 ) {
     FetchOtherUserRecipe(controller = navController)
 }

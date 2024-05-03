@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.den.culinarychest.presentation.navigation.appNavigation.AppNavigation
@@ -20,6 +21,7 @@ import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewM
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.den.culinarychest.presentation.view_models.RecipeStepsViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
+import com.example.culinarychest.data.data.TokenManager
 import com.example.culinarychest.data.data.api.RetrofitInstance
 import com.example.culinarychest.data.data.repository.ApplicationUserFavoriteRecipeRepositoryImpl
 import com.example.culinarychest.data.data.repository.ApplicationUserRecipeRepositoryImpl
@@ -46,30 +48,32 @@ class MainActivity : ComponentActivity() {
                     recipeViewModel,
                     applicationUserFavoriteRecipeViewModel,
                     applicationUserRecipeViewModel,
-                    recipeStepsViewModel
+                    recipeStepsViewModel,
+                    TokenManager(this)
                 )
-
             }
         }
     }
 
+    val tokenManager = TokenManager(this)
 
     private val applicationUserViewModel by viewModels<ApplicationUserViewModel>(factoryProducer = {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return ApplicationUserViewModel(
-                    ApplicationUserRepositoryImpl(RetrofitInstance.culinaryChestApi)
-                )
-                        as T
+                    TokenManager(this@MainActivity),
+                    ApplicationUserRepositoryImpl(RetrofitInstance(tokenManager).culinaryChestApi)
+                ) as T
             }
         }
     })
+
 
     private val recipeViewModel by viewModels<RecipeViewModel>(factoryProducer = {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return RecipeViewModel(
-                    RecipeRepositoryImpl(RetrofitInstance.culinaryChestApi)
+                    RecipeRepositoryImpl(RetrofitInstance(tokenManager).culinaryChestApi)
                 )
                         as T
             }
@@ -81,7 +85,7 @@ class MainActivity : ComponentActivity() {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return ApplicationUserFavoriteRecipeViewModel(
-                        ApplicationUserFavoriteRecipeRepositoryImpl(RetrofitInstance.culinaryChestApi),
+                        ApplicationUserFavoriteRecipeRepositoryImpl(RetrofitInstance(tokenManager).culinaryChestApi),
                         applicationUserViewModel = applicationUserViewModel
                     )
                             as T
@@ -95,7 +99,7 @@ class MainActivity : ComponentActivity() {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return ApplicationUserRecipeViewModel(
-                        ApplicationUserRecipeRepositoryImpl(RetrofitInstance.culinaryChestApi)
+                        ApplicationUserRecipeRepositoryImpl(RetrofitInstance(tokenManager).culinaryChestApi)
                     )
                             as T
                 }
@@ -108,7 +112,7 @@ class MainActivity : ComponentActivity() {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return RecipeStepsViewModel(
-                        RecipeStepsRepositoryImpl(RetrofitInstance.culinaryChestApi)
+                        RecipeStepsRepositoryImpl(RetrofitInstance(tokenManager).culinaryChestApi)
                     )
                             as T
                 }

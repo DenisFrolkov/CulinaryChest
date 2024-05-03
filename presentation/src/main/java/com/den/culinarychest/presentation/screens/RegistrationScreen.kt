@@ -31,22 +31,26 @@ import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
+import com.example.culinarychest.data.data.TokenManager
 
 @Composable
 fun RegistrationScreen(
     navController: NavController,
-    applicationUserViewModel: ApplicationUserViewModel
+    applicationUserViewModel: ApplicationUserViewModel,
+    tokenManager: TokenManager
 ) {
     Registration(
         controller = navController,
-        applicationUserViewModel = applicationUserViewModel
+        applicationUserViewModel = applicationUserViewModel,
+        tokenManager = tokenManager
     )
 }
 
 @Composable
 fun Registration(
     controller: NavController,
-    applicationUserViewModel: ApplicationUserViewModel
+    applicationUserViewModel: ApplicationUserViewModel,
+    tokenManager: TokenManager
 ) {
 
     // Придумать как оптимизировать эти переменные
@@ -56,13 +60,37 @@ fun Registration(
     var textPasswordField by remember { mutableStateOf("") }
     var textRetryPasswordField by remember { mutableStateOf("") }
 
-    val isLoginValid by remember { derivedStateOf { textUserNameField.isEmpty() || textUserNameField.matches(Regex("[a-zA-Z0-9_]+")) && textUserNameField.length in 5..20 } }
-    val isEmailValid by remember { derivedStateOf { textEmailField.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(textEmailField).matches() } }
+    val isLoginValid by remember {
+        derivedStateOf {
+            textUserNameField.isEmpty() || textUserNameField.matches(
+                Regex("[a-zA-Z0-9_]+")
+            ) && textUserNameField.length in 5..20
+        }
+    }
+    val isEmailValid by remember {
+        derivedStateOf {
+            textEmailField.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(
+                textEmailField
+            ).matches()
+        }
+    }
     val isPasswordValid by remember { derivedStateOf { textPasswordField.isEmpty() || textPasswordField.length >= 8 } }
     val isRetryPasswordValid by remember { derivedStateOf { textRetryPasswordField.isEmpty() && textRetryPasswordField == textPasswordField } }
 
-    val isLoginNotEmptyAndValid by remember { derivedStateOf { textUserNameField.isNotEmpty() && textUserNameField.matches(Regex("[a-zA-Z0-9_]+")) && textUserNameField.length in 5..20 } }
-    val isEmailNotEmptyAndValid by remember { derivedStateOf { textEmailField.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(textEmailField).matches() } }
+    val isLoginNotEmptyAndValid by remember {
+        derivedStateOf {
+            textUserNameField.isNotEmpty() && textUserNameField.matches(
+                Regex("[a-zA-Z0-9_]+")
+            ) && textUserNameField.length in 5..20
+        }
+    }
+    val isEmailNotEmptyAndValid by remember {
+        derivedStateOf {
+            textEmailField.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(
+                textEmailField
+            ).matches()
+        }
+    }
     val isPasswordNotEmptyAndValid by remember { derivedStateOf { textPasswordField.isNotEmpty() && textPasswordField.length >= 8 } }
     val isRetryPasswordNotEmptyAndValid by remember { derivedStateOf { textRetryPasswordField.isNotEmpty() && textRetryPasswordField == textPasswordField } }
 
@@ -141,7 +169,8 @@ fun Registration(
             fieldValidityCheck = allFieldsAreValid,
             textUserNameField,
             textPasswordField,
-            applicationUserViewModel
+            applicationUserViewModel,
+            tokenManager
         )
         Spacer(modifier = Modifier.height(height = 6.dp))
         Text(

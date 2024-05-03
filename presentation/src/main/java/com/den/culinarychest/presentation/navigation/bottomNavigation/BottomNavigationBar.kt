@@ -33,28 +33,38 @@ import com.den.culinarychest.presentation.screens.ProfileScreen
 import com.den.culinarychest.presentation.screens.SearchScreen
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
+import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import com.den.culinarychest.presentation.сlasses.data_class.BottomNavigationItem
+import com.example.culinarychest.data.data.TokenManager
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun BottomNavigationBar(
     navController: NavController,
     applicationUserViewModel: ApplicationUserViewModel,
-    recipeViewModel: RecipeViewModel
+    recipeViewModel: RecipeViewModel,
+    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
+    tokenManager: TokenManager
 ) {
     val bottomController = rememberNavController()
 
     val bottomNavigationItems = listOf(
         BottomNavigationItem(
-            BottomNavigationRoute.SearchScreen.route, R.drawable.bottombnavigation_search_icon, stringResource(R.string.search_text)
+            BottomNavigationRoute.SearchScreen.route,
+            R.drawable.bottombnavigation_search_icon,
+            stringResource(R.string.search_text)
         ),
         BottomNavigationItem(
-            BottomNavigationRoute.TopNavigationBar.route, R.drawable.bottombnavigation_favorites_icon, stringResource(R.string.favorite_text)
+            BottomNavigationRoute.TopNavigationBar.route,
+            R.drawable.bottombnavigation_favorites_icon,
+            stringResource(R.string.favorite_text)
         ),
         BottomNavigationItem(
-            BottomNavigationRoute.ProfileScreen.route, R.drawable.bottombnavigation_profile_icon, stringResource(R.string.profile_text)
+            BottomNavigationRoute.ProfileScreen.route,
+            R.drawable.bottombnavigation_profile_icon,
+            stringResource(R.string.profile_text)
         ),
     )
 
@@ -113,11 +123,20 @@ fun BottomNavigationBar(
                 SearchScreen(
                     navController = navController,
                     applicationUserViewModel = applicationUserViewModel,
-                    recipeViewModel = recipeViewModel
+                    recipeViewModel = recipeViewModel,
+                    tokenManager = tokenManager
                 )
             }
             composable(BottomNavigationRoute.TopNavigationBar.route) {
-                HorizontalPagerScreen(navController = navController)
+                applicationUserViewModel.token.observeForever { token ->
+                    token?.let { applicationUserFavoriteRecipeViewModel.getApplicationUserFavoriteRecipes(it) }
+                }
+                HorizontalPagerScreen(
+                    navController = navController,
+                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
+                    applicationUserViewModel = applicationUserViewModel,
+                    recipeViewModel = recipeViewModel
+                )
             }
             composable(BottomNavigationRoute.ProfileScreen.route) {
                 ProfileScreen(navController = navController)

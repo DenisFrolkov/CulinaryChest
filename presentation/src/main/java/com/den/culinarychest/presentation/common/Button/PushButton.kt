@@ -22,6 +22,7 @@ import com.den.culinarychest.presentation.ui.theme.LightGray
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
+import com.example.culinarychest.data.data.TokenManager
 
 @Composable
 fun PushButton(
@@ -33,7 +34,8 @@ fun PushButton(
     fieldValidityCheck: Boolean,
     textUserNameField: String,
     textPasswordField: String,
-    applicationUserViewModel: ApplicationUserViewModel
+    applicationUserViewModel: ApplicationUserViewModel,
+    tokenManager: TokenManager
 ) {
     Box(
         modifier = Modifier
@@ -41,7 +43,7 @@ fun PushButton(
             .border(width = 0.3.dp, color = Color.Gray, shape = RoundedCornerShape(12.dp))
             .clip(shape = RoundedCornerShape(12.dp))
             .clickable {
-                applicationUserViewModel.authorizeUser(textUserNameField, textPasswordField)
+                applicationUserViewModel.authorizeUser(textUserNameField, textPasswordField, tokenManager)
                 if (fieldValidityCheck && applicationUserViewModel.token != null) controller.navigate(route)
                 if (fieldCheck && applicationUserViewModel.token != null) onButtonClick(true) else onButtonClick(false)
             },

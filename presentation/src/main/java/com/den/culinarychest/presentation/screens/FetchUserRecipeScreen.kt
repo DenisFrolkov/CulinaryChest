@@ -45,22 +45,35 @@ import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
+import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
+import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 
 @Composable
 fun FetchUserRecipeScreen(
-    navController: NavController
+    navController: NavController,
+    applicationUserViewModel: ApplicationUserViewModel,
+    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel
 ) {
-    FetchUserRecipe(controller = navController)
+    FetchUserRecipe(
+        controller = navController,
+        applicationUserViewModel = applicationUserViewModel,
+        applicationUserRecipeViewModel = applicationUserRecipeViewModel
+    )
 }
 
 @Composable
 fun FetchUserRecipe(
-    controller: NavController
+    controller: NavController,
+    applicationUserViewModel: ApplicationUserViewModel,
+    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel
 ) {
 
-    val recipeIngredients = """
-        Макароны – 100 г, Крабовые палочки – 100 г, Чеснок – 1 зубчик, Масло сливочное – 10 г, Сыр твёрдый – 10 г, Сметана – 2 ст. ложки, Мука – 1/4 ч. ложки, Травы прованские сушеные – 1/2 ч. ложки, Соль – по вкусу, Перец чёрный молотый – по вкусу;
-    """.trimIndent()
+    applicationUserViewModel.token.observeForever { token ->
+        token?.let { applicationUserRecipeViewModel.getApplicationUserRecipes(it) }
+    }
+
+
+    val recipeIngredients = """ 12 """.trimIndent()
     val recipeSteps = arrayOf(
         "Подготавливаем все необходимые продукты.",
         "Начинаем с приготовления макарон. В небольшую кастрюлю наливаем воду, добавляем 1 щепотку соли, доводим до кипения. Опускаем макароны в кипящую воду, перемешиваем и варим, периодически помешивая, примерно 8-10 минут или согласно инструкции на упаковке, до мягкости. Отваренные макароны откидываем на дуршлаг, даём стечь лишней жидкости.",
@@ -103,7 +116,9 @@ fun FetchUserRecipe(
         ) {
             RecipeDropDownMenu(
                 dropDownMenuItems = dropDownMenuItems,
-                onClickParameters = { newValueParameters -> mappingDropdownMenu = newValueParameters },
+                onClickParameters = { newValueParameters ->
+                    mappingDropdownMenu = newValueParameters
+                },
                 onItemClick = { selectedItem ->
                     when (selectedItem) {
                         "Редактировать" -> {

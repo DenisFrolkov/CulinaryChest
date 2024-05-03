@@ -5,12 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.culinarychest.data.data.TokenManager
 import com.example.culinarychest.domain.domain.ProcessingResult
 import com.example.culinarychest.domain.domain.dataclasses.ApplicationUser
 import com.example.culinarychest.domain.domain.dataclasses.ApplicationUserInfo
 import com.example.culinarychest.domain.domain.dataclasses.Token
 import com.example.culinarychest.domain.domain.interfaces.ApplicationUserRepository
 import com.example.culinarychest.domain.domain.interfaces.RecipeRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +24,7 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class ApplicationUserViewModel(
+    private val tokenManager: TokenManager,
     private val applicationUserRepository: ApplicationUserRepository
 ) : ViewModel() {
 
@@ -55,13 +58,19 @@ class ApplicationUserViewModel(
         }
     }
 
-    fun authorizeUser(username: String, password: String) {
+    fun authorizeUser(
+        username: String,
+        password: String,
+        tokenManager: TokenManager,
+    ) {
         viewModelScope.launch {
             try {
                 val result = applicationUserRepository.authorizationApplicationUser(username, password)
                 if (result is ProcessingResult.Success) {
-                    setToken("Bearer ${result.data?.token ?: ""}")
-                } else {
+                    val token = result.data?.token ?: ""
+                    tokenManager.saveToken("Bearer $token")
+                } else{
+                    // Доделайте обработку ошибки
                 }
             } catch (e: Exception) {
                 val errorMessage = when (e) {
@@ -83,13 +92,15 @@ class ApplicationUserViewModel(
             applicationUserRepository.getApplicationUserId(token = token).collectLatest { result ->
                 when (result) {
                     is ProcessingResult.Error -> {
-//                        _showErrorToastChannel.send("Error")
-                    }
 
+                    }
                     is ProcessingResult.Success -> {
                         result.data.let { userInfo ->
                             _userInfoResult.update { userInfo }
                         }
+                    }
+
+                    else -> {
 
                     }
                 }

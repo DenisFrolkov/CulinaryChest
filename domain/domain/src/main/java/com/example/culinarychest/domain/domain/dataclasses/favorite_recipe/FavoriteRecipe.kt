@@ -4,12 +4,12 @@ import com.google.gson.annotations.SerializedName
 import java.time.LocalDateTime
 
 data class FavoriteRecipe(
-    @SerializedName("FavoriteRecipeId")
+    @SerializedName("FavoriteRecipeId", alternate = ["favoriteRecipeId"])
     val favoriteRecipeId: Int,
-    @SerializedName("Id")
+    @SerializedName("Id", alternate = ["id"])
     val id: String,
-    @SerializedName("RecipeId")
+    @SerializedName("RecipeId", alternate = ["recipeId"])
     val recipeId: Int,
-    @SerializedName("AddedDate")
+    @SerializedName("AddedDate", alternate = ["addedDate"])
     val addedDate: String,
 )

@@ -35,6 +35,7 @@ import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
+import com.example.culinarychest.data.data.TokenManager
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -42,17 +43,19 @@ import kotlinx.coroutines.launch
 @Composable
 fun AuthorizationScreen(
     navController: NavController,
-    applicationUserViewModel: ApplicationUserViewModel
+    applicationUserViewModel: ApplicationUserViewModel,
+    tokenManager: TokenManager
 ) {
 
-    Authorization(controller = navController, applicationUserViewModel = applicationUserViewModel)
+    Authorization(controller = navController, applicationUserViewModel = applicationUserViewModel, tokenManager = tokenManager)
 }
 
 
 @Composable
 fun Authorization(
     controller: NavController,
-    applicationUserViewModel: ApplicationUserViewModel
+    applicationUserViewModel: ApplicationUserViewModel,
+    tokenManager: TokenManager
 
 ) {
     var textUserNameField by remember { mutableStateOf("") }
@@ -127,7 +130,8 @@ fun Authorization(
             fieldValidityCheck = allFieldsAreValid,
             textUserNameField,
             textPasswordField,
-            applicationUserViewModel
+            applicationUserViewModel,
+            tokenManager
         )
         Spacer(modifier = Modifier.height(height = 6.dp))
         Text(

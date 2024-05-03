@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,13 +24,19 @@ import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
+import com.example.culinarychest.data.data.TokenManager
 
 @Composable
 fun SearchScreen(
     navController: NavController,
     applicationUserViewModel: ApplicationUserViewModel,
-    recipeViewModel: RecipeViewModel
+    recipeViewModel: RecipeViewModel,
+    tokenManager: TokenManager
 ) {
+    val token = tokenManager.getToken()
+    token?.let { recipeViewModel.getRecipes(it) }
+
+
     Search(
         controller = navController,
         applicationUserViewModel = applicationUserViewModel,
@@ -44,8 +51,8 @@ fun Search(
     applicationUserViewModel: ApplicationUserViewModel,
     recipeViewModel: RecipeViewModel
 ) {
-
     var searchText by remember { mutableStateOf("") }
+    val recipeList = recipeViewModel.recipes.collectAsState().value
 
     Scaffold(
         topBar = {
@@ -65,17 +72,12 @@ fun Search(
             item {
                 Spacer(modifier = Modifier.height(62.dp))
             }
-            applicationUserViewModel.token.observeForever { token ->
-                if (token != null) {
-                    recipeViewModel.getRecipes(token)
-                }
-                items(recipeViewModel.recipes.value) {recipe ->
-                    RecipeItem(
-                        controller = controller,
-                        textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
-                        recipe = recipe
-                    )
-                }
+            items(recipeList) { recipe ->
+                RecipeItem(
+                    controller = controller,
+                    textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
+                    recipe = recipe
+                )
             }
         }
     }

@@ -17,21 +17,35 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.Item.TopBarButtonItem
+import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
+import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
+import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HorizontalPagerScreen(
-    navController: NavController
+    navController: NavController,
+    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
+    applicationUserViewModel: ApplicationUserViewModel,
+    recipeViewModel: RecipeViewModel
 ) {
-    HorizontalPager(controller = navController)
+    HorizontalPager(
+        controller = navController,
+        applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
+        applicationUserViewModel = applicationUserViewModel,
+        recipeViewModel = recipeViewModel
+    )
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HorizontalPager(
-    controller: NavController
+    controller: NavController,
+    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
+    applicationUserViewModel: ApplicationUserViewModel,
+    recipeViewModel: RecipeViewModel
 ) {
     val pagerState = rememberPagerState(pageCount = { 2 })
     val coroutineScope = rememberCoroutineScope()
@@ -48,7 +62,7 @@ fun HorizontalPager(
                     textButton = stringResource(R.string.favorite_text),
                     onClick = {
                         coroutineScope.launch {
-                            pagerState.animateScrollToPage(0)
+                            pagerState.animateScrollToPage( 0 )
                         }
                     }
                 )
@@ -65,7 +79,13 @@ fun HorizontalPager(
     ) {
         HorizontalPager(state = pagerState) { page ->
             when (page) {
-                0 -> FavoriteScreen(controller = controller)
+                0 -> FavoriteScreen(
+                    controller = controller,
+                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
+                    applicationUserViewModel = applicationUserViewModel,
+                    recipeViewModel = recipeViewModel
+                )
+
                 1 -> CreatedScreen(controller = controller)
             }
         }
