@@ -1,4 +1,4 @@
-package com.example.culinarychest.domain.domain.dataclasses.favorite_recipe
+package com.example.culinarychest.domain.domain.model.favorite_recipe
 
 import com.google.gson.annotations.SerializedName
 

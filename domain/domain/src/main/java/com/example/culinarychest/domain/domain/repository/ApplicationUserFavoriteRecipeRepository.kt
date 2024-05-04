@@ -1,8 +1,8 @@
-package com.example.culinarychest.domain.domain.interfaces
+package com.example.culinarychest.domain.domain.repository
 
 import com.example.culinarychest.domain.domain.ProcessingResult
-import com.example.culinarychest.domain.domain.dataclasses.favorite_recipe.FavoriteRecipe
-import com.example.culinarychest.domain.domain.dataclasses.favorite_recipe.CreateFavoriteRecipe
+import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe
+import com.example.culinarychest.domain.domain.model.favorite_recipe.CreateFavoriteRecipe
 import kotlinx.coroutines.flow.Flow
 
 interface ApplicationUserFavoriteRecipeRepository {

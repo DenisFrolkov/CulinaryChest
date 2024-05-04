@@ -1,16 +1,16 @@
 package com.example.culinarychest.data.data.api
 
-import com.example.culinarychest.domain.domain.dataclasses.ApplicationUser
-import com.example.culinarychest.domain.domain.dataclasses.ApplicationUserInfo
-import com.example.culinarychest.domain.domain.dataclasses.favorite_recipe.FavoriteRecipe
-import com.example.culinarychest.domain.domain.dataclasses.Login
-import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
-import com.example.culinarychest.domain.domain.dataclasses.step.Step
-import com.example.culinarychest.domain.domain.dataclasses.favorite_recipe.CreateFavoriteRecipe
-import com.example.culinarychest.domain.domain.dataclasses.Token
-import com.example.culinarychest.domain.domain.dataclasses.recipe.CreateRecipe
-import com.example.culinarychest.domain.domain.dataclasses.recipe.UpdateRecipe
-import com.example.culinarychest.domain.domain.dataclasses.step.CreateStep
+import com.example.culinarychest.domain.domain.model.ApplicationUser
+import com.example.culinarychest.domain.domain.model.ApplicationUserInfo
+import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe
+import com.example.culinarychest.domain.domain.model.Login
+import com.example.culinarychest.domain.domain.model.recipe.Recipe
+import com.example.culinarychest.domain.domain.model.step.Step
+import com.example.culinarychest.domain.domain.model.favorite_recipe.CreateFavoriteRecipe
+import com.example.culinarychest.domain.domain.model.Token
+import com.example.culinarychest.domain.domain.model.recipe.CreateRecipe
+import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
+import com.example.culinarychest.domain.domain.model.step.CreateStep
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

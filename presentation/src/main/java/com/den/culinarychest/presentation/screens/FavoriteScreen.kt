@@ -26,8 +26,8 @@ import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import com.example.culinarychest.data.data.TokenManager
-import com.example.culinarychest.domain.domain.dataclasses.favorite_recipe.FavoriteRecipe
-import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
+import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe
+import com.example.culinarychest.domain.domain.model.recipe.Recipe
 
 @Composable
 fun FavoriteScreen(

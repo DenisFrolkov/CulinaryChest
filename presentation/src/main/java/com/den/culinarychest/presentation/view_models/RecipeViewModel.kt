@@ -3,12 +3,9 @@ package com.den.culinarychest.presentation.view_models
 import androidx.lifecycle.ViewModel
 import com.example.culinarychest.domain.domain.ProcessingResult
 import androidx.lifecycle.viewModelScope
-import com.example.culinarychest.data.data.TokenManager
-import com.example.culinarychest.domain.domain.dataclasses.favorite_recipe.FavoriteRecipe
-import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
-import com.example.culinarychest.domain.domain.interfaces.RecipeRepository
+import com.example.culinarychest.domain.domain.model.recipe.Recipe
+import com.example.culinarychest.domain.domain.repository.RecipeRepository
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest

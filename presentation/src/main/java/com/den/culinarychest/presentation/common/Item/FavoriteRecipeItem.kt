@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -30,8 +29,7 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import com.example.culinarychest.data.data.TokenManager
-import com.example.culinarychest.domain.domain.dataclasses.favorite_recipe.FavoriteRecipe
-import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
+import com.example.culinarychest.domain.domain.model.recipe.Recipe
 
 @Composable
 fun FavoriteRecipeItem(

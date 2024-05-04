@@ -55,6 +55,7 @@ fun TextInput(
         onTextChanged(enteredText.text)
     }
 
+
     if (isErrorVisible) returnValidation(true)
 
     Box(

@@ -1,21 +1,16 @@
 package com.den.culinarychest.presentation.view_models
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.data.data.TokenManager
 import com.example.culinarychest.domain.domain.ProcessingResult
-import com.example.culinarychest.domain.domain.dataclasses.ApplicationUser
-import com.example.culinarychest.domain.domain.dataclasses.ApplicationUserInfo
-import com.example.culinarychest.domain.domain.dataclasses.Token
-import com.example.culinarychest.domain.domain.interfaces.ApplicationUserRepository
-import com.example.culinarychest.domain.domain.interfaces.RecipeRepository
-import kotlinx.coroutines.CoroutineScope
+import com.example.culinarychest.domain.domain.model.ApplicationUser
+import com.example.culinarychest.domain.domain.model.ApplicationUserInfo
+import com.example.culinarychest.domain.domain.repository.ApplicationUserRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow

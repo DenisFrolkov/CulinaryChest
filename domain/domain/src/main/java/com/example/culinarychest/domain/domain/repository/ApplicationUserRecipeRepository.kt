@@ -1,9 +1,9 @@
-package com.example.culinarychest.domain.domain.interfaces
+package com.example.culinarychest.domain.domain.repository
 
 import com.example.culinarychest.domain.domain.ProcessingResult
-import com.example.culinarychest.domain.domain.dataclasses.recipe.CreateRecipe
-import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
-import com.example.culinarychest.domain.domain.dataclasses.recipe.UpdateRecipe
+import com.example.culinarychest.domain.domain.model.recipe.CreateRecipe
+import com.example.culinarychest.domain.domain.model.recipe.Recipe
+import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
 import kotlinx.coroutines.flow.Flow
 
 interface ApplicationUserRecipeRepository {

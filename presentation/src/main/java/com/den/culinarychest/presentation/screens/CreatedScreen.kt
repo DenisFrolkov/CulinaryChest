@@ -16,8 +16,8 @@ import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
 import com.example.culinarychest.data.data.TokenManager
-import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
-import com.example.culinarychest.domain.domain.dataclasses.step.Step
+import com.example.culinarychest.domain.domain.model.recipe.Recipe
+import com.example.culinarychest.domain.domain.model.step.Step
 
 @Composable
 fun CreatedScreen(

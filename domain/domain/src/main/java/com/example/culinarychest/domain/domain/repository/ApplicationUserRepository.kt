@@ -1,11 +1,10 @@
-package com.example.culinarychest.domain.domain.interfaces
+package com.example.culinarychest.domain.domain.repository
 
 import com.example.culinarychest.domain.domain.ProcessingResult
-import com.example.culinarychest.domain.domain.dataclasses.ApplicationUser
-import com.example.culinarychest.domain.domain.dataclasses.ApplicationUserInfo
-import com.example.culinarychest.domain.domain.dataclasses.Token
+import com.example.culinarychest.domain.domain.model.ApplicationUser
+import com.example.culinarychest.domain.domain.model.ApplicationUserInfo
+import com.example.culinarychest.domain.domain.model.Token
 import kotlinx.coroutines.flow.Flow
-import retrofit2.Response
 
 interface ApplicationUserRepository {
     suspend fun registrationApplicationUser(user: ApplicationUser)

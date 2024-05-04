@@ -1,13 +1,9 @@
 package com.example.culinarychest.data.data.repository
 
-import com.example.culinarychest.data.data.TokenManager
 import com.example.culinarychest.data.data.api.CulinaryChestAPI
 import com.example.culinarychest.domain.domain.ProcessingResult
-import com.example.culinarychest.domain.domain.dataclasses.favorite_recipe.FavoriteRecipe
-import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
-import com.example.culinarychest.domain.domain.interfaces.RecipeRepository
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
+import com.example.culinarychest.domain.domain.model.recipe.Recipe
+import com.example.culinarychest.domain.domain.repository.RecipeRepository
 import kotlinx.coroutines.flow.Flow
 
 class RecipeRepositoryImpl(

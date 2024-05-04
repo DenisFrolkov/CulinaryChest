@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.domain.ProcessingResult
-import com.example.culinarychest.domain.domain.dataclasses.recipe.CreateRecipe
-import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
-import com.example.culinarychest.domain.domain.dataclasses.recipe.UpdateRecipe
-import com.example.culinarychest.domain.domain.interfaces.ApplicationUserRecipeRepository
+import com.example.culinarychest.domain.domain.model.recipe.CreateRecipe
+import com.example.culinarychest.domain.domain.model.recipe.Recipe
+import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
+import com.example.culinarychest.domain.domain.repository.ApplicationUserRecipeRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

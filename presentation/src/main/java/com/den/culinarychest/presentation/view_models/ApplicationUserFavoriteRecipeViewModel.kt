@@ -4,9 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.domain.ProcessingResult
-import com.example.culinarychest.domain.domain.dataclasses.favorite_recipe.FavoriteRecipe
-import com.example.culinarychest.domain.domain.dataclasses.favorite_recipe.CreateFavoriteRecipe
-import com.example.culinarychest.domain.domain.interfaces.ApplicationUserFavoriteRecipeRepository
+import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe
+import com.example.culinarychest.domain.domain.model.favorite_recipe.CreateFavoriteRecipe
+import com.example.culinarychest.domain.domain.repository.ApplicationUserFavoriteRecipeRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

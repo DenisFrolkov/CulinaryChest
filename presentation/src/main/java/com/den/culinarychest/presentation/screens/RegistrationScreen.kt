@@ -22,11 +22,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.Button.PushButton
 import com.den.culinarychest.presentation.common.TextInput.TextInput
+import com.den.culinarychest.presentation.models.ScreenUiState
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftPink

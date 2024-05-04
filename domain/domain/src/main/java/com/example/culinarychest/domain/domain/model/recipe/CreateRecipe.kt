@@ -1,6 +1,6 @@
-package com.example.culinarychest.domain.domain.dataclasses.recipe
+package com.example.culinarychest.domain.domain.model.recipe
 
-import com.example.culinarychest.domain.domain.dataclasses.step.CreateStep
+import com.example.culinarychest.domain.domain.model.step.CreateStep
 import com.google.gson.annotations.SerializedName
 
 data class CreateRecipe(

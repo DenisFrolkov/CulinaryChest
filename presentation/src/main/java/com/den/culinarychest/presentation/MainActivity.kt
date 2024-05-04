@@ -1,17 +1,9 @@
 package com.den.culinarychest.presentation
 
-import android.annotation.SuppressLint
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.den.culinarychest.presentation.navigation.appNavigation.AppNavigation
@@ -28,14 +20,6 @@ import com.example.culinarychest.data.data.repository.ApplicationUserRecipeRepos
 import com.example.culinarychest.data.data.repository.ApplicationUserRepositoryImpl
 import com.example.culinarychest.data.data.repository.RecipeRepositoryImpl
 import com.example.culinarychest.data.data.repository.RecipeStepsRepositoryImpl
-import com.example.culinarychest.domain.domain.dataclasses.ApplicationUser
-import com.example.culinarychest.domain.domain.dataclasses.favorite_recipe.FavoriteRecipe
-import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
-import com.example.culinarychest.domain.domain.dataclasses.recipe.UpdateRecipe
-import com.example.culinarychest.domain.domain.dataclasses.step.CreateStep
-import com.example.culinarychest.domain.domain.dataclasses.step.Step
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class MainActivity : ComponentActivity() {
 

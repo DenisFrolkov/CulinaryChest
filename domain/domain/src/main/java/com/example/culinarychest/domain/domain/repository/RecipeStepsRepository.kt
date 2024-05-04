@@ -1,8 +1,8 @@
-package com.example.culinarychest.domain.domain.interfaces
+package com.example.culinarychest.domain.domain.repository
 
 import com.example.culinarychest.domain.domain.ProcessingResult
-import com.example.culinarychest.domain.domain.dataclasses.step.CreateStep
-import com.example.culinarychest.domain.domain.dataclasses.step.Step
+import com.example.culinarychest.domain.domain.model.step.CreateStep
+import com.example.culinarychest.domain.domain.model.step.Step
 import kotlinx.coroutines.flow.Flow
 
 interface RecipeStepsRepository {

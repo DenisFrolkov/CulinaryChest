@@ -1,7 +1,6 @@
 package com.den.culinarychest.presentation.screens
 
 import android.util.Patterns
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -13,8 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -31,14 +27,12 @@ import androidx.navigation.NavController
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.Button.PushButton
 import com.den.culinarychest.presentation.common.TextInput.TextInput
+import com.den.culinarychest.presentation.models.ScreenUiState
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.example.culinarychest.data.data.TokenManager
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 
 @Composable
 fun AuthorizationScreen(
@@ -58,22 +52,21 @@ fun Authorization(
     tokenManager: TokenManager
 
 ) {
-    var textUserNameField by remember { mutableStateOf("") }
-    var textPasswordField by remember { mutableStateOf("") }
+    var uiState by remember { mutableStateOf(ScreenUiState()) }
 
     val isUserNameValid by remember {
         derivedStateOf {
-            textUserNameField.isEmpty()
+            uiState.textUserNameField.isEmpty()
         }
     }
-    val isPasswordValid by remember { derivedStateOf { textPasswordField.isNotEmpty() && textPasswordField.length >= 13 } }
+    val isPasswordValid by remember { derivedStateOf { uiState.textPasswordField.isNotEmpty() && uiState.textPasswordField.length >= 13 } }
 
     val isUserNameNotEmptyAndValid by remember {
         derivedStateOf {
-            textUserNameField.isNotEmpty()
+            uiState.textUserNameField.isNotEmpty()
         }
     }
-    val isPasswordNotEmptyAndValid by remember { derivedStateOf { textPasswordField.isNotEmpty() && textPasswordField.length >= 13 } }
+    val isPasswordNotEmptyAndValid by remember { derivedStateOf { uiState.textPasswordField.isNotEmpty() && uiState.textPasswordField.length >= 13 } }
 
     val hasValidInput by remember { derivedStateOf { isUserNameValid || isPasswordValid } }
     val allFieldsAreValid by remember { derivedStateOf { isUserNameNotEmptyAndValid && isPasswordNotEmptyAndValid } }
@@ -104,7 +97,7 @@ fun Authorization(
         ) {
             TextInput(
                 outputTextHint = stringResource(R.string.user_name_text),
-                onTextChanged = { inputUserName -> textUserNameField = inputUserName },
+                onTextChanged = { uiState = uiState.copy(textUserNameField = it) },
                 onTextValidation = { text -> Patterns.EMAIL_ADDRESS.matcher(text).matches() },
                 checkTextOnClick = checkTextOnClick,
                 transferVerification = { newShow -> checkTextOnClick = newShow },
@@ -113,7 +106,7 @@ fun Authorization(
             Spacer(modifier = Modifier.height(16.dp))
             TextInput(
                 outputTextHint = stringResource(R.string.password_text),
-                onTextChanged = { inputPass -> textPasswordField = inputPass },
+                onTextChanged = { uiState = uiState.copy(textPasswordField = it) },
                 onTextValidation = { text -> text.length >= 8 },
                 checkTextOnClick = checkTextOnClick,
                 transferVerification = { newShow -> checkTextOnClick = newShow },
@@ -128,8 +121,8 @@ fun Authorization(
             route = AppNavigationRoute.BottomAppNavigationBar.route,
             onButtonClick = { newValue -> checkTextOnClick = newValue },
             fieldValidityCheck = allFieldsAreValid,
-            textUserNameField,
-            textPasswordField,
+            uiState.textUserNameField,
+            uiState.textPasswordField,
             applicationUserViewModel,
             tokenManager
         )

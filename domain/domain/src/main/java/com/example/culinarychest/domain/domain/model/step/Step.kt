@@ -1,4 +1,4 @@
-package com.example.culinarychest.domain.domain.dataclasses.step
+package com.example.culinarychest.domain.domain.model.step
 
 import com.google.gson.annotations.SerializedName
 

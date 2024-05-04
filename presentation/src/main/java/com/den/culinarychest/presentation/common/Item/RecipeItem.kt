@@ -26,7 +26,7 @@ import androidx.navigation.NavController
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.R
-import com.example.culinarychest.domain.domain.dataclasses.recipe.Recipe
+import com.example.culinarychest.domain.domain.model.recipe.Recipe
 
 @Composable
 fun RecipeItem(
