@@ -30,12 +30,13 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.den.culinarychest.R
+import com.den.culinarychest.presentation.models.ScreenUiState
 import com.den.culinarychest.presentation.ui.theme.LightGray
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 
 @Composable
-fun TextInput(
+fun AccountTextInput(
     outputTextHint: String,
     onTextChanged: (String) -> Unit,
     onTextValidation: (String) -> Boolean,
@@ -134,4 +135,3 @@ fun TextInput(
         }
     }
 }
-

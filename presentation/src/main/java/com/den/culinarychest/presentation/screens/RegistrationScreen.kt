@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.Button.PushButton
-import com.den.culinarychest.presentation.common.TextInput.TextInput
+import com.den.culinarychest.presentation.common.TextInput.AccountTextInput
 import com.den.culinarychest.presentation.models.ScreenUiState
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
@@ -53,7 +53,9 @@ fun Registration(
     tokenManager: TokenManager
 ) {
 
-    // Придумать как оптимизировать эти переменные
+    var uiTextState by remember { mutableStateOf(ScreenUiState()) }
+
+    val uiDerivedState by remember { derivedStateOf{ ScreenUiState() } }
 
     var textUserNameField by remember { mutableStateOf("") }
     var textEmailField by remember { mutableStateOf("") }
@@ -122,7 +124,7 @@ fun Registration(
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
             Spacer(modifier = Modifier.height(24.dp))
-            TextInput(
+            AccountTextInput(
                 outputTextHint = stringResource(R.string.login_text),
                 onTextChanged = { textUserNameField = it },
                 onTextValidation = { it.matches(Regex("[a-zA-Z0-9_]+")) && it.length in 5..20 },
@@ -131,7 +133,7 @@ fun Registration(
                 returnValidation = { validation -> loginVerificationResult = validation }
             )
             Spacer(modifier = Modifier.height(32.dp))
-            TextInput(
+            AccountTextInput(
                 outputTextHint = stringResource(R.string.user_name_text),
                 onTextChanged = { textEmailField = it },
                 onTextValidation = { text -> Patterns.EMAIL_ADDRESS.matcher(text).matches() },
@@ -141,7 +143,7 @@ fun Registration(
 
             )
             Spacer(modifier = Modifier.height(32.dp))
-            TextInput(
+            AccountTextInput(
                 outputTextHint = stringResource(R.string.password_text),
                 onTextChanged = { textPasswordField = it },
                 onTextValidation = { text -> text.length >= 8 },
@@ -150,7 +152,7 @@ fun Registration(
                 returnValidation = { validation -> passwordVerificationResult = validation }
             )
             Spacer(modifier = Modifier.height(32.dp))
-            TextInput(
+            AccountTextInput(
                 outputTextHint = stringResource(R.string.verification_text),
                 onTextChanged = { textRetryPasswordField = it },
                 onTextValidation = { text -> text.isNotEmpty() && text == textPasswordField },
