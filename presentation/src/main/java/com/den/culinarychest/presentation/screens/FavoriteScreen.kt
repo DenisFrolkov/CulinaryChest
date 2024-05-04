@@ -1,5 +1,6 @@
 package com.den.culinarychest.presentation.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -29,6 +30,7 @@ import com.example.culinarychest.data.data.TokenManager
 import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun FavoriteScreen(
     controller: NavController,
@@ -36,8 +38,11 @@ fun FavoriteScreen(
     recipeViewModel: RecipeViewModel,
     tokenManager: TokenManager
 ) {
+
+
     val favoriteRecipeList =
         applicationUserFavoriteRecipeViewModel.userFavoriteRecipes.collectAsState().value
+
 
     if (favoriteRecipeList.isEmpty()) {
         EmptyScreenText()
@@ -53,9 +58,7 @@ private fun ListRecipes(
     recipeViewModel: RecipeViewModel,
     tokenManager: TokenManager
 ) {
-
-    val recipeCache = remember { mutableMapOf<String, Recipe>() }
-
+    tokenManager.getToken()?.let { recipeViewModel.getRecipesByIds(it, favoriteRecipeList) }
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -68,23 +71,14 @@ private fun ListRecipes(
         }
 
         items(favoriteRecipeList) { favoriteRecipe ->
-            val token = tokenManager.getToken()
-
-            token?.let { recipeViewModel.getRecipeById(it, "${favoriteRecipe.recipeId}") }
-
-            val recipeList = recipeViewModel.recipe.collectAsState().value
-
-            recipeList.forEach { recipe ->
-                FavoriteRecipeItem(
-                    controller = controller,
-                    textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
-                    recipe = recipe,
-                    recipeViewModel = recipeViewModel,
-                    tokenManager = tokenManager
-                )
-            }
+            FavoriteRecipeItem(
+                controller = controller,
+                textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
+                favoriteRecipe = favoriteRecipe,
+                recipeViewModel = recipeViewModel,
+                tokenManager = tokenManager
+            )
         }
-
     }
 }
 

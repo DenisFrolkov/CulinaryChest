@@ -14,6 +14,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
@@ -119,7 +120,7 @@ fun BottomNavigationBar(
     ) {
         NavHost(
             navController = bottomController,
-            startDestination = BottomNavigationRoute.SearchScreen.route
+            startDestination = BottomNavigationRoute.TopNavigationBar.route
         ) {
             composable(BottomNavigationRoute.SearchScreen.route) {
                 SearchScreen(
@@ -130,7 +131,6 @@ fun BottomNavigationBar(
                 )
             }
             composable(BottomNavigationRoute.TopNavigationBar.route) {
-                tokenManager.getToken()?.let { applicationUserFavoriteRecipeViewModel.getApplicationUserFavoriteRecipes(it) }
                 HorizontalPagerScreen(
                     navController = navController,
                     applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,

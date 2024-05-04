@@ -67,6 +67,7 @@ fun AppNavigation(
         composable(AppNavigationRoute.BottomAppNavigationBar.route) {
 
             tokenManager.getToken()?.let { recipeViewModel.getRecipes(it) }
+            tokenManager.getToken()?.let { applicationUserFavoriteRecipeViewModel.getApplicationUserFavoriteRecipes(it) }
 
             BottomNavigationBar(
                 navController = appNavigationController,

@@ -6,8 +6,5 @@ data class ScreenUiState(
     var textUserNameField: String = "",
     var textEmailField: String = "",
     var textPasswordField: String = "",
-    var textRetryPasswordField: String = "",
-
-    val isUserNameValid: Boolean = false,
-    val isPasswordValid: Boolean = false
+    var textRetryPasswordField: String = ""
 )

@@ -1,5 +1,6 @@
 package com.den.culinarychest.presentation.common.Item
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,6 +16,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -29,20 +35,37 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import com.example.culinarychest.data.data.TokenManager
+import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun FavoriteRecipeItem(
     controller: NavController,
     textRouteNavigation: String,
-    recipe: Recipe,
+    favoriteRecipe: FavoriteRecipe,
     recipeViewModel: RecipeViewModel,
     tokenManager: TokenManager,
 ) {
 
-    extracted(controller, AppNavigationRoute.FetchOtherUserRecipeScreen.route, recipe)
+    val recipesSet = recipeViewModel.recipe.value.toSet()
 
+    recipesSet.forEach {
+        Text(text = it.recipeId)
+    }
+
+
+    
+//    Text(text = "${favoriteRecipe.recipeId}")
+//
+//    val recipe = recipeViewModel.recipe.collectAsState().value
+//    recipe.let {recipeList ->
+//        recipeList.forEach {
+//            Text(text = it.recipeId)
+//        }
+//    }
 }
+
 
 @Composable
 private fun extracted(
