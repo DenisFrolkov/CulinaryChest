@@ -44,7 +44,7 @@ fun FavoriteScreen(
     }
 
     val recipe =
-        recipeViewModel.recipe.collectAsState().value
+        recipeViewModel.recipeByIds.collectAsState().value
 
 
     if (recipe.isEmpty()) {

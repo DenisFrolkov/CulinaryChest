@@ -43,10 +43,13 @@ interface CulinaryChestAPI {
     @DELETE("/api/applicationUser/favoriteRecipe/{favoriteRecipeId}")
     suspend fun deleteApplicationUserFavoriteRecipe(@Header("Authorization") token: String, @Path("favoriteRecipeId") favoriteRecipeId: String) //Completed
 
-    @GET("/api/recipe/get-recipes")
+    @GET("/api/recipe/listRecipe")
     suspend fun getRecipes(@Header("Authorization") token: String): List<Recipe> //Completed
-    @GET("/api/recipe") // Изменил путь запроса на "/api/recipes", чтобы получить список рецептов
-    suspend fun getRecipeById(@Header("Authorization") token: String, @Query("recipeIds") recipeIds: List<String>): List<Recipe> // Изменил параметр recipeId на recipeIds и использовал аннотацию @Query для передачи списка идентификаторов
+    @GET("/api/recipe/listRecipeByIds")
+    suspend fun getRecipeByIds(@Header("Authorization") token: String, @Query("recipeIds") recipeIds: List<String>): List<Recipe> //Completed
+    @GET("/api/recipe/{recipeId}")
+    suspend fun getRecipeById(@Header("Authorization") token: String, @Path("recipeId") recipeId: String): List<Recipe>
+
 
     @GET("/api/applicationUser/recipe")
     suspend fun getApplicationUserRecipes(@Header ("Authorization") token: String): List<Recipe> //Completed
