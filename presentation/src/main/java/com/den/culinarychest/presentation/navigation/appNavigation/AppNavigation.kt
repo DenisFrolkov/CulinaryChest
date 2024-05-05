@@ -1,6 +1,7 @@
 package com.den.culinarychest.presentation.navigation.appNavigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.navigation.compose.NavHost
@@ -65,10 +66,10 @@ fun AppNavigation(
             )
         }
         composable(AppNavigationRoute.BottomAppNavigationBar.route) {
-
-            tokenManager.getToken()?.let { recipeViewModel.getRecipes(it) }
-            tokenManager.getToken()?.let { applicationUserFavoriteRecipeViewModel.getApplicationUserFavoriteRecipes(it) }
-
+            tokenManager.getToken()?.let {
+                recipeViewModel.getRecipes(it)
+                applicationUserFavoriteRecipeViewModel.getApplicationUserFavoriteRecipes(it)
+            }
             BottomNavigationBar(
                 navController = appNavigationController,
                 applicationUserViewModel = applicationUserViewModel,

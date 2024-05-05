@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,27 +45,14 @@ import com.example.culinarychest.domain.domain.model.recipe.Recipe
 fun FavoriteRecipeItem(
     controller: NavController,
     textRouteNavigation: String,
-    favoriteRecipe: FavoriteRecipe,
+    recipe: Recipe,
     recipeViewModel: RecipeViewModel,
     tokenManager: TokenManager,
 ) {
 
-    val recipesSet = recipeViewModel.recipe.value.toSet()
+    Text(text = recipe.recipeId)
+    Text(text = recipe.creationDate)
 
-    recipesSet.forEach {
-        Text(text = it.recipeId)
-    }
-
-
-    
-//    Text(text = "${favoriteRecipe.recipeId}")
-//
-//    val recipe = recipeViewModel.recipe.collectAsState().value
-//    recipe.let {recipeList ->
-//        recipeList.forEach {
-//            Text(text = it.recipeId)
-//        }
-//    }
 }
 
 

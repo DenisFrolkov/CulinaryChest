@@ -48,45 +48,40 @@ class RecipeViewModel(
         }
     }
 
-    fun getRecipesByIds(token: String, recipeIds: List<FavoriteRecipe>) {
+    fun getRecipesByIds(token: String, recipeIds: List<String>) {
         viewModelScope.launch {
-            val collectedRecipes = mutableListOf<Recipe>()
-
-            recipeIds.forEach { favoriteRecipe ->
-                recipeRepository.getRecipeById(token, "${favoriteRecipe.recipeId}").collectLatest { result ->
-                    when (result) {
-                        is ProcessingResult.Error -> {
-                            _showErrorToastChannel.send(true)
-                        }
-                        is ProcessingResult.Success -> {
-                            result.data?.let { recipe ->
-                                collectedRecipes.addAll(recipe)
-                            }
-                        }
-                    }
-                }
-            }
-
-            _recipe.value = collectedRecipes
-        }
-    }
-
-    fun getRecipeById(token: String, recipeId: String) {
-        viewModelScope.launch {
-            recipeRepository.getRecipeById(token, recipeId).collectLatest { result ->
+            recipeRepository.getRecipesByIds(token, recipeIds).collectLatest { result ->
                 when (result) {
                     is ProcessingResult.Error -> {
                         _showErrorToastChannel.send(true)
                     }
-
                     is ProcessingResult.Success -> {
-                        result.data?.let { recipe ->
-                            _recipe.update { recipe }
+                        result.data?.let { recipes ->
+                            _recipe.update { recipes }
                         }
                     }
                 }
             }
         }
     }
+
+
+//    fun getRecipeById(token: String, recipeId: String) {
+//        viewModelScope.launch {
+//            recipeRepository.getRecipeById(token, recipeId).collectLatest { result ->
+//                when (result) {
+//                    is ProcessingResult.Error -> {
+//                        _showErrorToastChannel.send(true)
+//                    }
+//
+//                    is ProcessingResult.Success -> {
+//                        result.data?.let { recipe ->
+//                            _recipe.update { recipe }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
 

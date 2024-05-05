@@ -15,9 +15,10 @@ class RecipeRepositoryImpl(
             culinaryChestAPI.getRecipes(token)
         }
     }
-    override suspend fun getRecipeById(token: String, recipeId: String): Flow<ProcessingResult<List<Recipe>>> {
+    override suspend fun getRecipesByIds(token: String, recipeIds: List<String>): Flow<ProcessingResult<List<Recipe>>> {
         return safeApiCall {
-            culinaryChestAPI.getRecipeById(token, recipeId)
+            culinaryChestAPI.getRecipeById(token, recipeIds)
         }
     }
+
 }

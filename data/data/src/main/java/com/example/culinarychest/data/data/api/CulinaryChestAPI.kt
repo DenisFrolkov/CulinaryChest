@@ -19,6 +19,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 const val BASE_URL = "https://10.0.2.2:7286"
 
@@ -42,10 +43,10 @@ interface CulinaryChestAPI {
     @DELETE("/api/applicationUser/favoriteRecipe/{favoriteRecipeId}")
     suspend fun deleteApplicationUserFavoriteRecipe(@Header("Authorization") token: String, @Path("favoriteRecipeId") favoriteRecipeId: String) //Completed
 
-    @GET("/api/recipe")
+    @GET("/api/recipe/get-recipes")
     suspend fun getRecipes(@Header("Authorization") token: String): List<Recipe> //Completed
-    @GET("/api/recipe/{recipeId}")
-    suspend fun getRecipeById(@Header("Authorization") token: String, @Path("recipeId") recipeId: String): List<Recipe> //Completed
+    @GET("/api/recipe") // Изменил путь запроса на "/api/recipes", чтобы получить список рецептов
+    suspend fun getRecipeById(@Header("Authorization") token: String, @Query("recipeIds") recipeIds: List<String>): List<Recipe> // Изменил параметр recipeId на recipeIds и использовал аннотацию @Query для передачи списка идентификаторов
 
     @GET("/api/applicationUser/recipe")
     suspend fun getApplicationUserRecipes(@Header ("Authorization") token: String): List<Recipe> //Completed

@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -27,7 +26,6 @@ import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import com.example.culinarychest.data.data.TokenManager
-import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -39,26 +37,30 @@ fun FavoriteScreen(
     tokenManager: TokenManager
 ) {
 
+    val favoriteRecipeList = applicationUserFavoriteRecipeViewModel.userFavoriteRecipes.collectAsState().value
+    tokenManager.getToken()?.let { token ->
+        val recipeIds = favoriteRecipeList.map { it.recipeId.toString() }
+        recipeViewModel.getRecipesByIds(token, recipeIds)
+    }
 
-    val favoriteRecipeList =
-        applicationUserFavoriteRecipeViewModel.userFavoriteRecipes.collectAsState().value
+    val recipe =
+        recipeViewModel.recipe.collectAsState().value
 
 
-    if (favoriteRecipeList.isEmpty()) {
+    if (recipe.isEmpty()) {
         EmptyScreenText()
     } else {
-        ListRecipes(controller, favoriteRecipeList, recipeViewModel, tokenManager)
+        ListRecipes(controller, recipe, recipeViewModel, tokenManager)
     }
 }
 
 @Composable
 private fun ListRecipes(
     controller: NavController,
-    favoriteRecipeList: List<FavoriteRecipe>,
+    recipeList: List<Recipe>,
     recipeViewModel: RecipeViewModel,
     tokenManager: TokenManager
 ) {
-    tokenManager.getToken()?.let { recipeViewModel.getRecipesByIds(it, favoriteRecipeList) }
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -70,11 +72,11 @@ private fun ListRecipes(
             Spacer(modifier = Modifier.height(72.dp))
         }
 
-        items(favoriteRecipeList) { favoriteRecipe ->
+        items(recipeList) { recipe ->
             FavoriteRecipeItem(
                 controller = controller,
                 textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
-                favoriteRecipe = favoriteRecipe,
+                recipe = recipe,
                 recipeViewModel = recipeViewModel,
                 tokenManager = tokenManager
             )
