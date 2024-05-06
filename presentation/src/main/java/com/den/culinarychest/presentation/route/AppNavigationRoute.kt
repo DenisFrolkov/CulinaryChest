@@ -1,5 +1,7 @@
 package com.den.culinarychest.presentation.route
 
+import androidx.navigation.NavHostController
+
 sealed class AppNavigationRoute(val route: String) {
     object AuthorizationScreen : AppNavigationRoute("authorization_screen")
     object RegistrationScreen : AppNavigationRoute("registration_screen")

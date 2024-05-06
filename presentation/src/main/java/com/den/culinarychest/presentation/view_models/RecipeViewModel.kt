@@ -17,11 +17,11 @@ class RecipeViewModel(
     private val recipeRepository: RecipeRepository,
 ) : ViewModel() {
 
-    private val _recipes = MutableStateFlow<List<Recipe>>(emptyList())
-    val recipes = _recipes.asStateFlow()
+    private val _listRecipes = MutableStateFlow<List<Recipe>>(emptyList())
+    val listRecipes = _listRecipes.asStateFlow()
 
-    private val _recipeByIds = MutableStateFlow<List<Recipe>>(emptyList())
-    val recipeByIds = _recipeByIds.asStateFlow()
+    private val _recipesById = MutableStateFlow<List<Recipe>>(emptyList())
+    val recipesById = _recipesById.asStateFlow()
 
     private val _recipe = MutableStateFlow<List<Recipe>>(emptyList())
     val recipe = _recipe.asStateFlow()
@@ -40,7 +40,7 @@ class RecipeViewModel(
 
                     is ProcessingResult.Success -> {
                         result.data?.let { recipes ->
-                            _recipes.update { recipes }
+                            _listRecipes.update { recipes }
                         }
                     }
                 }
@@ -57,7 +57,7 @@ class RecipeViewModel(
                     }
                     is ProcessingResult.Success -> {
                         result.data?.let { recipes ->
-                            _recipeByIds.update { recipes }
+                            _recipesById.update { recipes }
                         }
                     }
                 }

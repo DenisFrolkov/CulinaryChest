@@ -46,7 +46,7 @@ fun Search(
     recipeViewModel: RecipeViewModel
 ) {
     var searchText by remember { mutableStateOf("") }
-    val recipeList = recipeViewModel.recipes.collectAsState().value
+    val recipeList = recipeViewModel.listRecipes.collectAsState().value
 
     Scaffold(
         topBar = {

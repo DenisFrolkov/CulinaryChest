@@ -40,29 +40,25 @@ import com.den.culinarychest.presentation.common.Item.StepRecipeItem
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
-import com.den.culinarychest.presentation.view_models.RecipeViewModel
+import com.example.culinarychest.domain.domain.model.recipe.Recipe
 
 @Composable
 fun FetchOtherUserRecipeScreen(
     navController: NavController,
-    recipeViewModel: RecipeViewModel
+    recipe: Recipe
 ) {
-    FetchOtherUserRecipe(controller = navController)
+    FetchOtherUserRecipe(
+        controller = navController,
+        recipe = recipe
+    )
 }
 
 @Composable
 fun FetchOtherUserRecipe(
-    controller: NavController
+    controller: NavController,
+    recipe: Recipe
 ) {
     val clickElementLike by remember { mutableStateOf(false) }
-    val recipeIngredients = """
-        Макароны – 100 г, Крабовые палочки – 100 г, Чеснок – 1 зубчик, Масло сливочное – 10 г, Сыр твёрдый – 10 г, Сметана – 2 ст. ложки, Мука – 1/4 ч. ложки, Травы прованские сушеные – 1/2 ч. ложки, Соль – по вкусу, Перец чёрный молотый – по вкусу;
-    """.trimIndent()
-    val recipeSteps = arrayOf(
-        "Подготавливаем все необходимые продукты.",
-        "Начинаем с приготовления макарон. В небольшую кастрюлю наливаем воду, добавляем 1 щепотку соли, доводим до кипения. Опускаем макароны в кипящую воду, перемешиваем и варим, периодически помешивая, примерно 8-10 минут или согласно инструкции на упаковке, до мягкости. Отваренные макароны откидываем на дуршлаг, даём стечь лишней жидкости.",
-        "С крабовых палочек снимаем упаковку. Нарезаем крабовые палочки кружочками. Чеснок очищаем и нарезаем мелкими кусочками."
-    )
     Column {
         FetchOtherUserRecipeTopBar(
             controller = controller,
@@ -74,11 +70,11 @@ fun FetchOtherUserRecipe(
                 .background(color = SoftPink)
         ) {
             item {
-                FetchOtherUserRecipeImage()
-                FetchOtherUserRecipeMiniInformation()
-                FetchOtherUserRecipeTitle()
-                FetchOtherUserRecipeIngredient(recipeIngredients = recipeIngredients)
-                FetchOtherUserRecipeSteps(recipeSteps = recipeSteps)
+                FetchOtherUserRecipeImage(recipe = recipe)
+                FetchOtherUserRecipeMiniInformation(recipe = recipe)
+                FetchOtherUserRecipeTitle(recipe = recipe)
+                FetchOtherUserRecipeIngredient(recipe = recipe)
+                FetchOtherUserRecipeSteps(recipe = recipe)
             }
         }
     }
@@ -130,7 +126,9 @@ fun FetchOtherUserRecipeTopBar(
 }
 
 @Composable
-fun FetchOtherUserRecipeImage(  ) {
+fun FetchOtherUserRecipeImage(
+    recipe: Recipe
+) {
     Image(
         modifier = Modifier
             .fillMaxWidth()
@@ -143,7 +141,9 @@ fun FetchOtherUserRecipeImage(  ) {
 }
 
 @Composable
-fun FetchOtherUserRecipeMiniInformation() {
+fun FetchOtherUserRecipeMiniInformation(
+    recipe: Recipe
+) {
     Row(
         modifier = Modifier
             .padding(start = 24.dp, top = 6.dp, end = 8.dp)
@@ -151,14 +151,14 @@ fun FetchOtherUserRecipeMiniInformation() {
         DisplayRecipeInfo(
             iconRecipeInfo = painterResource(id = R.drawable.recipe_info_star_icon),
             sizeRecipeInfoIcon = 24,
-            textRecipeInfo = "4.5",
+            textRecipeInfo = "${recipe.savedCount}",
             textFontSize = 16
         )
         Spacer(modifier = Modifier.width(8.dp))
         DisplayRecipeInfo(
             iconRecipeInfo = painterResource(id = R.drawable.recipe_info_time_icon),
             sizeRecipeInfoIcon = 24,
-            textRecipeInfo = "30 мин",
+            textRecipeInfo = recipe.preparationTime,
             textFontSize = 16
         )
         Row(
@@ -170,7 +170,7 @@ fun FetchOtherUserRecipeMiniInformation() {
             DisplayRecipeInfo(
                 iconRecipeInfo = painterResource(id = R.drawable.recipe_info_calendar_icon),
                 sizeRecipeInfoIcon = 20,
-                textRecipeInfo = "23.10.2020",
+                textRecipeInfo = recipe.creationDate,
                 textFontSize = 12
             )
         }
@@ -178,12 +178,14 @@ fun FetchOtherUserRecipeMiniInformation() {
 }
 
 @Composable
-fun FetchOtherUserRecipeTitle() {
+fun FetchOtherUserRecipeTitle(
+    recipe: Recipe
+) {
     Text(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 5.dp),
-        text = "Макароны с крабовыми палочками, сметаной и чесноком",
+        text = recipe.title,
         style = TextStyle(
             fontSize = 18.sp,
             color = SoftGray
@@ -194,8 +196,11 @@ fun FetchOtherUserRecipeTitle() {
 
 @Composable
 fun FetchOtherUserRecipeIngredient(
-    recipeIngredients: String
+    recipe: Recipe
 ) {
+
+    val recipeIngredients = """ ${recipe.ingredients} """.trimIndent()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -231,7 +236,7 @@ fun FetchOtherUserRecipeIngredient(
 
 @Composable
 fun FetchOtherUserRecipeSteps(
-    recipeSteps: Array<String>
+    recipe: Recipe
 ) {
     Text(
         modifier = Modifier.padding(start = 10.dp, top = 10.dp, bottom = 6.dp),
@@ -241,11 +246,10 @@ fun FetchOtherUserRecipeSteps(
             color = SoftGray
         )
     )
-    repeat(recipeSteps.size) { number ->
-        val elementNumber = number + 1
+    recipe.steps.forEach { step ->
         StepRecipeItem(
-            numberStep = "$elementNumber",
-            textStep = recipeSteps[number]
+            numberStep = "${step.order}",
+            textStep = step.description
         )
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,14 +25,29 @@ import androidx.navigation.NavController
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.Item.ProfileStatisticsItem
 import com.den.culinarychest.presentation.common.Button.SettingButton
+import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
+import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
+import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
+import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
+import com.example.culinarychest.data.data.TokenManager
 
 @Composable
 fun ProfileScreen(
-    navController: NavController
+    navController: NavController,
+    applicationUserViewModel: ApplicationUserViewModel,
+    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
+    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
+    tokenManager: TokenManager
 ) {
+
+    val userInfo = applicationUserViewModel.userInfoResult.collectAsState().value
+
+    val applicationUserRecipeSize = applicationUserRecipeViewModel.applicationUserRecipes.collectAsState().value.size
+    val applicationUserFavoriteRecipeSize = applicationUserFavoriteRecipeViewModel.userFavoriteRecipes.collectAsState().value.size
+
     Column {
         Column(
             modifier = Modifier
@@ -51,30 +67,33 @@ fun ProfileScreen(
                             .size(size = 100.dp)
                             .background(color = SoftGray, shape = RoundedCornerShape(size = 50.dp))
                     ) { }
-                    Text(
-                        text = "Denis123112",
-                        style = TextStyle(
-                            color = SoftGray,
-                            fontSize = 12.sp
-                        ),
-                        modifier = Modifier
-                            .padding(top = 6.dp)
-                            .align(Alignment.CenterHorizontally),
-                    )
+                    userInfo?.let {
+                        Text(
+                            text = it.userName,
+                            style = TextStyle(
+                                color = SoftGray,
+                                fontSize = 20.sp
+                            ),
+                            modifier = Modifier
+                                .padding(top = 6.dp)
+                                .align(Alignment.CenterHorizontally),
+                        )
+                    }
                 }
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 12.dp, bottom = 8.dp).padding(horizontal = 18.dp)
+                        .padding(top = 12.dp, bottom = 8.dp)
+                        .padding(horizontal = 18.dp)
                 ) {
                     ProfileStatisticsItem(
                         textStatistic = stringResource(R.string.favorite_recipe_text),
-                        numberStatistic = "12"
+                        numberStatistic = "$applicationUserRecipeSize"
                     )
                     ProfileStatisticsItem(
                         textStatistic = stringResource(R.string.created_recipe_text),
-                        numberStatistic = "3"
+                        numberStatistic = "$applicationUserFavoriteRecipeSize"
                     )
                 }
             }
@@ -90,14 +109,12 @@ fun ProfileScreen(
                     .padding(horizontal = 88.dp)
             ) {
                 SettingButton(
-                    borderColor = SoftGray,
-                    textButton = stringResource(R.string.edit_text),
-                    textColor = SoftGray
-                )
-                SettingButton(
+                    controller = navController,
+                    navigationText = AppNavigationRoute.AuthorizationScreen.route,
                     borderColor = Color.Red,
                     textButton = stringResource(R.string.exit_text),
-                    textColor = Color.Red
+                    textColor = Color.Red,
+                    tokenManager = tokenManager
                 )
             }
         }

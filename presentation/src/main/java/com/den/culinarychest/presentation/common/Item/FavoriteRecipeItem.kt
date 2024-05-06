@@ -49,25 +49,12 @@ fun FavoriteRecipeItem(
     recipeViewModel: RecipeViewModel,
     tokenManager: TokenManager,
 ) {
-
-    Text(text = recipe.recipeId)
-    Text(text = recipe.creationDate)
-
-}
-
-
-@Composable
-private fun extracted(
-    controller: NavController,
-    textRouteNavigation: String,
-    recipe: Recipe
-) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 16.dp)
             .clickable {
-                controller.navigate(textRouteNavigation)
+                controller.navigate("${textRouteNavigation}/${recipe.recipeId}")
             }
             .border(width = .15.dp, color = SoftGray, shape = RoundedCornerShape(12.dp))
             .background(SoftOrange, RoundedCornerShape(12.dp))

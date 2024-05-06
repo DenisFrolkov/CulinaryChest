@@ -3,10 +3,11 @@ package com.den.culinarychest.presentation.navigation.appNavigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.lifecycle.ViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.navigation.bottomNavigation.BottomNavigationBar
 import com.den.culinarychest.presentation.screens.AuthorizationScreen
@@ -36,8 +37,6 @@ fun AppNavigation(
 
     val isUserAuthorized = token != null
 
-    val navController = rememberNavController()
-
     val startDestination = if (isUserAuthorized) {
         AppNavigationRoute.BottomAppNavigationBar.route
     } else {
@@ -66,10 +65,6 @@ fun AppNavigation(
             )
         }
         composable(AppNavigationRoute.BottomAppNavigationBar.route) {
-            tokenManager.getToken()?.let {
-                recipeViewModel.getRecipes(it)
-                applicationUserFavoriteRecipeViewModel.getApplicationUserFavoriteRecipes(it)
-            }
             BottomNavigationBar(
                 navController = appNavigationController,
                 applicationUserViewModel = applicationUserViewModel,
@@ -79,18 +74,51 @@ fun AppNavigation(
                 applicationUserRecipeViewModel = applicationUserRecipeViewModel
             )
         }
-        composable(AppNavigationRoute.FetchOtherUserRecipeScreen.route) {
-            FetchOtherUserRecipeScreen(
-                navController = appNavigationController,
-                recipeViewModel = recipeViewModel
-            )
+        composable(AppNavigationRoute.FetchOtherUserRecipeScreen.route + "/{recipeId}",
+            arguments = listOf(navArgument("recipeId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val recipeId = backStackEntry.arguments?.getString("recipeId") ?: "Надо придумать реализацию, если такого рецепта не существует"
+            recipeId.let { recipe ->
+                tokenManager.getToken()?.let { token ->
+                    recipeViewModel.getRecipeById(
+                        token,
+                        recipe
+                    )
+                }
+            }
+
+            val recipeInfo = recipeViewModel.recipe.collectAsState().value
+            recipeInfo.forEach { recipe ->
+                FetchOtherUserRecipeScreen(
+                    navController = appNavigationController,
+                    recipe = recipe
+                )
+            }
         }
-        composable(AppNavigationRoute.FetchUserRecipeScreen.route) {
-            FetchUserRecipeScreen(
-                navController = appNavigationController,
-                applicationUserViewModel = applicationUserViewModel,
-                applicationUserRecipeViewModel = applicationUserRecipeViewModel
-            )
+        composable(AppNavigationRoute.FetchUserRecipeScreen.route + "/{recipeId}",
+            arguments = listOf(navArgument("recipeId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val recipeId = backStackEntry.arguments?.getString("recipeId")
+                ?: "Надо придумать реализацию, если такого рецепта не существует"
+
+            recipeId.let { recipe ->
+                tokenManager.getToken()?.let { token ->
+                    recipeViewModel.getRecipeById(
+                        token,
+                        recipe
+                    )
+                }
+            }
+
+            val recipeInfo = recipeViewModel.recipe.collectAsState().value
+            recipeInfo.forEach {recipe ->
+                FetchUserRecipeScreen(
+                    navController = appNavigationController,
+                    applicationUserViewModel = applicationUserViewModel,
+                    applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+                    recipe = recipe
+                )
+            }
         }
         composable(AppNavigationRoute.EditRecipeScreen.route) {
             EditRecipeScreen(navController = appNavigationController)

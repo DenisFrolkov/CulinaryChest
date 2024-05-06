@@ -34,6 +34,7 @@ import com.den.culinarychest.presentation.screens.ProfileScreen
 import com.den.culinarychest.presentation.screens.SearchScreen
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
+import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
@@ -51,7 +52,17 @@ fun BottomNavigationBar(
     applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
     tokenManager: TokenManager
 ) {
+
+    tokenManager.getToken()?.let {
+        recipeViewModel.getRecipes(it)
+        applicationUserFavoriteRecipeViewModel.getApplicationUserFavoriteRecipes(it)
+        applicationUserRecipeViewModel.getApplicationUserRecipes(it)
+        applicationUserViewModel.getApplicationUserInfo(it)
+    }
+
     val bottomController = rememberNavController()
+
+    tokenManager.getToken()?.let { applicationUserRecipeViewModel.getApplicationUserRecipes(it) }
 
     val bottomNavigationItems = listOf(
         BottomNavigationItem(
@@ -140,7 +151,12 @@ fun BottomNavigationBar(
                 )
             }
             composable(BottomNavigationRoute.ProfileScreen.route) {
-                ProfileScreen(navController = navController)
+                ProfileScreen(
+                    navController = navController,
+                    applicationUserViewModel = applicationUserViewModel,
+                    applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
+                    tokenManager = tokenManager)
             }
         }
     }

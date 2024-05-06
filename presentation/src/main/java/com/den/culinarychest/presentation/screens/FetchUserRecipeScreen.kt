@@ -47,17 +47,21 @@ import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
+import com.example.culinarychest.domain.domain.model.recipe.Recipe
+import com.example.culinarychest.domain.domain.model.step.Step
 
 @Composable
 fun FetchUserRecipeScreen(
     navController: NavController,
     applicationUserViewModel: ApplicationUserViewModel,
-    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel
+    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
+    recipe: Recipe
 ) {
     FetchUserRecipe(
         controller = navController,
         applicationUserViewModel = applicationUserViewModel,
-        applicationUserRecipeViewModel = applicationUserRecipeViewModel
+        applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+        recipe = recipe
     )
 }
 
@@ -65,20 +69,11 @@ fun FetchUserRecipeScreen(
 fun FetchUserRecipe(
     controller: NavController,
     applicationUserViewModel: ApplicationUserViewModel,
-    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel
+    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
+    recipe: Recipe
 ) {
 
-    applicationUserViewModel.token.observeForever { token ->
-        token?.let { applicationUserRecipeViewModel.getApplicationUserRecipes(it) }
-    }
-
-
-    val recipeIngredients = """ 12 """.trimIndent()
-    val recipeSteps = arrayOf(
-        "Подготавливаем все необходимые продукты.",
-        "Начинаем с приготовления макарон. В небольшую кастрюлю наливаем воду, добавляем 1 щепотку соли, доводим до кипения. Опускаем макароны в кипящую воду, перемешиваем и варим, периодически помешивая, примерно 8-10 минут или согласно инструкции на упаковке, до мягкости. Отваренные макароны откидываем на дуршлаг, даём стечь лишней жидкости.",
-        "С крабовых палочек снимаем упаковку. Нарезаем крабовые палочки кружочками. Чеснок очищаем и нарезаем мелкими кусочками."
-    )
+    val recipeIngredients = """ ${recipe.ingredients} """.trimIndent()
 
     val dropDownMenuItems = arrayOf(
         "Редактировать",
@@ -99,11 +94,11 @@ fun FetchUserRecipe(
                 .background(color = SoftPink)
         ) {
             item {
-                FetchUserRecipeImage()
-                FetchUserRecipeMiniInformation()
-                FetchUserRecipeTitle()
+                FetchUserRecipeImage(recipe = recipe)
+                FetchUserRecipeMiniInformation(recipe = recipe)
+                FetchUserRecipeTitle(recipe = recipe)
                 FetchUserRecipeIngredient(recipeIngredients = recipeIngredients)
-                FetchUserRecipeSteps(recipeSteps = recipeSteps)
+                FetchUserRecipeSteps(recipeSteps = recipe.steps)
             }
         }
     }
@@ -179,7 +174,9 @@ fun FetchUserRecipeTopBar(
 
 
 @Composable
-fun FetchUserRecipeImage() {
+fun FetchUserRecipeImage(
+    recipe: Recipe
+) {
     Image(
         modifier = Modifier
             .fillMaxWidth()
@@ -193,7 +190,7 @@ fun FetchUserRecipeImage() {
 
 @Composable
 fun FetchUserRecipeMiniInformation(
-
+    recipe: Recipe
 ) {
     Row(
         modifier = Modifier
@@ -202,14 +199,14 @@ fun FetchUserRecipeMiniInformation(
         DisplayRecipeInfo(
             iconRecipeInfo = painterResource(id = R.drawable.recipe_info_star_icon),
             sizeRecipeInfoIcon = 24,
-            textRecipeInfo = "4.5",
+            textRecipeInfo = "${recipe.savedCount}",
             textFontSize = 16
         )
         Spacer(modifier = Modifier.width(8.dp))
         DisplayRecipeInfo(
             iconRecipeInfo = painterResource(id = R.drawable.recipe_info_time_icon),
             sizeRecipeInfoIcon = 24,
-            textRecipeInfo = "30 мин",
+            textRecipeInfo = recipe.preparationTime,
             textFontSize = 16
         )
         Row(
@@ -221,7 +218,7 @@ fun FetchUserRecipeMiniInformation(
             DisplayRecipeInfo(
                 iconRecipeInfo = painterResource(id = R.drawable.recipe_info_calendar_icon),
                 sizeRecipeInfoIcon = 20,
-                textRecipeInfo = "23.10.2020",
+                textRecipeInfo = recipe.creationDate,
                 textFontSize = 12
             )
         }
@@ -229,12 +226,14 @@ fun FetchUserRecipeMiniInformation(
 }
 
 @Composable
-fun FetchUserRecipeTitle() {
+fun FetchUserRecipeTitle(
+    recipe: Recipe
+) {
     Text(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 5.dp),
-        text = "Макароны с крабовыми палочками, сметаной и чесноком",
+        text = recipe.title,
         style = TextStyle(
             fontSize = 18.sp,
             color = SoftGray
@@ -282,7 +281,7 @@ fun FetchUserRecipeIngredient(
 
 @Composable
 fun FetchUserRecipeSteps(
-    recipeSteps: Array<String>
+    recipeSteps: List<Step>
 ) {
     Text(
         modifier = Modifier.padding(start = 10.dp, top = 10.dp, bottom = 6.dp),
@@ -292,11 +291,10 @@ fun FetchUserRecipeSteps(
             color = SoftGray
         )
     )
-    repeat(recipeSteps.size) { number ->
-        val elementNumber = number + 1
+    recipeSteps.forEach {step ->
         StepRecipeItem(
-            numberStep = "$elementNumber",
-            textStep = recipeSteps[number]
+            numberStep = "${step.order}",
+            textStep = step.description
         )
     }
 }

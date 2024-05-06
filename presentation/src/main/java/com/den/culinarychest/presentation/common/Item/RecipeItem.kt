@@ -39,7 +39,7 @@ fun RecipeItem(
             .fillMaxWidth()
             .padding(bottom = 16.dp)
             .clickable {
-                controller.navigate(textRouteNavigation)
+                controller.navigate("${textRouteNavigation}/${recipe.recipeId}")
             }
             .border(width = .15.dp, color = SoftGray, shape = RoundedCornerShape(12.dp))
             .background(SoftOrange, RoundedCornerShape(12.dp))
