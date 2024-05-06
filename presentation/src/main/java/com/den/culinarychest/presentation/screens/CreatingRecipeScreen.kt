@@ -1,6 +1,8 @@
 package com.den.culinarychest.presentation.screens
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,17 +20,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,34 +43,64 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.common.Button.SaveButton
 import com.den.culinarychest.presentation.common.TextInput.SmallTextInput
 import com.den.culinarychest.presentation.common.TextInput.NumberTextInput
 import com.den.culinarychest.presentation.common.TextInput.RecipeDetailsTextInput
+import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
+import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
+import com.example.culinarychest.data.data.TokenManager
+import com.example.culinarychest.domain.domain.model.recipe.CreateRecipe
+import com.example.culinarychest.domain.domain.model.step.CreateStep
+import java.time.LocalDateTime
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CreatingRecipeScreen(
-    navController: NavController
+    navController: NavController,
+    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
+    tokenManager: TokenManager
 ) {
     CreatingRecipe(
-        navController = navController
+        navController = navController,
+        applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+        tokenManager = tokenManager
     )
 }
 
+
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CreatingRecipe(
-    navController: NavController
+    navController: NavController,
+    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
+    tokenManager: TokenManager
 ) {
 
     var textTitle by remember { mutableStateOf("") }
     var textIngredient by remember { mutableStateOf("") }
-    var textTime by remember { mutableStateOf("") }
     var textRecipeStep by remember { mutableStateOf("") }
-
+    var numberTextRecipeStep by remember { mutableStateOf("") }
+    var textPreparationTime by remember { mutableStateOf("") }
+    val steps = remember { mutableStateListOf<CreateStep>() }
     var countRecipeSteps by remember { mutableIntStateOf(1) }
+
+    fun addStep(textRecipeStep: String, numberTextRecipeStep: String) {
+        val newStep = CreateStep(textRecipeStep, numberTextRecipeStep)
+        steps.add(newStep)
+    }
+
+    val createRecipe = CreateRecipe(
+        title = textTitle,
+        ingredients = textIngredient,
+        recipeImage = "Пока что ничего",
+        steps = steps.toList(),
+        creationDate = LocalDateTime.now().toString(),
+        preparationTime = textPreparationTime,
+        savedCount = countRecipeSteps
+    )
 
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -78,7 +114,7 @@ fun CreatingRecipe(
             RecipeInputs(
                 onTitleTextChanged = { textTitle = it },
                 onIngredientsTextChanged = { textIngredient = it },
-                onTimeTextChanged = { textTime = it }
+                onTimeTextChanged = { textPreparationTime = it }
             )
             DescribeStepsRecipe(
                 count = countRecipeSteps,
@@ -93,8 +129,11 @@ fun CreatingRecipe(
             ) {
                 NumberTextInput(
                     outputTextHint = "$itemNumber.",
-                    onTextChanged = { textRecipeStep = it },
-                    onTextValidation = { it.matches(Regex("[а-яА-Я0-9]+")) })
+                    onTextChanged = { newTextRecipeStep -> textRecipeStep = newTextRecipeStep },
+                    onNumberTextChanged = { newNumberTextRecipeStep -> numberTextRecipeStep = newNumberTextRecipeStep },
+                    onTextValidation = { it.matches(Regex("[а-яА-Я0-9]+")) },
+                    onEnterPressed = { addStep(textRecipeStep, numberTextRecipeStep) }
+                )
             }
         }
         item {
@@ -103,7 +142,12 @@ fun CreatingRecipe(
                     .padding(top = 24.dp, bottom = 16.dp)
                     .padding(horizontal = 80.dp)
             ) {
-                SaveButton(
+                CreatingRecipeSaveButton(
+                    controller = navController,
+                    navigationRoute = AppNavigationRoute.BottomAppNavigationBar.route,
+                    applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+                    tokenManager = tokenManager,
+                    recipeInfo = createRecipe,
                     buttonText = stringResource(id = R.string.save_recipe_text),
                     colorButtonText = SoftGray,
                     buttonColor = SoftOrange
@@ -226,6 +270,50 @@ fun DescribeStepsRecipe(
                     .clickable { onCountChange(count + 1) }
             )
         }
+    }
+}
+
+@Composable
+private fun CreatingRecipeSaveButton(
+    controller: NavController,
+    navigationRoute: String,
+    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
+    tokenManager: TokenManager,
+    recipeInfo: CreateRecipe,
+    buttonText: String,
+    colorButtonText: Color,
+    buttonColor: Color,
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .alpha(if (buttonColor == SoftOrange) 1f else 0.5f)
+            .background(color = buttonColor, shape = RoundedCornerShape(12.dp))
+            .border(width = 0.1.dp, color = SoftGray, shape = RoundedCornerShape(12.dp))
+            .clip(shape = RoundedCornerShape(12.dp))
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                tokenManager
+                    .getToken()
+                    ?.let {
+                        applicationUserRecipeViewModel.createApplicationUserRecipe(
+                            it, recipeInfo
+                        )
+                    }
+//                controller.navigate(navigationRoute)
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = buttonText,
+            style = TextStyle(
+                fontSize = 16.sp,
+                color = colorButtonText
+            ),
+            modifier = Modifier.padding(vertical = 16.dp)
+        )
     }
 }
 

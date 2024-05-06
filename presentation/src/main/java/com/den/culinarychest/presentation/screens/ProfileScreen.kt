@@ -32,12 +32,14 @@ import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
+import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import com.example.culinarychest.data.data.TokenManager
 
 @Composable
 fun ProfileScreen(
     navController: NavController,
     applicationUserViewModel: ApplicationUserViewModel,
+    recipeViewModel: RecipeViewModel,
     applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
     applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
     tokenManager: TokenManager
@@ -46,8 +48,14 @@ fun ProfileScreen(
     val userInfo = applicationUserViewModel.userInfoResult.collectAsState().value
 
     val applicationUserRecipeSize = applicationUserRecipeViewModel.applicationUserRecipes.collectAsState().value.size
-    val applicationUserFavoriteRecipeSize = applicationUserFavoriteRecipeViewModel.userFavoriteRecipes.collectAsState().value.size
+    val favoriteRecipeList = applicationUserFavoriteRecipeViewModel.userFavoriteRecipes.collectAsState().value
+    tokenManager.getToken()?.let { token ->
+        val recipeIds = favoriteRecipeList.map { it.recipeId.toString() }
+        recipeViewModel.getRecipesByIds(token, recipeIds)
+    }
 
+    val applicationUserFavoriteRecipeSize =
+        recipeViewModel.recipesById.collectAsState().value.size
     Column {
         Column(
             modifier = Modifier
@@ -89,11 +97,11 @@ fun ProfileScreen(
                 ) {
                     ProfileStatisticsItem(
                         textStatistic = stringResource(R.string.favorite_recipe_text),
-                        numberStatistic = "$applicationUserRecipeSize"
+                        numberStatistic = "$applicationUserFavoriteRecipeSize"
                     )
                     ProfileStatisticsItem(
                         textStatistic = stringResource(R.string.created_recipe_text),
-                        numberStatistic = "$applicationUserFavoriteRecipeSize"
+                        numberStatistic = "$applicationUserRecipeSize"
                     )
                 }
             }

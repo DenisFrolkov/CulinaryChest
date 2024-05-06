@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,9 +25,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,9 +43,10 @@ import com.den.culinarychest.presentation.ui.theme.SoftOrange
 fun NumberTextInput(
     outputTextHint: String,
     onTextChanged: (String) -> Unit,
-    onTextValidation: (String) -> Boolean
+    onNumberTextChanged: (String) -> Unit,
+    onTextValidation: (String) -> Boolean,
+    onEnterPressed: () -> Unit
 ) {
-
     var enteredText by remember { mutableStateOf(TextFieldValue()) }
     var isHintVisible by remember { mutableStateOf(true) }
     var isErrorVisible by remember { mutableStateOf(false) }
@@ -48,6 +54,7 @@ fun NumberTextInput(
     LaunchedEffect(enteredText) {
         isErrorVisible = !onTextValidation(enteredText.text)
         onTextChanged(enteredText.text)
+        onNumberTextChanged(outputTextHint)
     }
 
     if (enteredText.text.isEmpty()) isErrorVisible = false
@@ -75,7 +82,15 @@ fun NumberTextInput(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp)
-                .align(Alignment.CenterStart)
+                .align(Alignment.CenterStart),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    onEnterPressed()
+                }
+            ),
         )
         if (isHintVisible) {
             Text(
@@ -139,4 +154,5 @@ fun NumberTextInput(
         }
     }
 }
+
 

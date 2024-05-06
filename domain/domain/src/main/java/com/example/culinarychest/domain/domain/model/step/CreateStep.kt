@@ -6,5 +6,5 @@ data class CreateStep(
     @SerializedName("Description", alternate = ["description"])
     val description: String,
     @SerializedName("Order", alternate = ["order"])
-    val order: Int,
+    val order: String,
 )

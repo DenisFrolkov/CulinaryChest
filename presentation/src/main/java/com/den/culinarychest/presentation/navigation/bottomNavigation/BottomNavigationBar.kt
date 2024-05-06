@@ -62,8 +62,6 @@ fun BottomNavigationBar(
 
     val bottomController = rememberNavController()
 
-    tokenManager.getToken()?.let { applicationUserRecipeViewModel.getApplicationUserRecipes(it) }
-
     val bottomNavigationItems = listOf(
         BottomNavigationItem(
             BottomNavigationRoute.SearchScreen.route,
@@ -154,6 +152,7 @@ fun BottomNavigationBar(
                 ProfileScreen(
                     navController = navController,
                     applicationUserViewModel = applicationUserViewModel,
+                    recipeViewModel = recipeViewModel,
                     applicationUserRecipeViewModel = applicationUserRecipeViewModel,
                     applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
                     tokenManager = tokenManager)

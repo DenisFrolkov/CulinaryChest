@@ -74,10 +74,12 @@ fun AppNavigation(
                 applicationUserRecipeViewModel = applicationUserRecipeViewModel
             )
         }
-        composable(AppNavigationRoute.FetchOtherUserRecipeScreen.route + "/{recipeId}",
+        composable(
+            AppNavigationRoute.FetchOtherUserRecipeScreen.route + "/{recipeId}",
             arguments = listOf(navArgument("recipeId") { type = NavType.StringType })
         ) { backStackEntry ->
-            val recipeId = backStackEntry.arguments?.getString("recipeId") ?: "Надо придумать реализацию, если такого рецепта не существует"
+            val recipeId = backStackEntry.arguments?.getString("recipeId")
+                ?: "Надо придумать реализацию, если такого рецепта не существует"
             recipeId.let { recipe ->
                 tokenManager.getToken()?.let { token ->
                     recipeViewModel.getRecipeById(
@@ -95,7 +97,8 @@ fun AppNavigation(
                 )
             }
         }
-        composable(AppNavigationRoute.FetchUserRecipeScreen.route + "/{recipeId}",
+        composable(
+            AppNavigationRoute.FetchUserRecipeScreen.route + "/{recipeId}",
             arguments = listOf(navArgument("recipeId") { type = NavType.StringType })
         ) { backStackEntry ->
             val recipeId = backStackEntry.arguments?.getString("recipeId")
@@ -111,7 +114,7 @@ fun AppNavigation(
             }
 
             val recipeInfo = recipeViewModel.recipe.collectAsState().value
-            recipeInfo.forEach {recipe ->
+            recipeInfo.forEach { recipe ->
                 FetchUserRecipeScreen(
                     navController = appNavigationController,
                     applicationUserViewModel = applicationUserViewModel,
@@ -124,7 +127,11 @@ fun AppNavigation(
             EditRecipeScreen(navController = appNavigationController)
         }
         composable(AppNavigationRoute.CreatingRecipeScreen.route) {
-            CreatingRecipeScreen(navController = appNavigationController)
+            CreatingRecipeScreen(
+                navController = appNavigationController,
+                applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+                tokenManager = tokenManager
+            )
         }
     }
 }

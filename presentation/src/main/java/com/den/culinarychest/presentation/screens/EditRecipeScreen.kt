@@ -24,7 +24,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +49,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.Button.SaveButton
+import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.EditRecipeColor
 import com.den.culinarychest.presentation.ui.theme.LightGray
 import com.den.culinarychest.presentation.ui.theme.LightRed
@@ -62,14 +62,13 @@ fun EditRecipeScreen(
     navController: NavController
 ) {
     EditRecipe(
-//        controller = navController
+        controller = navController
     )
 }
 
-@Preview
 @Composable
 fun EditRecipe(
-//    controller: NavController
+    controller: NavController
 ) {
     var titleEditRecipeMenu by remember { mutableStateOf("") }
 
@@ -79,7 +78,7 @@ fun EditRecipe(
 
     Column {
         EditRecipeTopBar(
-//            controller = controller
+            controller = controller
         )
         LazyColumn(
             modifier = Modifier
@@ -121,6 +120,8 @@ fun EditRecipe(
                         .padding(horizontal = 80.dp)
                 ) {
                     SaveButton(
+                        controller = controller,
+                        navigationRoute = AppNavigationRoute.BottomAppNavigationBar.route,
                         buttonText = stringResource(id = R.string.save_recipe_changes),
                         colorButtonText = Color.Black,
                         buttonColor = EditRecipeColor
@@ -140,7 +141,7 @@ fun EditRecipe(
 
 @Composable
 fun EditRecipeTopBar(
-//    controller: NavController
+    controller: NavController
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -159,7 +160,7 @@ fun EditRecipeTopBar(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null
                 ) {
-//                    controller.popBackStack()
+                    controller.popBackStack()
                 }
         )
     }

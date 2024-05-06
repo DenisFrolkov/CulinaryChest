@@ -10,16 +10,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.Item.FAB
 import com.den.culinarychest.presentation.common.Item.FavoriteRecipeItem
 import com.den.culinarychest.presentation.common.Item.RecipeItem
 import com.den.culinarychest.presentation.route.AppNavigationRoute
+import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
@@ -33,15 +39,16 @@ fun CreatedScreen(
     tokenManager: TokenManager
 ) {
 
-    val listRecipeCreatedUser = applicationUserRecipeViewModel.applicationUserRecipes.collectAsState().value
+    val listRecipeCreatedUser =
+        applicationUserRecipeViewModel.applicationUserRecipes.collectAsState().value
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(color = SoftPink)
     ) {
-        FABButton(controller)
         ListRecipeCreatedUser(controller, listRecipeCreatedUser)
+        FABButton(controller)
     }
 }
 
@@ -53,7 +60,9 @@ private fun FABButton(controller: NavController) {
             .fillMaxSize()
             .padding(end = 16.dp, bottom = 66.dp)
     ) {
-        FAB(navController = controller)
+        FAB(
+            navController = controller
+        )
     }
 }
 
@@ -69,19 +78,30 @@ private fun ListRecipeCreatedUser(controller: NavController, listRecipeCreatedUs
         item {
             Spacer(modifier = Modifier.height(72.dp))
         }
-
-        if (listRecipeCreatedUser != null) {
+        if (listRecipeCreatedUser == null) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = SoftPink)
+                ) {
+                    Text(
+                        text = stringResource(R.string.empty_text),
+                        style = TextStyle(
+                            color = SoftGray,
+                            fontSize = 16.sp
+                        ),
+                        modifier = Modifier
+                            .padding(start = 16.dp, top = 82.dp)
+                    )
+                }
+            }
+        } else {
             items(listRecipeCreatedUser) { recipeCreatedUser ->
                 RecipeItem(
                     controller = controller,
                     textRouteNavigation = AppNavigationRoute.FetchUserRecipeScreen.route,
                     recipe = recipeCreatedUser
-                )
-            }
-        } else {
-            item {
-                CircularProgressIndicator(
-                    color = SoftOrange,
                 )
             }
         }
