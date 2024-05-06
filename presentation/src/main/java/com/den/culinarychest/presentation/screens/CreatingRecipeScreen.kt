@@ -56,7 +56,6 @@ import com.example.culinarychest.domain.domain.model.recipe.CreateRecipe
 import com.example.culinarychest.domain.domain.model.step.CreateStep
 import java.time.LocalDateTime
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CreatingRecipeScreen(
     navController: NavController,
@@ -71,7 +70,7 @@ fun CreatingRecipeScreen(
 }
 
 
-@RequiresApi(Build.VERSION_CODES.O)
+@SuppressLint("NewApi")
 @Composable
 fun CreatingRecipe(
     navController: NavController,
