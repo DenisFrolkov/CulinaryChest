@@ -22,6 +22,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
+import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
+import com.example.culinarychest.data.data.TokenManager
+import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
 
 @Composable
 fun SaveButton(
@@ -29,6 +32,10 @@ fun SaveButton(
     navigationRoute: String,
     buttonText: String,
     colorButtonText: Color,
+    recipeId: String,
+    updateInfoRecipe: UpdateRecipe,
+    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
+    tokenManager: TokenManager,
     buttonColor: Color,
 ) {
     Box(
@@ -42,7 +49,10 @@ fun SaveButton(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
-
+                tokenManager.getToken()?.let {
+                    applicationUserRecipeViewModel.updateApplicationUserRecipe(
+                        it, recipeId, updateInfoRecipe)
+                }
                 controller.navigate(navigationRoute)
             },
         contentAlignment = Alignment.Center

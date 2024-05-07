@@ -119,12 +119,36 @@ fun AppNavigation(
                     navController = appNavigationController,
                     applicationUserViewModel = applicationUserViewModel,
                     applicationUserRecipeViewModel = applicationUserRecipeViewModel,
-                    recipe = recipe
+                    recipe = recipe,
+                    tokenManager = tokenManager
                 )
             }
         }
-        composable(AppNavigationRoute.EditRecipeScreen.route) {
-            EditRecipeScreen(navController = appNavigationController)
+        composable(AppNavigationRoute.EditRecipeScreen.route + "/{recipeId}",
+            arguments = listOf(navArgument("recipeId") { type = NavType.StringType })
+            ) { backStackEntry ->
+            val recipeId = backStackEntry.arguments?.getString("recipeId")
+                ?: "Надо придумать реализацию, если такого рецепта не существует"
+
+            recipeId.let { recipe ->
+                tokenManager.getToken()?.let { token ->
+                    recipeViewModel.getRecipeById(
+                        token,
+                        recipe
+                    )
+                }
+            }
+
+            val recipeInfo = recipeViewModel.recipe.collectAsState().value
+            recipeInfo.forEach { recipe ->
+                EditRecipeScreen(
+                    navController = appNavigationController,
+                    applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+                    recipeStepsViewModel = recipeStepsViewModel,
+                    recipe = recipe,
+                    tokenManager = tokenManager
+                )
+            }
         }
         composable(AppNavigationRoute.CreatingRecipeScreen.route) {
             CreatingRecipeScreen(

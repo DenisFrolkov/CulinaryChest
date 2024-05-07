@@ -33,7 +33,12 @@ fun SearchScreen(
     recipeViewModel: RecipeViewModel,
     tokenManager: TokenManager
 ) {
-    Search(
+
+    tokenManager.getToken()?.let {
+        recipeViewModel.getRecipes(it)
+        applicationUserViewModel.getApplicationUserInfo(it)
+    }
+        Search(
         controller = navController,
         recipeViewModel = recipeViewModel
     )

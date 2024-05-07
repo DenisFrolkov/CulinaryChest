@@ -24,6 +24,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,7 +43,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -56,25 +56,51 @@ import com.den.culinarychest.presentation.ui.theme.LightRed
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
+import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
+import com.den.culinarychest.presentation.view_models.RecipeStepsViewModel
+import com.example.culinarychest.data.data.TokenManager
+import com.example.culinarychest.domain.domain.model.recipe.Recipe
+import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
+import com.example.culinarychest.domain.domain.model.step.Step
 
 @Composable
 fun EditRecipeScreen(
-    navController: NavController
-) {
+    navController: NavController,
+    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
+    recipeStepsViewModel: RecipeStepsViewModel,
+    recipe: Recipe,
+    tokenManager: TokenManager
+    ) {
     EditRecipe(
-        controller = navController
+        controller = navController,
+        applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+        recipeStepsViewModel = recipeStepsViewModel,
+        recipe = recipe,
+        tokenManager = tokenManager
     )
 }
 
 @Composable
 fun EditRecipe(
-    controller: NavController
+    controller: NavController,
+    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
+    recipeStepsViewModel: RecipeStepsViewModel,
+    recipe: Recipe,
+    tokenManager: TokenManager
 ) {
     var titleEditRecipeMenu by remember { mutableStateOf("") }
+    var textEditRecipeMenu by remember { mutableStateOf("") }
 
-    var timeRecipeText by remember { mutableStateOf("30") }
+    var imageRecipeText by remember { mutableStateOf(recipe.recipeImage) }
+    var titleRecipeText by remember { mutableStateOf(recipe.title) }
+    var ingredientsRecipeText by remember { mutableStateOf(recipe.ingredients) }
+//    val stepsRecipeText = remember { mutableStateListOf<CreateStep>() }
+    var timeRecipeText by remember { mutableStateOf(recipe.preparationTime) }
+    var savedCountRecipeText by remember { mutableStateOf(recipe.savedCount) }
 
     var showEditRecipeMenu by remember { mutableStateOf(false) }
+
+    val updateInfoRecipe = UpdateRecipe(title = titleRecipeText, recipeImage = imageRecipeText, ingredients = ingredientsRecipeText, creationDate = recipe.creationDate, preparationTime = timeRecipeText, savedCount = savedCountRecipeText)
 
     Column {
         EditRecipeTopBar(
@@ -95,25 +121,44 @@ fun EditRecipe(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 EditRecipeTitle(
+                    textTitle = recipe.title,
                     clickShowEditRecipeMenu = { newValueShowEditRecipeMenu ->
                         showEditRecipeMenu = newValueShowEditRecipeMenu
                     },
-                    passedEditRecipeMenuTitle = { getTitleEditRecipeMenu -> titleEditRecipeMenu = getTitleEditRecipeMenu}
+                    textEditRecipeMenu = { getTextEditRecipeMenu -> textEditRecipeMenu = getTextEditRecipeMenu },
+                    passedEditRecipeMenuTitle = { newTitle -> titleEditRecipeMenu = newTitle }
                 )
+
                 Spacer(modifier = Modifier.height(12.dp))
+
                 EditRecipeIngredients(
-                    clickShowEditRecipeMenu = { newValueShowEditRecipeMenu ->
-                        showEditRecipeMenu = newValueShowEditRecipeMenu
-                    },
-                    passedEditRecipeMenuTitle = { getTitleEditRecipeMenu -> titleEditRecipeMenu = getTitleEditRecipeMenu}
+                    textIngredients = recipe.ingredients,
+                    textEditRecipeMenu = { newText -> textEditRecipeMenu = newText },
+                    passedEditRecipeMenuTitle = { newTitle -> titleEditRecipeMenu = newTitle },
+                    clickShowEditRecipeMenu = { newValue -> showEditRecipeMenu = newValue }
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                EditRecipeSteps(
-                    clickShowEditRecipeMenu = { newValueShowEditRecipeMenu ->
-                        showEditRecipeMenu = newValueShowEditRecipeMenu
-                    },
-                    passedEditRecipeMenuTitle = { getTitleEditRecipeMenu -> titleEditRecipeMenu = getTitleEditRecipeMenu}
-                )
+                Column {
+                    Spacer(modifier = Modifier.height(height = 16.dp))
+                    Text(
+                        text = stringResource(id = R.string.preparation_steps_text),
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            color = SoftGray
+                        )
+                    )
+                    Spacer(modifier = Modifier.height(height = 8.dp))
+                    recipe.steps.forEach {step ->
+                        EditRecipeStepItem(
+                            numberStep = "${step.order}",
+                            textStep = step.description,
+                            textEditRecipeMenu = { newText -> textEditRecipeMenu = newText },
+                            clickShowEditRecipeMenu = { newValue -> showEditRecipeMenu = newValue },
+                            passedEditRecipeMenuTitle = { newTitleEditRecipeMenuText -> titleEditRecipeMenu = newTitleEditRecipeMenuText }
+                        )
+                        Spacer(modifier = Modifier.height(height = 10.dp))
+                    }
+                }
                 Box(
                     modifier = Modifier
                         .padding(top = 10.dp, bottom = 10.dp)
@@ -124,6 +169,10 @@ fun EditRecipe(
                         navigationRoute = AppNavigationRoute.BottomAppNavigationBar.route,
                         buttonText = stringResource(id = R.string.save_recipe_changes),
                         colorButtonText = Color.Black,
+                        recipeId = recipe.recipeId,
+                        updateInfoRecipe = updateInfoRecipe,
+                        applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+                        tokenManager = tokenManager,
                         buttonColor = EditRecipeColor
                     )
                 }
@@ -131,10 +180,9 @@ fun EditRecipe(
         }
         EditRecipeMenu(
             titleEditRecipeMenu = titleEditRecipeMenu,
+            textEditRecipeMenu = textEditRecipeMenu,
             showDialog = showEditRecipeMenu,
-            onDismiss = { newValueShowEditRecipeMenu ->
-                showEditRecipeMenu = newValueShowEditRecipeMenu
-            }
+            onDismiss = { newValue -> showEditRecipeMenu = newValue }
         )
     }
 }
@@ -286,18 +334,18 @@ fun EditRecipeTime(
 
 @Composable
 fun EditRecipeTitle(
+    textTitle: String,
+    textEditRecipeMenu: (String) -> Unit,
+    passedEditRecipeMenuTitle: (String) -> Unit,
     clickShowEditRecipeMenu: (Boolean) -> Unit,
-    passedEditRecipeMenuTitle: (String) -> Unit
 ) {
-
-    var recipeTitleText by remember { mutableStateOf("Макароны с крабовыми палочками, сметаной и чесноком") }
-
     val MAX_LENGTH = 67
+    val title = textTitle
 
-    val truncateText = if (recipeTitleText.length > MAX_LENGTH) {
-        recipeTitleText.take(MAX_LENGTH) + "…"
+    val truncateText = if (title.length > MAX_LENGTH) {
+        title.take(MAX_LENGTH) + "…"
     } else {
-        recipeTitleText
+        title
     }
 
     Row(
@@ -307,8 +355,9 @@ fun EditRecipeTitle(
             .background(color = Color.White, shape = RoundedCornerShape(12.dp))
             .clip(shape = RoundedCornerShape(12.dp))
             .clickable {
-                clickShowEditRecipeMenu(true)
+                textEditRecipeMenu(title)
                 passedEditRecipeMenuTitle("Редактирование названия рецепта")
+                clickShowEditRecipeMenu(true)
             },
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -347,13 +396,13 @@ fun EditRecipeTitle(
 
 @Composable
 fun EditRecipeIngredients(
+    textIngredients: String,
     clickShowEditRecipeMenu: (Boolean) -> Unit,
+    textEditRecipeMenu: (String) -> Unit,
     passedEditRecipeMenuTitle: (String) -> Unit
 ) {
 
-    val ingredientsRecipeText = """
-        Макароны – 100 г, Крабовые палочки – 100 г, Чеснок – 1 зубчик, Масло сливочное – 10 г, Сыр твёрдый – 10 г, Сметана – 2 ст. ложки, Мука – 1/4 ч. ложки, Травы прованские сушеные – 1/2 ч. ложки, Соль – по вкусу, Перец чёрный молотый – по вкусу;
-    """.trimIndent()
+    val ingredientsRecipeText = textIngredients.trimIndent()
 
     val MAX_LENGTH = 130
 
@@ -370,8 +419,9 @@ fun EditRecipeIngredients(
             .background(color = Color.White, shape = RoundedCornerShape(12.dp))
             .clip(shape = RoundedCornerShape(12.dp))
             .clickable {
-                clickShowEditRecipeMenu(true)
+                textEditRecipeMenu(ingredientsRecipeText)
                 passedEditRecipeMenuTitle("Редактирование ингредиентов рецепта")
+                clickShowEditRecipeMenu(true)
             }
     ) {
         Column(
@@ -423,50 +473,10 @@ fun EditRecipeIngredients(
 }
 
 @Composable
-fun EditRecipeSteps(
-    clickShowEditRecipeMenu: (Boolean) -> Unit,
-    passedEditRecipeMenuTitle: (String) -> Unit
-) {
-
-    var titleEditRecipeMenuText by remember { mutableStateOf("") }
-
-    val recipeStepsText = arrayOf(
-        "Подготавливаем все необходимые продукты.",
-        "Начинаем с приготовления макарон. В небольшую кастрюлю наливаем воду, добавляем 1 щепотку соли, доводим до кипения. Опускаем макароны в кипящую воду, перемешиваем и варим, периодически помешивая, примерно 8-10 минут или согласно инструкции на упаковке, до мягкости. Отваренные макароны откидываем на дуршлаг, даём стечь лишней жидкости.",
-        "С крабовых палочек снимаем упаковку. Нарезаем крабовые палочки кружочками. Чеснок очищаем и нарезаем мелкими кусочками."
-    )
-    passedEditRecipeMenuTitle(titleEditRecipeMenuText)
-
-    Column {
-        Spacer(modifier = Modifier.height(height = 16.dp))
-        Text(
-            text = stringResource(id = R.string.preparation_steps_text),
-            style = TextStyle(
-                fontSize = 18.sp,
-                color = SoftGray
-            )
-        )
-        Spacer(modifier = Modifier.height(height = 8.dp))
-        repeat(recipeStepsText.size) { number ->
-            val elementNumber = number + 1
-            EditRecipeStepItem(
-                numberStep = "$elementNumber",
-                textStep = recipeStepsText[number],
-                clickShowEditRecipeMenu = { newValueShowEditRecipeMenu ->
-                    clickShowEditRecipeMenu(newValueShowEditRecipeMenu)
-                },
-                passedEditRecipeMenuTitle = { newTitleEditRecipeMenuText -> titleEditRecipeMenuText = newTitleEditRecipeMenuText
-                }
-            )
-            Spacer(modifier = Modifier.height(height = 10.dp))
-        }
-    }
-}
-
-@Composable
 fun EditRecipeStepItem(
     numberStep: String,
     textStep: String,
+    textEditRecipeMenu: (String) -> Unit,
     clickShowEditRecipeMenu: (Boolean) -> Unit,
     passedEditRecipeMenuTitle: (String) -> Unit
 ) {
@@ -485,8 +495,9 @@ fun EditRecipeStepItem(
             .background(color = Color.White, shape = RoundedCornerShape(12.dp))
             .clip(shape = RoundedCornerShape(12.dp))
             .clickable {
+                textEditRecipeMenu(textStep)
+                passedEditRecipeMenuTitle("Редактирование шага №$numberStep")
                 clickShowEditRecipeMenu(true)
-                passedEditRecipeMenuTitle("Редактирование шага №$numberStep рецепта")
             },
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -494,14 +505,6 @@ fun EditRecipeStepItem(
             modifier = Modifier
                 .weight(1f)
         ) {
-            Text(
-                text = "$numberStep.",
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    color = SoftGray
-                ),
-                modifier = Modifier.padding(start = 5.dp, top = 5.dp)
-            )
             Text(
                 text = truncateText,
                 style = TextStyle(
@@ -534,15 +537,17 @@ fun EditRecipeStepItem(
 @Composable
 fun EditRecipeMenu(
     titleEditRecipeMenu: String,
+    textEditRecipeMenu: String,
     showDialog: Boolean,
     onDismiss: (Boolean) -> Unit
 ) {
 
-    var editText by remember { mutableStateOf("") }
-
-    var isHintVisible by remember { mutableStateOf(false) }
-
     if (showDialog) {
+        var editText by remember { mutableStateOf(textEditRecipeMenu) }
+        var titleText by remember { mutableStateOf(titleEditRecipeMenu) }
+
+        var isHintVisible by remember { mutableStateOf(editText.isEmpty()) }
+
         Dialog(onDismissRequest = { onDismiss(false) }) {
             Surface(
                 modifier = Modifier
@@ -554,7 +559,7 @@ fun EditRecipeMenu(
                         .background(color = SoftPink)
                 ) {
                     Text(
-                        text = titleEditRecipeMenu,
+                        text = titleText,
                         style = TextStyle(
                             fontSize = 16.sp,
                             color = SoftGray,
@@ -614,4 +619,11 @@ fun EditRecipeMenu(
             }
         }
     }
+}
+
+@Composable
+private fun text(titleEditRecipeMenu: String) {
+    var editText by remember { mutableStateOf(titleEditRecipeMenu) }
+
+    Text(text = editText)
 }

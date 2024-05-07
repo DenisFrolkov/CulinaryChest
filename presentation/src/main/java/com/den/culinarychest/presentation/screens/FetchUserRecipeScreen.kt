@@ -47,6 +47,7 @@ import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
+import com.example.culinarychest.data.data.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.domain.model.step.Step
 
@@ -55,13 +56,15 @@ fun FetchUserRecipeScreen(
     navController: NavController,
     applicationUserViewModel: ApplicationUserViewModel,
     applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
-    recipe: Recipe
+    recipe: Recipe,
+    tokenManager: TokenManager
 ) {
     FetchUserRecipe(
         controller = navController,
         applicationUserViewModel = applicationUserViewModel,
         applicationUserRecipeViewModel = applicationUserRecipeViewModel,
-        recipe = recipe
+        recipe = recipe,
+        tokenManager = tokenManager
     )
 }
 
@@ -70,7 +73,8 @@ fun FetchUserRecipe(
     controller: NavController,
     applicationUserViewModel: ApplicationUserViewModel,
     applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
-    recipe: Recipe
+    recipe: Recipe,
+    tokenManager: TokenManager
 ) {
 
     val recipeIngredients = """ ${recipe.ingredients} """.trimIndent()
@@ -117,11 +121,14 @@ fun FetchUserRecipe(
                 onItemClick = { selectedItem ->
                     when (selectedItem) {
                         "Редактировать" -> {
-                            controller.navigate(AppNavigationRoute.CreatingRecipeScreen.route)
+                            controller.navigate("${AppNavigationRoute.EditRecipeScreen.route}/${recipe.recipeId}")
                         }
 
                         "Удалить" -> {
                             controller.popBackStack()
+                            tokenManager.getToken()?.let {
+                                applicationUserRecipeViewModel.deleteApplicationUserRecipe(it, recipe.recipeId)
+                            }
                         }
                     }
                 }

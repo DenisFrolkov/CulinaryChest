@@ -58,12 +58,12 @@ fun PushButton(
             .clickable {
                 if (isClickable) {
                     isClickable = false
-                    applicationUserViewModel.authorizeUser(
-                        textUserNameField,
-                        textPasswordField,
-                        tokenManager
-                    )
                     CoroutineScope(Dispatchers.Main).launch {
+                        applicationUserViewModel.authorizeUser(
+                            textUserNameField,
+                            textPasswordField,
+                            tokenManager
+                        )
                         delay(500)
                         isClickable = true
                     }

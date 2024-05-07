@@ -45,6 +45,10 @@ fun ProfileScreen(
     tokenManager: TokenManager
 ) {
 
+    tokenManager.getToken()?.let {
+        applicationUserViewModel.getApplicationUserInfo(it)
+    }
+
     val userInfo = applicationUserViewModel.userInfoResult.collectAsState().value
 
     val applicationUserRecipeSize = applicationUserRecipeViewModel.applicationUserRecipes.collectAsState().value.size
