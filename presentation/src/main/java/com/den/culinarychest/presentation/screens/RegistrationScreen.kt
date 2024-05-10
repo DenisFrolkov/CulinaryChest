@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.common.Button.PushButton
 import com.den.culinarychest.presentation.common.TextInput.AccountTextInput
 import com.den.culinarychest.presentation.models.ScreenUiState
 import com.den.culinarychest.presentation.route.AppNavigationRoute
@@ -39,12 +38,8 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
-import com.example.culinarychest.data.data.TokenManager
-import com.example.culinarychest.domain.domain.model.ApplicationUser
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.example.culinarychest.data.data.repository.TokenManager
+import com.example.culinarychest.domain.domain.model.application_user.ApplicationUser
 
 @Composable
 fun RegistrationScreen(
@@ -140,7 +135,7 @@ fun Registration(
             )
             Spacer(modifier = Modifier.height(32.dp))
             AccountTextInput(
-                outputTextHint = stringResource(R.string.empty_text),
+                outputTextHint = stringResource(R.string.email_text),
                 onTextChanged = { uiState = uiState.copy(textEmailField = it) },
                 onTextValidation = { text -> Patterns.EMAIL_ADDRESS.matcher(text).matches() },
                 checkTextOnClick = checkTextOnClick,
@@ -182,7 +177,7 @@ fun Registration(
             applicationUserViewModel,
             tokenManager
         )
-        Spacer(modifier = Modifier.height(height = 6.dp))
+        Spacer(modifier = Modifier.height(height = 8.dp))
         Text(
             modifier = Modifier.clickable(
                 interactionSource = remember { MutableInteractionSource() },

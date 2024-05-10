@@ -2,6 +2,8 @@ package com.den.culinarychest.presentation.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -24,7 +26,7 @@ import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
-import com.example.culinarychest.data.data.TokenManager
+import com.example.culinarychest.data.data.repository.TokenManager
 
 @Composable
 fun SearchScreen(
@@ -38,7 +40,7 @@ fun SearchScreen(
         recipeViewModel.getRecipes(it)
         applicationUserViewModel.getApplicationUserInfo(it)
     }
-        Search(
+    Search(
         controller = navController,
         recipeViewModel = recipeViewModel
     )
@@ -53,24 +55,28 @@ fun Search(
     var searchText by remember { mutableStateOf("") }
     val recipeList = recipeViewModel.listRecipes.collectAsState().value
 
-    Scaffold(
-        topBar = {
-            SearchBarItem { searchText = it }
-        },
+    Column(
         modifier = Modifier
+            .fillMaxSize()
             .background(SoftPink)
-            .padding(horizontal = 8.dp, vertical = 10.dp),
+            .padding(bottom = 40.dp)
     ) {
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 12.dp)
+        ) {
+            SearchBarItem { searchText = it }
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(SoftPink)
-                .padding(bottom = 40.dp)
                 .padding(horizontal = 8.dp)
         ) {
-            item {
-                Spacer(modifier = Modifier.height(62.dp))
-            }
             items(recipeList) { recipe ->
                 RecipeItem(
                     controller = controller,
@@ -79,5 +85,6 @@ fun Search(
                 )
             }
         }
+
     }
 }

@@ -33,7 +33,7 @@ import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRec
 import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
-import com.example.culinarychest.data.data.TokenManager
+import com.example.culinarychest.data.data.repository.TokenManager
 
 @Composable
 fun ProfileScreen(

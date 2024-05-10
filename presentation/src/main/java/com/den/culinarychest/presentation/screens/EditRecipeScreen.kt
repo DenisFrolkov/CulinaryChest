@@ -21,10 +21,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,10 +58,9 @@ import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
 import com.den.culinarychest.presentation.view_models.RecipeStepsViewModel
-import com.example.culinarychest.data.data.TokenManager
+import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
-import com.example.culinarychest.domain.domain.model.step.Step
 
 @Composable
 fun EditRecipeScreen(
@@ -70,7 +69,7 @@ fun EditRecipeScreen(
     recipeStepsViewModel: RecipeStepsViewModel,
     recipe: Recipe,
     tokenManager: TokenManager
-    ) {
+) {
     EditRecipe(
         controller = navController,
         applicationUserRecipeViewModel = applicationUserRecipeViewModel,
@@ -100,7 +99,14 @@ fun EditRecipe(
 
     var showEditRecipeMenu by remember { mutableStateOf(false) }
 
-    val updateInfoRecipe = UpdateRecipe(title = titleRecipeText, recipeImage = imageRecipeText, ingredients = ingredientsRecipeText, creationDate = recipe.creationDate, preparationTime = timeRecipeText, savedCount = savedCountRecipeText)
+    val updateInfoRecipe = UpdateRecipe(
+        title = titleRecipeText,
+        recipeImage = imageRecipeText,
+        ingredients = ingredientsRecipeText,
+        creationDate = recipe.creationDate,
+        preparationTime = timeRecipeText,
+        savedCount = savedCountRecipeText
+    )
 
     Column {
         EditRecipeTopBar(
@@ -125,7 +131,9 @@ fun EditRecipe(
                     clickShowEditRecipeMenu = { newValueShowEditRecipeMenu ->
                         showEditRecipeMenu = newValueShowEditRecipeMenu
                     },
-                    textEditRecipeMenu = { getTextEditRecipeMenu -> textEditRecipeMenu = getTextEditRecipeMenu },
+                    textEditRecipeMenu = { getTextEditRecipeMenu ->
+                        textEditRecipeMenu = getTextEditRecipeMenu
+                    },
                     passedEditRecipeMenuTitle = { newTitle -> titleEditRecipeMenu = newTitle }
                 )
 
@@ -140,21 +148,48 @@ fun EditRecipe(
                 Spacer(modifier = Modifier.height(12.dp))
                 Column {
                     Spacer(modifier = Modifier.height(height = 16.dp))
-                    Text(
-                        text = stringResource(id = R.string.preparation_steps_text),
-                        style = TextStyle(
-                            fontSize = 18.sp,
-                            color = SoftGray
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .padding(top = 6.dp)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.preparation_steps_text),
+                            style = TextStyle(
+                                fontSize = 18.sp,
+                                color = SoftGray
+                            )
                         )
-                    )
+                        Box(
+                            modifier = Modifier
+                                .padding(horizontal = 28.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.add_step_button_icon),
+                                contentDescription = null,
+                                tint = SoftGray,
+                                modifier = Modifier
+                                    .size(size = 36.dp)
+                                    .clickable (
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        indication = null
+                                    ) { }
+                            )
+                        }
+                    }
                     Spacer(modifier = Modifier.height(height = 8.dp))
-                    recipe.steps.forEach {step ->
+                    recipe.steps.forEach { step ->
                         EditRecipeStepItem(
                             numberStep = "${step.order}",
                             textStep = step.description,
                             textEditRecipeMenu = { newText -> textEditRecipeMenu = newText },
                             clickShowEditRecipeMenu = { newValue -> showEditRecipeMenu = newValue },
-                            passedEditRecipeMenuTitle = { newTitleEditRecipeMenuText -> titleEditRecipeMenu = newTitleEditRecipeMenuText }
+                            passedEditRecipeMenuTitle = { newTitleEditRecipeMenuText ->
+                                titleEditRecipeMenu = newTitleEditRecipeMenuText
+                            }
                         )
                         Spacer(modifier = Modifier.height(height = 10.dp))
                     }
@@ -222,7 +257,7 @@ fun EditRecipeImage() {
             .padding(top = 10.dp)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.image_recipe),
+            painter = painterResource(id = R.drawable.recipe_space_image),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier

@@ -47,7 +47,7 @@ import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
-import com.example.culinarychest.data.data.TokenManager
+import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.domain.model.step.Step
 
@@ -189,7 +189,7 @@ fun FetchUserRecipeImage(
             .fillMaxWidth()
             .padding(start = 10.dp, top = 10.dp, end = 10.dp)
             .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp)),
-        painter = painterResource(id = R.drawable.image_recipe),
+        painter = painterResource(id = R.drawable.recipe_space_image),
         contentDescription = null,
         contentScale = ContentScale.Crop
     )
@@ -213,7 +213,7 @@ fun FetchUserRecipeMiniInformation(
         DisplayRecipeInfo(
             iconRecipeInfo = painterResource(id = R.drawable.recipe_info_time_icon),
             sizeRecipeInfoIcon = 24,
-            textRecipeInfo = recipe.preparationTime,
+            textRecipeInfo = "${recipe.preparationTime} мин",
             textFontSize = 16
         )
         Row(
@@ -225,7 +225,7 @@ fun FetchUserRecipeMiniInformation(
             DisplayRecipeInfo(
                 iconRecipeInfo = painterResource(id = R.drawable.recipe_info_calendar_icon),
                 sizeRecipeInfoIcon = 20,
-                textRecipeInfo = recipe.creationDate,
+                textRecipeInfo = recipe.creationDate.takeWhile { it != 'T' },
                 textFontSize = 12
             )
         }

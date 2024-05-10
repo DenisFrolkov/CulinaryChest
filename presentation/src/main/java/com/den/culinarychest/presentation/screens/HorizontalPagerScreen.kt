@@ -10,7 +10,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -20,9 +19,8 @@ import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.Item.TopBarButtonItem
 import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
-import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
-import com.example.culinarychest.data.data.TokenManager
+import com.example.culinarychest.data.data.repository.TokenManager
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -71,14 +69,16 @@ fun HorizontalPager(
                 horizontalArrangement = Arrangement.Absolute.SpaceAround
             ) {
                 TopBarButtonItem(
+                    isSelected = pagerState.currentPage == 0,
                     textButton = stringResource(R.string.favorite_text),
                     onClick = {
                         coroutineScope.launch {
-                            pagerState.animateScrollToPage( 0 )
+                            pagerState.animateScrollToPage(0)
                         }
                     }
                 )
                 TopBarButtonItem(
+                    isSelected = pagerState.currentPage == 1,
                     textButton = stringResource(R.string.created_recipe_text),
                     onClick = {
                         coroutineScope.launch {
@@ -97,7 +97,6 @@ fun HorizontalPager(
                     recipeViewModel = recipeViewModel,
                     tokenManager = tokenManager
                 )
-
                 1 -> CreatedScreen(
                     controller = controller,
                     applicationUserRecipeViewModel = applicationUserRecipeViewModel,

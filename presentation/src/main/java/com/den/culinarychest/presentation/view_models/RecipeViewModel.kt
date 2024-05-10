@@ -1,7 +1,7 @@
 package com.den.culinarychest.presentation.view_models
 
 import androidx.lifecycle.ViewModel
-import com.example.culinarychest.domain.domain.ProcessingResult
+import com.example.culinarychest.domain.domain.repository.ProcessingResult
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.domain.repository.RecipeRepository

@@ -15,17 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import kotlinx.coroutines.Job
 
 @Composable
 fun TopBarButtonItem(
-//    isSelected: Boolean,
+    isSelected: Boolean,
     textButton: String,
-//    topBarNavController: NavController,
-//    buttonNavigation: String,
-//    onButtonSelected: (Boolean) -> Unit,
     onClick: () -> Unit
 ) {
     Box(
@@ -33,8 +31,8 @@ fun TopBarButtonItem(
             .size(width = 159.dp, height = 46.dp)
             .background(color = SoftOrange, shape = RoundedCornerShape(size = 12.dp))
             .border(
-//                if (isSelected) 0.50.dp else
-                width = 0.15.dp,
+
+                width = if (isSelected) 0.50.dp else 0.15.dp,
                 color = SoftGray,
                 shape = RoundedCornerShape(12.dp)
             )
@@ -50,8 +48,7 @@ fun TopBarButtonItem(
             text = textButton,
             style = TextStyle(
                 color = SoftGray,
-//                if (isSelected) 16.sp else
-                fontSize = 14.sp,
+                fontSize = if (isSelected) 16.sp else 14.sp,
             )
         )
     }

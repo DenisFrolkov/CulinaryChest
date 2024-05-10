@@ -16,11 +16,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -58,11 +62,12 @@ fun FetchOtherUserRecipe(
     controller: NavController,
     recipe: Recipe
 ) {
-    val clickElementLike by remember { mutableStateOf(false) }
+    var clickElementLike by remember { mutableStateOf(false) }
     Column {
         FetchOtherUserRecipeTopBar(
             controller = controller,
-            clickElement = clickElementLike
+            clickElement = clickElementLike,
+            passClickElement = { clickElementLike = it }
         )
         LazyColumn(
             modifier = Modifier
@@ -83,7 +88,8 @@ fun FetchOtherUserRecipe(
 @Composable
 fun FetchOtherUserRecipeTopBar(
     controller: NavController,
-    clickElement: Boolean
+    clickElement: Boolean,
+    passClickElement: (Boolean) -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -106,20 +112,28 @@ fun FetchOtherUserRecipeTopBar(
                 }
         )
         if (clickElement == false) {
-            Image(
+            Icon(
                 modifier = Modifier
-                    .size(24.dp)
-                    .clickable { clickElement == true },
-                painter = painterResource(id = R.drawable.heart_icon_dont_like),
-                contentDescription = null
+                    .size(26.dp)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { passClickElement(true) },
+                imageVector = Icons.Default.Favorite,
+                contentDescription = null,
+                tint = SoftGray
             )
         } else {
-            Image(
+            Icon(
                 modifier = Modifier
-                    .size(24.dp)
-                    .clickable { clickElement == false },
-                painter = painterResource(id = R.drawable.heart_icon_like),
-                contentDescription = null
+                    .size(26.dp)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { passClickElement(false) },
+                imageVector = Icons.Default.Favorite,
+                contentDescription = null,
+                tint = Color.Red
             )
         }
     }
@@ -134,7 +148,7 @@ fun FetchOtherUserRecipeImage(
             .fillMaxWidth()
             .padding(start = 10.dp, top = 10.dp, end = 10.dp)
             .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp)),
-        painter = painterResource(id = R.drawable.image_recipe),
+        painter = painterResource(id = R.drawable.recipe_space_image),
         contentDescription = null,
         contentScale = ContentScale.Crop
     )
@@ -158,7 +172,7 @@ fun FetchOtherUserRecipeMiniInformation(
         DisplayRecipeInfo(
             iconRecipeInfo = painterResource(id = R.drawable.recipe_info_time_icon),
             sizeRecipeInfoIcon = 24,
-            textRecipeInfo = recipe.preparationTime,
+            textRecipeInfo = "${recipe.preparationTime} мин",
             textFontSize = 16
         )
         Row(
@@ -170,7 +184,7 @@ fun FetchOtherUserRecipeMiniInformation(
             DisplayRecipeInfo(
                 iconRecipeInfo = painterResource(id = R.drawable.recipe_info_calendar_icon),
                 sizeRecipeInfoIcon = 20,
-                textRecipeInfo = recipe.creationDate,
+                textRecipeInfo = recipe.creationDate.takeWhile { it != 'T' },
                 textFontSize = 12
             )
         }

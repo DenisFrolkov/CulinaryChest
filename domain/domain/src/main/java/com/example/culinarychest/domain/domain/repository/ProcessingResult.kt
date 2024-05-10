@@ -1,4 +1,4 @@
-package com.example.culinarychest.domain.domain
+package com.example.culinarychest.domain.domain.repository
 
 sealed class ProcessingResult<T>(
     val data: T? = null,

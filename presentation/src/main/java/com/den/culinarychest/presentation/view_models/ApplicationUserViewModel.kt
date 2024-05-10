@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.culinarychest.data.data.TokenManager
-import com.example.culinarychest.domain.domain.ProcessingResult
-import com.example.culinarychest.domain.domain.model.ApplicationUser
-import com.example.culinarychest.domain.domain.model.ApplicationUserInfo
+import com.example.culinarychest.data.data.repository.TokenManager
+import com.example.culinarychest.domain.domain.repository.ProcessingResult
+import com.example.culinarychest.domain.domain.model.application_user.ApplicationUser
+import com.example.culinarychest.domain.domain.model.application_user.ApplicationUserInfo
 import com.example.culinarychest.domain.domain.repository.ApplicationUserRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

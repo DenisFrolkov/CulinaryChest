@@ -14,7 +14,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
@@ -26,6 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.screens.HorizontalPagerScreen
@@ -34,13 +34,12 @@ import com.den.culinarychest.presentation.screens.ProfileScreen
 import com.den.culinarychest.presentation.screens.SearchScreen
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
-import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import com.den.culinarychest.presentation.сlasses.data_class.BottomNavigationItem
-import com.example.culinarychest.data.data.TokenManager
+import com.example.culinarychest.data.data.repository.TokenManager
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -107,10 +106,10 @@ fun BottomNavigationBar(
                             ),
                             icon = {
                                 Icon(
-                                    modifier = Modifier.size(if (bottomNavigationIndex == selectedItemIndex) 36.dp else 30.dp),
+                                    modifier = Modifier.size(if (bottomNavigationIndex == selectedItemIndex) 34.dp else 30.dp),
                                     painter = painterResource(id = bottomNavigationItem.icon),
                                     contentDescription = null,
-                                    tint = SoftGray
+                                    tint = if (bottomNavigationIndex == selectedItemIndex) Color.Black else SoftGray
                                 )
                             }
                         )

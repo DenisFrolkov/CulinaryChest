@@ -1,8 +1,7 @@
 package com.example.culinarychest.data.data.api
 
 import android.annotation.SuppressLint
-import android.content.SharedPreferences
-import com.example.culinarychest.data.data.TokenManager
+import com.example.culinarychest.data.data.repository.TokenManager
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -12,9 +11,6 @@ import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
 class RetrofitInstance(private var tokenManager: TokenManager) {
-    fun setTokenManager(manager: TokenManager) {
-        tokenManager = manager
-    }
 
     private val okHttpClient = OkHttpClient.Builder()
         .apply {

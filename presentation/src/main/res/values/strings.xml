@@ -11,6 +11,7 @@
     <string name="enter_text">Войти</string>
     <string name="exit_text">Выйти</string>
     <string name="login_text">Логин</string>
+    <string name="email_text">Электронную почту</string>
     <string name="user_name_text">Имя пользователя</string>
     <string name="password_text">Пароль</string>
     <string name="verification_text">Повторите пароль</string>

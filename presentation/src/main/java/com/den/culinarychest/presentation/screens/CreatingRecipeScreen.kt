@@ -1,8 +1,6 @@
 package com.den.culinarychest.presentation.screens
 
 import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,7 +27,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -51,7 +48,7 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
-import com.example.culinarychest.data.data.TokenManager
+import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.CreateRecipe
 import com.example.culinarychest.domain.domain.model.step.CreateStep
 import java.time.LocalDateTime
@@ -100,57 +97,60 @@ fun CreatingRecipe(
         preparationTime = textPreparationTime,
         savedCount = countRecipeSteps
     )
-
-    LazyColumn(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = SoftPink)
-    ) {
-        item {
-            TopBar(navController = navController)
-            AddRecipePhoto()
-            RecipeInputs(
-                onTitleTextChanged = { textTitle = it },
-                onIngredientsTextChanged = { textIngredient = it },
-                onTimeTextChanged = { textPreparationTime = it }
-            )
-            DescribeStepsRecipe(
-                count = countRecipeSteps,
-                onCountChange = { newCount -> countRecipeSteps = newCount }
-            )
-        }
-        items(countRecipeSteps) { recipeStepIndex ->
-            val itemNumber = recipeStepIndex + 1
-            Spacer(modifier = Modifier.height(height = 10.dp))
-            Column(
-                modifier = Modifier.padding(horizontal = 16.dp)
-            ) {
-                NumberTextInput(
-                    outputTextHint = "$itemNumber.",
-                    onTextChanged = { newTextRecipeStep -> textRecipeStep = newTextRecipeStep },
-                    onNumberTextChanged = { newNumberTextRecipeStep -> numberTextRecipeStep = newNumberTextRecipeStep },
-                    onTextValidation = { it.matches(Regex("[а-яА-Я0-9]+")) },
-                    onEnterPressed = { addStep(textRecipeStep, numberTextRecipeStep) }
+    Column {
+        TopBar(navController = navController)
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = SoftPink)
+        ) {
+            item {
+                AddRecipePhoto()
+                RecipeInputs(
+                    onTitleTextChanged = { textTitle = it },
+                    onIngredientsTextChanged = { textIngredient = it },
+                    onTimeTextChanged = { textPreparationTime = it }
+                )
+                DescribeStepsRecipe(
+                    count = countRecipeSteps,
+                    onCountChange = { newCount -> countRecipeSteps = newCount }
                 )
             }
-        }
-        item {
-            Box(
-                modifier = Modifier
-                    .padding(top = 24.dp, bottom = 16.dp)
-                    .padding(horizontal = 80.dp)
-            ) {
-                CreatingRecipeSaveButton(
-                    controller = navController,
-                    navigationRoute = AppNavigationRoute.BottomAppNavigationBar.route,
-                    applicationUserRecipeViewModel = applicationUserRecipeViewModel,
-                    tokenManager = tokenManager,
-                    recipeInfo = createRecipe,
-                    buttonText = stringResource(id = R.string.save_recipe_text),
-                    colorButtonText = SoftGray,
-                    buttonColor = SoftOrange
-                )
+            items(countRecipeSteps) { recipeStepIndex ->
+                val itemNumber = recipeStepIndex + 1
+                Spacer(modifier = Modifier.height(height = 10.dp))
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                ) {
+                    NumberTextInput(
+                        outputTextHint = "$itemNumber.",
+                        onTextChanged = { newTextRecipeStep -> textRecipeStep = newTextRecipeStep },
+                        onNumberTextChanged = { newNumberTextRecipeStep ->
+                            numberTextRecipeStep = newNumberTextRecipeStep
+                        },
+                        onTextValidation = { it.matches(Regex("[а-яА-Я0-9]+")) },
+                        onEnterPressed = { addStep(textRecipeStep, numberTextRecipeStep) }
+                    )
+                }
+            }
+            item {
+                Box(
+                    modifier = Modifier
+                        .padding(top = 24.dp, bottom = 16.dp)
+                        .padding(horizontal = 80.dp)
+                ) {
+                    CreatingRecipeSaveButton(
+                        controller = navController,
+                        navigationRoute = AppNavigationRoute.BottomAppNavigationBar.route,
+                        applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+                        tokenManager = tokenManager,
+                        recipeInfo = createRecipe,
+                        buttonText = stringResource(id = R.string.save_recipe_text),
+                        colorButtonText = SoftGray,
+                        buttonColor = SoftOrange
+                    )
+                }
             }
         }
     }

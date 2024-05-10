@@ -1,11 +1,11 @@
 package com.example.culinarychest.data.data.repository
 
 import com.example.culinarychest.data.data.api.CulinaryChestAPI
-import com.example.culinarychest.domain.domain.ProcessingResult
-import com.example.culinarychest.domain.domain.model.ApplicationUser
-import com.example.culinarychest.domain.domain.model.ApplicationUserInfo
-import com.example.culinarychest.domain.domain.model.Login
-import com.example.culinarychest.domain.domain.model.Token
+import com.example.culinarychest.domain.domain.repository.ProcessingResult
+import com.example.culinarychest.domain.domain.model.application_user.ApplicationUser
+import com.example.culinarychest.domain.domain.model.application_user.ApplicationUserInfo
+import com.example.culinarychest.domain.domain.model.application_user.Login
+import com.example.culinarychest.domain.domain.model.application_user.Token
 import com.example.culinarychest.domain.domain.repository.ApplicationUserRepository
 import kotlinx.coroutines.flow.Flow
 

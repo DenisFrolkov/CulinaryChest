@@ -1,6 +1,6 @@
 package com.example.culinarychest.data.data.repository
 
-import com.example.culinarychest.domain.domain.ProcessingResult
+import com.example.culinarychest.domain.domain.repository.ProcessingResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException

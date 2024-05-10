@@ -1,4 +1,4 @@
-package com.example.culinarychest.data.data
+package com.example.culinarychest.data.data.repository
 
 import android.content.Context
 import android.content.SharedPreferences

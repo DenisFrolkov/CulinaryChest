@@ -21,7 +21,7 @@ import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewM
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.den.culinarychest.presentation.view_models.RecipeStepsViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
-import com.example.culinarychest.data.data.TokenManager
+import com.example.culinarychest.data.data.repository.TokenManager
 
 @Composable
 fun AppNavigation(

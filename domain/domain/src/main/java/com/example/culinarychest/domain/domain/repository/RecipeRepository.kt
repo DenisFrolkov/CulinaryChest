@@ -1,6 +1,5 @@
 package com.example.culinarychest.domain.domain.repository
 
-import com.example.culinarychest.domain.domain.ProcessingResult
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 import kotlinx.coroutines.flow.Flow
 
