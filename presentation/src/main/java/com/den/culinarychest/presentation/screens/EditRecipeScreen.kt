@@ -91,6 +91,7 @@ fun EditRecipe(
 ) {
     var titleEditRecipeMenu by remember { mutableStateOf("") }
     var textEditRecipeMenu by remember { mutableStateOf("") }
+    var numberEditRecipeMenu by remember { mutableStateOf("") }
     var labelEditRecipeMenu by remember { mutableStateOf("") }
 
     var imageRecipeText by remember { mutableStateOf(recipe.recipeImage) }
@@ -99,15 +100,19 @@ fun EditRecipe(
 
     val steps = remember { mutableStateListOf<CreateStep>() }
 
+
     var timeRecipeText by remember { mutableStateOf(recipe.preparationTime) }
     var savedCountRecipeText by remember { mutableStateOf(recipe.savedCount) }
 
     var showEditRecipeMenu by remember { mutableStateOf(false) }
+    var showEditRecipeMenuStep by remember { mutableStateOf(false) }
 
     fun addStep(textRecipeStep: String, numberTextRecipeStep: String) {
         val newStep = CreateStep(textRecipeStep, numberTextRecipeStep)
         steps.add(newStep)
     }
+
+    var nextStepOrder by remember { mutableStateOf(recipe.steps.size) }
 
     if (labelEditRecipeMenu == "title") {
         titleRecipeText = textEditRecipeMenu
@@ -191,11 +196,15 @@ fun EditRecipe(
                                 tint = SoftGray,
                                 modifier = Modifier
                                     .size(size = 36.dp)
-                                    .clickable (
+                                    .clickable(
                                         interactionSource = remember { MutableInteractionSource() },
                                         indication = null
                                     ) {
-
+                                        nextStepOrder++
+                                        titleEditRecipeMenu = "Создание шага №${nextStepOrder}"
+                                        textEditRecipeMenu = ""
+                                        numberEditRecipeMenu = "$nextStepOrder"
+                                        showEditRecipeMenuStep = true
                                     }
                             )
                         }
@@ -256,6 +265,19 @@ fun EditRecipe(
             passNewText = { newText -> textEditRecipeMenu = newText},
             passLabelText = { label -> labelEditRecipeMenu = label }
 //            onClick = {  }
+        )
+
+        EditRecipeMenuStep(
+            titleEditRecipeMenu = titleEditRecipeMenu,
+            textEditRecipeMenu = textEditRecipeMenu,
+            labelEditRecipeMenu = labelEditRecipeMenu,
+            numberEditRecipeMenu = numberEditRecipeMenu,
+            passNumberText = { number -> numberEditRecipeMenu = number },
+            showDialog = showEditRecipeMenuStep,
+            onDismiss = { newValue -> showEditRecipeMenuStep = newValue },
+            passNewText = { newText -> textEditRecipeMenu = newText},
+            passLabelText = { label -> labelEditRecipeMenu = label },
+            onClick = { addStep(textRecipeStep = textEditRecipeMenu, numberTextRecipeStep = numberEditRecipeMenu) }
         )
     }
 }
@@ -716,8 +738,98 @@ fun EditRecipeMenu(
 }
 
 @Composable
-private fun text(titleEditRecipeMenu: String) {
-    var editText by remember { mutableStateOf(titleEditRecipeMenu) }
+fun EditRecipeMenuStep(
+    titleEditRecipeMenu: String,
+    textEditRecipeMenu: String,
+    numberEditRecipeMenu: String,
+    passNumberText: (String) -> Unit,
+    labelEditRecipeMenu: String,
+    showDialog: Boolean,
+    passNewText: (String) -> Unit,
+    passLabelText: (String) -> Unit,
+    onDismiss: (Boolean) -> Unit,
+    onClick: () -> Unit
+) {
+    if (showDialog) {
+        var editText by remember { mutableStateOf(textEditRecipeMenu) }
+        var titleText by remember { mutableStateOf(titleEditRecipeMenu) }
 
-    Text(text = editText)
+        var isHintVisible by remember { mutableStateOf(editText.isEmpty()) }
+
+        Dialog(onDismissRequest = { onDismiss(false) }) {
+            Surface(
+                modifier = Modifier
+                    .padding(all = 18.dp)
+                    .clip(shape = RoundedCornerShape(12.dp))
+            ) {
+                Column(
+                    modifier = Modifier
+                        .background(color = SoftPink)
+                ) {
+                    Text(
+                        text = titleText,
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            color = SoftGray,
+                            textAlign = TextAlign.Center
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .background(color = Color.White)
+                            .padding(vertical = 14.dp)
+                    ) {
+                        BasicTextField(
+                            value = editText,
+                            onValueChange = {
+                                editText = it
+                                isHintVisible = it.isEmpty()
+                            },
+                            textStyle = TextStyle(
+                                fontSize = 16.sp,
+                                color = Color.Black
+                            ),
+                            singleLine = false,
+                            cursorBrush = SolidColor(Color.Black),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 6.dp)
+                        )
+                        if (isHintVisible) {
+                            Text(
+                                text = "Введите новое название рецепта",
+                                style = TextStyle(
+                                    fontSize = 16.sp,
+                                    color = LightGray
+                                ),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 6.dp)
+                            )
+                        }
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = SoftOrange)
+                            .clickable {
+                                passNewText(editText)
+                                passNumberText(numberEditRecipeMenu)
+                                passLabelText(labelEditRecipeMenu)
+                                onDismiss(false)
+                                onClick()
+                            }
+                            .padding(all = 16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "Сохранить")
+                    }
+                }
+            }
+        }
+    }
 }
+
