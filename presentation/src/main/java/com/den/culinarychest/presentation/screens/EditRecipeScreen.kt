@@ -26,6 +26,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -61,6 +62,7 @@ import com.den.culinarychest.presentation.view_models.RecipeStepsViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
+import com.example.culinarychest.domain.domain.model.step.CreateStep
 
 @Composable
 fun EditRecipeScreen(
@@ -89,15 +91,29 @@ fun EditRecipe(
 ) {
     var titleEditRecipeMenu by remember { mutableStateOf("") }
     var textEditRecipeMenu by remember { mutableStateOf("") }
+    var labelEditRecipeMenu by remember { mutableStateOf("") }
 
     var imageRecipeText by remember { mutableStateOf(recipe.recipeImage) }
     var titleRecipeText by remember { mutableStateOf(recipe.title) }
     var ingredientsRecipeText by remember { mutableStateOf(recipe.ingredients) }
-//    val stepsRecipeText = remember { mutableStateListOf<CreateStep>() }
+
+    val steps = remember { mutableStateListOf<CreateStep>() }
+
     var timeRecipeText by remember { mutableStateOf(recipe.preparationTime) }
     var savedCountRecipeText by remember { mutableStateOf(recipe.savedCount) }
 
     var showEditRecipeMenu by remember { mutableStateOf(false) }
+
+    fun addStep(textRecipeStep: String, numberTextRecipeStep: String) {
+        val newStep = CreateStep(textRecipeStep, numberTextRecipeStep)
+        steps.add(newStep)
+    }
+
+    if (labelEditRecipeMenu == "title") {
+        titleRecipeText = textEditRecipeMenu
+    } else if (labelEditRecipeMenu == "ingredients") {
+        ingredientsRecipeText = textEditRecipeMenu
+    }
 
     val updateInfoRecipe = UpdateRecipe(
         title = titleRecipeText,
@@ -127,23 +143,25 @@ fun EditRecipe(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 EditRecipeTitle(
-                    textTitle = recipe.title,
+                    textTitle = titleRecipeText,
                     clickShowEditRecipeMenu = { newValueShowEditRecipeMenu ->
                         showEditRecipeMenu = newValueShowEditRecipeMenu
                     },
                     textEditRecipeMenu = { getTextEditRecipeMenu ->
                         textEditRecipeMenu = getTextEditRecipeMenu
                     },
-                    passedEditRecipeMenuTitle = { newTitle -> titleEditRecipeMenu = newTitle }
+                    passedEditRecipeMenuTitle = { newTitle -> titleEditRecipeMenu = newTitle },
+                    passedEditRecipeMenuLabel = {label -> labelEditRecipeMenu = label }
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
                 EditRecipeIngredients(
-                    textIngredients = recipe.ingredients,
+                    textIngredients = ingredientsRecipeText,
                     textEditRecipeMenu = { newText -> textEditRecipeMenu = newText },
                     passedEditRecipeMenuTitle = { newTitle -> titleEditRecipeMenu = newTitle },
-                    clickShowEditRecipeMenu = { newValue -> showEditRecipeMenu = newValue }
+                    clickShowEditRecipeMenu = { newValue -> showEditRecipeMenu = newValue },
+                    passedEditRecipeMenuLabel = {label -> labelEditRecipeMenu = label }
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Column {
@@ -176,7 +194,9 @@ fun EditRecipe(
                                     .clickable (
                                         interactionSource = remember { MutableInteractionSource() },
                                         indication = null
-                                    ) { }
+                                    ) {
+
+                                    }
                             )
                         }
                     }
@@ -189,7 +209,21 @@ fun EditRecipe(
                             clickShowEditRecipeMenu = { newValue -> showEditRecipeMenu = newValue },
                             passedEditRecipeMenuTitle = { newTitleEditRecipeMenuText ->
                                 titleEditRecipeMenu = newTitleEditRecipeMenuText
-                            }
+                            },
+                            passedEditRecipeMenuLabel = {label -> labelEditRecipeMenu = label }
+                        )
+                        Spacer(modifier = Modifier.height(height = 10.dp))
+                    }
+                    steps.forEach { step ->
+                        EditRecipeStepItem(
+                            numberStep = "${step.order}",
+                            textStep = step.description,
+                            textEditRecipeMenu = { newText -> textEditRecipeMenu = newText },
+                            clickShowEditRecipeMenu = { newValue -> showEditRecipeMenu = newValue },
+                            passedEditRecipeMenuTitle = { newTitleEditRecipeMenuText ->
+                                titleEditRecipeMenu = newTitleEditRecipeMenuText
+                            },
+                            passedEditRecipeMenuLabel = {label -> labelEditRecipeMenu = label }
                         )
                         Spacer(modifier = Modifier.height(height = 10.dp))
                     }
@@ -216,8 +250,12 @@ fun EditRecipe(
         EditRecipeMenu(
             titleEditRecipeMenu = titleEditRecipeMenu,
             textEditRecipeMenu = textEditRecipeMenu,
+            labelEditRecipeMenu = labelEditRecipeMenu,
             showDialog = showEditRecipeMenu,
-            onDismiss = { newValue -> showEditRecipeMenu = newValue }
+            onDismiss = { newValue -> showEditRecipeMenu = newValue },
+            passNewText = { newText -> textEditRecipeMenu = newText},
+            passLabelText = { label -> labelEditRecipeMenu = label }
+//            onClick = {  }
         )
     }
 }
@@ -372,6 +410,7 @@ fun EditRecipeTitle(
     textTitle: String,
     textEditRecipeMenu: (String) -> Unit,
     passedEditRecipeMenuTitle: (String) -> Unit,
+    passedEditRecipeMenuLabel: (String) -> Unit,
     clickShowEditRecipeMenu: (Boolean) -> Unit,
 ) {
     val MAX_LENGTH = 67
@@ -391,6 +430,7 @@ fun EditRecipeTitle(
             .clip(shape = RoundedCornerShape(12.dp))
             .clickable {
                 textEditRecipeMenu(title)
+                passedEditRecipeMenuLabel("title")
                 passedEditRecipeMenuTitle("Редактирование названия рецепта")
                 clickShowEditRecipeMenu(true)
             },
@@ -434,7 +474,8 @@ fun EditRecipeIngredients(
     textIngredients: String,
     clickShowEditRecipeMenu: (Boolean) -> Unit,
     textEditRecipeMenu: (String) -> Unit,
-    passedEditRecipeMenuTitle: (String) -> Unit
+    passedEditRecipeMenuTitle: (String) -> Unit,
+    passedEditRecipeMenuLabel: (String) -> Unit,
 ) {
 
     val ingredientsRecipeText = textIngredients.trimIndent()
@@ -455,6 +496,7 @@ fun EditRecipeIngredients(
             .clip(shape = RoundedCornerShape(12.dp))
             .clickable {
                 textEditRecipeMenu(ingredientsRecipeText)
+                passedEditRecipeMenuLabel("ingredients")
                 passedEditRecipeMenuTitle("Редактирование ингредиентов рецепта")
                 clickShowEditRecipeMenu(true)
             }
@@ -513,7 +555,8 @@ fun EditRecipeStepItem(
     textStep: String,
     textEditRecipeMenu: (String) -> Unit,
     clickShowEditRecipeMenu: (Boolean) -> Unit,
-    passedEditRecipeMenuTitle: (String) -> Unit
+    passedEditRecipeMenuTitle: (String) -> Unit,
+    passedEditRecipeMenuLabel: (String) -> Unit
 ) {
     val MAX_LENGTH = 67
 
@@ -531,6 +574,7 @@ fun EditRecipeStepItem(
             .clip(shape = RoundedCornerShape(12.dp))
             .clickable {
                 textEditRecipeMenu(textStep)
+                passedEditRecipeMenuLabel("step")
                 passedEditRecipeMenuTitle("Редактирование шага №$numberStep")
                 clickShowEditRecipeMenu(true)
             },
@@ -540,6 +584,15 @@ fun EditRecipeStepItem(
             modifier = Modifier
                 .weight(1f)
         ) {
+            Text(
+                text = numberStep,
+                style = TextStyle(
+                    fontSize = 15.sp,
+                    color = SoftGray,
+                ),
+                modifier = Modifier
+                    .padding(start = 14.dp, top = 8.dp, bottom = 6.dp)
+            )
             Text(
                 text = truncateText,
                 style = TextStyle(
@@ -573,10 +626,13 @@ fun EditRecipeStepItem(
 fun EditRecipeMenu(
     titleEditRecipeMenu: String,
     textEditRecipeMenu: String,
+    labelEditRecipeMenu: String,
     showDialog: Boolean,
-    onDismiss: (Boolean) -> Unit
+    passNewText: (String) -> Unit,
+    passLabelText: (String) -> Unit,
+    onDismiss: (Boolean) -> Unit,
+//    onClick: () -> Unit
 ) {
-
     if (showDialog) {
         var editText by remember { mutableStateOf(textEditRecipeMenu) }
         var titleText by remember { mutableStateOf(titleEditRecipeMenu) }
@@ -643,7 +699,10 @@ fun EditRecipeMenu(
                             .fillMaxWidth()
                             .background(color = SoftOrange)
                             .clickable {
+                                passNewText(editText)
+                                passLabelText(labelEditRecipeMenu)
                                 onDismiss(false)
+//                                onClick()
                             }
                             .padding(all = 16.dp),
                         contentAlignment = Alignment.Center
