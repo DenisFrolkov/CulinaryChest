@@ -23,8 +23,10 @@ import androidx.navigation.NavController
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
+import com.den.culinarychest.presentation.view_models.RecipeStepsViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
+import com.example.culinarychest.domain.domain.model.step.CreateStep
 
 @Composable
 fun SaveButton(
@@ -34,7 +36,9 @@ fun SaveButton(
     colorButtonText: Color,
     recipeId: String,
     updateInfoRecipe: UpdateRecipe,
+    updateStep: List<CreateStep>,
     applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
+    recipeStepsViewModel: RecipeStepsViewModel,
     tokenManager: TokenManager,
     buttonColor: Color,
 ) {
@@ -52,6 +56,11 @@ fun SaveButton(
                 tokenManager.getToken()?.let {
                     applicationUserRecipeViewModel.updateApplicationUserRecipe(
                         it, recipeId, updateInfoRecipe)
+                }
+                updateStep.forEach {createStep ->
+                    tokenManager.getToken()?.let {
+                        recipeStepsViewModel.createRecipeSteps(it, recipeId, step = CreateStep(createStep.description, createStep.order))
+                    }
                 }
                 controller.navigate(navigationRoute)
             },

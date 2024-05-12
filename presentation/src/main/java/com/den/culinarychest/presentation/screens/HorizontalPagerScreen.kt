@@ -91,13 +91,13 @@ fun HorizontalPager(
     ) {
         HorizontalPager(state = pagerState) { page ->
             when (page) {
-                0 -> FavoriteScreen(
+                1 -> FavoriteScreen(
                     controller = controller,
                     applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
                     recipeViewModel = recipeViewModel,
                     tokenManager = tokenManager
                 )
-                1 -> CreatedScreen(
+                0 -> CreatedScreen(
                     controller = controller,
                     applicationUserRecipeViewModel = applicationUserRecipeViewModel,
                     tokenManager = tokenManager
