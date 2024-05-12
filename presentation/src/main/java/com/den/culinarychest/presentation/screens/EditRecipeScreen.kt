@@ -64,6 +64,7 @@ import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
 import com.example.culinarychest.domain.domain.model.step.CreateStep
+import com.example.culinarychest.domain.domain.model.step.UpdateStep
 
 @Composable
 fun EditRecipeScreen(
@@ -91,15 +92,21 @@ fun EditRecipe(
     tokenManager: TokenManager
 ) {
 
-    val steps = remember { mutableStateListOf<CreateStep>() }
+    val stepsFromServer = remember { mutableStateListOf<UpdateStep>() }
+    val stepsCreateApp = remember { mutableStateListOf<CreateStep>() }
 
-    fun addStep(textRecipeStep: String, numberTextRecipeStep: String) {
+    fun addStepFromServer(stepId: String, textRecipeStep: String, numberTextRecipeStep: String) {
+        val newStep = UpdateStep(stepId, textRecipeStep, numberTextRecipeStep)
+        stepsFromServer.add(newStep)
+    }
+
+    fun addStepCreateApp(textRecipeStep: String, numberTextRecipeStep: String) {
         val isStepAlreadyExists =
-            steps.any { it.description == textRecipeStep && it.order == numberTextRecipeStep }
+            stepsCreateApp.any { it.description == textRecipeStep && it.order == numberTextRecipeStep }
 
         if (!isStepAlreadyExists) {
             val newStep = CreateStep(textRecipeStep, numberTextRecipeStep)
-            steps.add(newStep)
+            stepsCreateApp.add(newStep)
         }
     }
 
@@ -107,7 +114,7 @@ fun EditRecipe(
 
     if (!stepsInitialized) {
         recipe.steps.forEach {
-            addStep(it.description, it.order.toString())
+            addStepFromServer(it.stepId.toString(), it.description, it.order.toString())
         }
         stepsInitialized = true
     }
@@ -117,6 +124,7 @@ fun EditRecipe(
     var textEditRecipeMenu by remember { mutableStateOf("") }
     var numberEditRecipeMenu by remember { mutableStateOf("") }
     var labelEditRecipeMenu by remember { mutableStateOf("") }
+    var idStep by remember { mutableStateOf("") }
     var indexStepEditRecipeMenu by remember { mutableIntStateOf(0) }
 
     var imageRecipeText by remember { mutableStateOf(recipe.recipeImage) }
@@ -130,9 +138,17 @@ fun EditRecipe(
     var showEditRecipeMenuStep by remember { mutableStateOf(false) }
 
 
-    fun updateStep(index: Int, updatedStep: CreateStep) {
-        if (index in 0 until steps.size) {
-            steps[index] = updatedStep
+    fun updateStepFromServer(index: Int, stepFromServer: UpdateStep) {
+        if (index in 0 until stepsFromServer.size) {
+            stepsFromServer[index] = stepFromServer
+        } else {
+            println("Ошибка: Шаг с индексом $index не существует в списке")
+        }
+    }
+
+    fun updateStepCreateApp(index: Int, stepCreateApp: CreateStep) {
+        if (index in 0 until stepsCreateApp.size) {
+            stepsCreateApp[index] = stepCreateApp
         } else {
             println("Ошибка: Шаг с индексом $index не существует в списке")
         }
@@ -147,15 +163,20 @@ fun EditRecipe(
         ingredientsRecipeText = textEditRecipeMenu
     } else if (labelEditRecipeMenu == "createStep"){
         if (textEditRecipeMenu != "") {
-            addStep(
+            addStepCreateApp(
                 textRecipeStep = textEditRecipeMenu,
                 numberTextRecipeStep = numberEditRecipeMenu
             )
         }
-    } else if (labelEditRecipeMenu == "updateStep"){
-        updateStep(
+    } else if (labelEditRecipeMenu == "updateStepCreateApp"){
+        updateStepCreateApp(
             index = indexStepEditRecipeMenu,
-            updatedStep = CreateStep(textEditRecipeMenu, numberEditRecipeMenu)
+            stepCreateApp = CreateStep(textEditRecipeMenu, numberEditRecipeMenu)
+        )
+    } else if (labelEditRecipeMenu == "updateStepFromServer"){
+        updateStepFromServer(
+            index = indexStepEditRecipeMenu,
+            stepFromServer = UpdateStep(idStep , textEditRecipeMenu, numberEditRecipeMenu)
         )
     }
 
@@ -167,7 +188,6 @@ fun EditRecipe(
         preparationTime = timeRecipeText,
         savedCount = savedCountRecipeText
     )
-    val updateStep = steps
 
     Column {
         EditRecipeTopBar(
@@ -251,11 +271,15 @@ fun EditRecipe(
                         }
                     }
 
-                    steps.forEachIndexed { index, step ->
+                    stepsFromServer.forEachIndexed { index, step ->
                         EditRecipeStepItem(
+                            stepId = "${step.stepId}",
                             numberStep = "${step.order}",
                             indexStep = "$index",
                             textStep = step.description,
+                            passStepId = { stepId ->
+                                idStep = stepId
+                            },
                             numberEditRecipeMenu = { newNumberText ->
                                 numberEditRecipeMenu = newNumberText
                             },
@@ -265,9 +289,30 @@ fun EditRecipe(
                             passedEditRecipeMenuTitle = { newTitleEditRecipeMenuText ->
                                 titleEditRecipeMenu = newTitleEditRecipeMenuText
                             },
-                            passedEditRecipeMenuLabel = { LabelEditRecipeMenuText ->
-                                labelEditRecipeMenu = LabelEditRecipeMenuText
-                            }
+                            passedEditRecipeMenuLabel = { labelEditRecipeMenu = "updateStepFromServer" }
+                        )
+                        Spacer(modifier = Modifier.height(height = 10.dp))
+                    }
+
+                    stepsCreateApp.forEachIndexed { index, step ->
+                        EditRecipeStepItem(
+                            stepId = null,
+                            numberStep = "${step.order}",
+                            indexStep = "$index",
+                            textStep = step.description,
+                            passStepId = { stepId ->
+                                idStep = stepId
+                            },
+                            numberEditRecipeMenu = { newNumberText ->
+                                numberEditRecipeMenu = newNumberText
+                            },
+                            textEditRecipeMenu = { newText -> textEditRecipeMenu = newText },
+                            indexEditRecipeMenu = { indexStep -> indexStepEditRecipeMenu = indexStep.toInt() },
+                            clickShowEditRecipeMenu = { newValue -> showEditRecipeMenu = newValue },
+                            passedEditRecipeMenuTitle = { newTitleEditRecipeMenuText ->
+                                titleEditRecipeMenu = newTitleEditRecipeMenuText
+                            },
+                            passedEditRecipeMenuLabel = { labelEditRecipeMenu = "updateStepCreateApp" }
                         )
                         Spacer(modifier = Modifier.height(height = 10.dp))
                     }
@@ -284,7 +329,8 @@ fun EditRecipe(
                         colorButtonText = Color.Black,
                         recipeId = recipe.recipeId,
                         updateInfoRecipe = updateInfoRecipe,
-                        updateStep = steps.toList(),
+                        updateStep = stepsFromServer.toList(),
+                        createStep = stepsCreateApp.toList(),
                         applicationUserRecipeViewModel = applicationUserRecipeViewModel,
                         recipeStepsViewModel = recipeStepsViewModel,
                         tokenManager = tokenManager,
@@ -613,15 +659,17 @@ fun EditRecipeIngredients(
 
 @Composable
 fun EditRecipeStepItem(
+    stepId: String?,
     numberStep: String,
     indexStep: String,
     textStep: String,
+    passStepId: (String) -> Unit,
     numberEditRecipeMenu: (String) -> Unit,
     textEditRecipeMenu: (String) -> Unit,
     indexEditRecipeMenu: (String) -> Unit,
     clickShowEditRecipeMenu: (Boolean) -> Unit,
     passedEditRecipeMenuTitle: (String) -> Unit,
-    passedEditRecipeMenuLabel: (String) -> Unit
+    passedEditRecipeMenuLabel: () -> Unit
 ) {
     val MAX_LENGTH = 67
 
@@ -638,10 +686,11 @@ fun EditRecipeStepItem(
             .background(color = Color.White, shape = RoundedCornerShape(12.dp))
             .clip(shape = RoundedCornerShape(12.dp))
             .clickable {
+                passStepId(stepId.toString())
                 textEditRecipeMenu(textStep)
                 indexEditRecipeMenu(indexStep)
                 numberEditRecipeMenu(numberStep)
-                passedEditRecipeMenuLabel("updateStep")
+                passedEditRecipeMenuLabel()
                 passedEditRecipeMenuTitle("Редактирование шага №$numberStep")
                 clickShowEditRecipeMenu(true)
             },
@@ -652,7 +701,7 @@ fun EditRecipeStepItem(
                 .weight(1f)
         ) {
             Text(
-                text = indexStep,
+                text = numberStep,
                 style = TextStyle(
                     fontSize = 15.sp,
                     color = SoftGray,

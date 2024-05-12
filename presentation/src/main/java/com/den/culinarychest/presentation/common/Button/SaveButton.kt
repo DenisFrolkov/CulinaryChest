@@ -27,6 +27,7 @@ import com.den.culinarychest.presentation.view_models.RecipeStepsViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
 import com.example.culinarychest.domain.domain.model.step.CreateStep
+import com.example.culinarychest.domain.domain.model.step.UpdateStep
 
 @Composable
 fun SaveButton(
@@ -36,7 +37,8 @@ fun SaveButton(
     colorButtonText: Color,
     recipeId: String,
     updateInfoRecipe: UpdateRecipe,
-    updateStep: List<CreateStep>,
+    updateStep: List<UpdateStep>,
+    createStep: List<CreateStep>,
     applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
     recipeStepsViewModel: RecipeStepsViewModel,
     tokenManager: TokenManager,
@@ -57,11 +59,18 @@ fun SaveButton(
                     applicationUserRecipeViewModel.updateApplicationUserRecipe(
                         it, recipeId, updateInfoRecipe)
                 }
-                updateStep.forEach {createStep ->
+                updateStep.forEach {updateStep ->
+                    tokenManager.getToken()?.let {
+                        recipeStepsViewModel.updateRecipeStep(it, recipeId, stepId = updateStep.stepId, updateStep = CreateStep(updateStep.description, updateStep.order))
+                    }
+                }
+
+                createStep.forEach {createStep ->
                     tokenManager.getToken()?.let {
                         recipeStepsViewModel.createRecipeSteps(it, recipeId, step = CreateStep(createStep.description, createStep.order))
                     }
                 }
+
                 controller.navigate(navigationRoute)
             },
         contentAlignment = Alignment.Center
