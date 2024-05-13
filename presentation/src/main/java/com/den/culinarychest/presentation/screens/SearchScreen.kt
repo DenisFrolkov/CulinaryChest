@@ -37,12 +37,13 @@ fun SearchScreen(
 ) {
 
     tokenManager.getToken()?.let {
-        recipeViewModel.getRecipes(it)
+        recipeViewModel.getRecipes(it, null)
         applicationUserViewModel.getApplicationUserInfo(it)
     }
     Search(
         controller = navController,
-        recipeViewModel = recipeViewModel
+        recipeViewModel = recipeViewModel,
+        tokenManager = tokenManager
     )
 }
 
@@ -50,9 +51,11 @@ fun SearchScreen(
 @Composable
 fun Search(
     controller: NavController,
-    recipeViewModel: RecipeViewModel
+    recipeViewModel: RecipeViewModel,
+    tokenManager: TokenManager
 ) {
     var searchText by remember { mutableStateOf("") }
+
     val recipeList = recipeViewModel.listRecipes.collectAsState().value
 
     Column(
@@ -67,7 +70,11 @@ fun Search(
             modifier = Modifier
                 .padding(horizontal = 12.dp)
         ) {
-            SearchBarItem { searchText = it }
+            SearchBarItem(
+                recipeViewModel = recipeViewModel,
+                tokenManager = tokenManager,
+                onTextChanged = { text -> searchText = text }
+            )
         }
 
         Spacer(modifier = Modifier.height(10.dp))

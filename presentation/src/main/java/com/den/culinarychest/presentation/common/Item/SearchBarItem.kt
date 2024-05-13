@@ -10,11 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +30,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,20 +38,30 @@ import com.den.culinarychest.R
 import com.den.culinarychest.presentation.ui.theme.LightGray
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
+import com.den.culinarychest.presentation.view_models.RecipeViewModel
+import com.example.culinarychest.data.data.repository.TokenManager
 
 @Composable
 fun SearchBarItem(
+    recipeViewModel: RecipeViewModel,
+    tokenManager: TokenManager,
     onTextChanged: (String) -> Unit,
 ) {
+
     var enteredSearchText by remember { mutableStateOf(TextFieldValue()) }
     var isHintVisible by remember { mutableStateOf(true) }
     var isHistoryVisible by remember { mutableStateOf(false) }
+
+//    tokenManager.getToken()?.let { token -> recipeViewModel.getRecipes(token, enteredSearchText.text) }
+
+//    val recipeList = recipeViewModel.listRecipes.collectAsState().value
 
     val searchHistoryCollection = mutableListOf(
         "Блюдо 1",
         "Блюдо 2",
         "Блюдо 3"
     )
+
 
     LaunchedEffect(enteredSearchText) {
         onTextChanged(enteredSearchText.text)
@@ -86,6 +100,14 @@ fun SearchBarItem(
                 ),
                 singleLine = true,
                 cursorBrush = SolidColor(Color.Black),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        tokenManager.getToken()?.let { token -> recipeViewModel.getRecipes(token, enteredSearchText.text) }
+                    }
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .onFocusChanged { isFocused ->
@@ -137,40 +159,40 @@ fun SearchBarItem(
                 )
             }
         }
-        if (isHistoryVisible) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = SoftOrange)
-                    .border(
-                        width = .5.dp,
-                        color = SoftGray,
-                        shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
-                    )
-                    .padding(10.dp)
-            ) {
-                Divider(color = Color.Gray, thickness = .5.dp)
-                searchHistoryCollection.forEach { historyTextItem ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                enteredSearchText = TextFieldValue(historyTextItem)
-                            }
-                    ) {
-                        Text(
-                            text = historyTextItem,
-                            style = TextStyle(
-                                fontSize = 18.sp,
-                                color = SoftGray
-                            ),
-                            modifier = Modifier
-                                .padding(10.dp)
-                        )
-                    }
-                    Divider(color = Color.Gray, thickness = .5.dp)
-                }
-            }
-        }
+//        if (isHistoryVisible) {
+//            Column(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .background(color = SoftOrange)
+//                    .border(
+//                        width = .5.dp,
+//                        color = SoftGray,
+//                        shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
+//                    )
+//                    .padding(10.dp)
+//            ) {
+//                Divider(color = Color.Gray, thickness = .5.dp)
+//                recipeList.forEach { historyTextItem ->
+//                    Box(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .clickable {
+//                                enteredSearchText = TextFieldValue(historyTextItem.title)
+//                            }
+//                    ) {
+//                        Text(
+//                            text = historyTextItem.title,
+//                            style = TextStyle(
+//                                fontSize = 18.sp,
+//                                color = SoftGray
+//                            ),
+//                            modifier = Modifier
+//                                .padding(10.dp)
+//                        )
+//                    }
+//                    Divider(color = Color.Gray, thickness = .5.dp)
+//                }
+//            }
+//        }
     }
 }

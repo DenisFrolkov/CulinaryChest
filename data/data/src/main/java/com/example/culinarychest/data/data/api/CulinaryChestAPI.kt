@@ -44,7 +44,7 @@ interface CulinaryChestAPI {
     suspend fun deleteApplicationUserFavoriteRecipe(@Header("Authorization") token: String, @Path("favoriteRecipeId") favoriteRecipeId: String)
 
     @GET("/api/recipe/listRecipe")
-    suspend fun getRecipes(@Header("Authorization") token: String): List<Recipe>
+    suspend fun getRecipes(@Header("Authorization") token: String, @Query("SearchTerm") searchTerm: String?): List<Recipe>
     @GET("/api/recipe/listRecipeByIds")
     suspend fun getRecipeByIds(@Header("Authorization") token: String, @Query("recipeIds") recipeIds: List<String>): List<Recipe>
     @GET("/api/recipe/{recipeId}")

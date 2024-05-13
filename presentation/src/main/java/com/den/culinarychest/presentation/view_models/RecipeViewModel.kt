@@ -30,9 +30,9 @@ class RecipeViewModel(
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
 
 
-    fun getRecipes(token: String) {
+    fun getRecipes(token: String, searchTerm: String?) {
         viewModelScope.launch {
-            recipeRepository.getRecipes(token).collectLatest { result ->
+            recipeRepository.getRecipes(token, searchTerm).collectLatest { result ->
                 when (result) {
                     is ProcessingResult.Error -> {
                         _showErrorToastChannel.send(true)

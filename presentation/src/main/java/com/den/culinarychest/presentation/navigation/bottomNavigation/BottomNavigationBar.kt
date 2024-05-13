@@ -120,7 +120,7 @@ fun BottomNavigationBar(
     ) {
         NavHost(
             navController = bottomController,
-            startDestination = BottomNavigationRoute.TopNavigationBar.route
+            startDestination = BottomNavigationRoute.SearchScreen.route
         ) {
             composable(BottomNavigationRoute.SearchScreen.route) {
                 SearchScreen(

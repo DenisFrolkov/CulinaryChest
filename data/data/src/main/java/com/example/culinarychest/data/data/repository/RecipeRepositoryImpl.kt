@@ -10,9 +10,9 @@ class RecipeRepositoryImpl(
     private val culinaryChestAPI: CulinaryChestAPI
 ) : RecipeRepository {
 
-    override suspend fun getRecipes(token: String): Flow<ProcessingResult<List<Recipe>>> {
+    override suspend fun getRecipes(token: String, searchTerm: String?): Flow<ProcessingResult<List<Recipe>>> {
         return safeApiCall {
-            culinaryChestAPI.getRecipes(token)
+            culinaryChestAPI.getRecipes(token, searchTerm)
         }
     }
     override suspend fun getRecipesByIds(token: String, recipeIds: List<String>): Flow<ProcessingResult<List<Recipe>>> {
@@ -20,7 +20,6 @@ class RecipeRepositoryImpl(
             culinaryChestAPI.getRecipeByIds(token, recipeIds)
         }
     }
-
     override suspend fun getRecipeById(token: String, recipeId: String): Flow<ProcessingResult<List<Recipe>>> {
         return safeApiCall {
             culinaryChestAPI.getRecipeById(token, recipeId)
