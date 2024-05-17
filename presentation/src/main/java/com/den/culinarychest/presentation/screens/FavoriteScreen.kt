@@ -102,7 +102,7 @@ private fun EmptyScreenText() {
             .background(color = SoftPink)
     ) {
         Text(
-            text = stringResource(R.string.empty_text),
+            text = stringResource(R.string.no_saved_recipes_text_text),
             style = TextStyle(
                 color = SoftGray,
                 fontSize = 16.sp

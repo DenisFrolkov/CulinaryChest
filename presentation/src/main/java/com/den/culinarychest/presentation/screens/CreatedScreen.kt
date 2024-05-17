@@ -82,7 +82,7 @@ private fun ListRecipeCreatedUser(controller: NavController, listRecipeCreatedUs
                         .background(color = SoftPink)
                 ) {
                     Text(
-                        text = stringResource(R.string.empty_text),
+                        text = stringResource(R.string.no_created_recipes_text),
                         style = TextStyle(
                             color = SoftGray,
                             fontSize = 16.sp

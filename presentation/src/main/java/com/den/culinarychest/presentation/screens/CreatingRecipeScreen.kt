@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -91,11 +92,9 @@ fun CreatingRecipe(
     val createRecipe = CreateRecipe(
         title = textTitle,
         ingredients = textIngredient,
-        recipeImage = "Пока что ничего",
         steps = steps.toList(),
         creationDate = LocalDateTime.now().toString(),
-        preparationTime = textPreparationTime,
-        savedCount = countRecipeSteps
+        preparationTime = textPreparationTime
     )
     Column {
         TopBar(navController = navController)
@@ -106,7 +105,7 @@ fun CreatingRecipe(
                 .background(color = SoftPink)
         ) {
             item {
-                AddRecipePhoto()
+//                AddRecipePhoto()
                 RecipeInputs(
                     onTitleTextChanged = { textTitle = it },
                     onIngredientsTextChanged = { textIngredient = it },
@@ -124,7 +123,7 @@ fun CreatingRecipe(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
                     NumberTextInput(
-                        outputTextHint = "$itemNumber.",
+                        outputTextHint = "$itemNumber",
                         onTextChanged = { newTextRecipeStep -> textRecipeStep = newTextRecipeStep },
                         onNumberTextChanged = { newNumberTextRecipeStep ->
                             numberTextRecipeStep = newNumberTextRecipeStep
@@ -135,7 +134,7 @@ fun CreatingRecipe(
                 }
             }
             item {
-                Box(
+                Column(
                     modifier = Modifier
                         .padding(top = 24.dp, bottom = 16.dp)
                         .padding(horizontal = 80.dp)
@@ -301,7 +300,7 @@ private fun CreatingRecipeSaveButton(
                             it, recipeInfo
                         )
                     }
-//                controller.navigate(navigationRoute)
+                controller.navigate(navigationRoute)
             },
         contentAlignment = Alignment.Center
     ) {

@@ -16,7 +16,8 @@
     <string name="password_text">Пароль</string>
     <string name="verification_text">Повторите пароль</string>
     <string name="mistake_text">Проверьте правильность набора информации</string>
-    <string name="empty_text">Здесь еще ничего нет :(</string>
+    <string name="no_saved_recipes_text_text">Вы еще не сохранили рецепт :(</string>
+    <string name="no_created_recipes_text">Вы еще не создали рецепт :(</string>
     <string name="preparation_steps_text">Шаги приготовления:</string>
     <string name="ingredients_text">Ингредиенты:</string>
     <string name="enter_title_recipe">Введите название рецепта</string>

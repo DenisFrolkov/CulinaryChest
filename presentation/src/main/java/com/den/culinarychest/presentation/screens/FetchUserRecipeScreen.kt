@@ -98,7 +98,6 @@ fun FetchUserRecipe(
                 .background(color = SoftPink)
         ) {
             item {
-                FetchUserRecipeImage(recipe = recipe)
                 FetchUserRecipeMiniInformation(recipe = recipe)
                 FetchUserRecipeTitle(recipe = recipe)
                 FetchUserRecipeIngredient(recipeIngredients = recipeIngredients)
@@ -177,22 +176,6 @@ fun FetchUserRecipeTopBar(
             contentDescription = null
         )
     }
-}
-
-
-@Composable
-fun FetchUserRecipeImage(
-    recipe: Recipe
-) {
-    Image(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 10.dp, top = 10.dp, end = 10.dp)
-            .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp)),
-        painter = painterResource(id = R.drawable.recipe_space_image),
-        contentDescription = null,
-        contentScale = ContentScale.Crop
-    )
 }
 
 @Composable

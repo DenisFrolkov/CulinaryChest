@@ -127,7 +127,6 @@ fun EditRecipe(
     var idStep by remember { mutableStateOf("") }
     var indexStepEditRecipeMenu by remember { mutableIntStateOf(0) }
 
-    var imageRecipeText by remember { mutableStateOf(recipe.recipeImage) }
     var titleRecipeText by remember { mutableStateOf(recipe.title) }
     var ingredientsRecipeText by remember { mutableStateOf(recipe.ingredients) }
 
@@ -182,7 +181,6 @@ fun EditRecipe(
 
     val updateInfoRecipe = UpdateRecipe(
         title = titleRecipeText,
-        recipeImage = imageRecipeText,
         ingredients = ingredientsRecipeText,
         creationDate = recipe.creationDate,
         preparationTime = timeRecipeText,
@@ -200,7 +198,6 @@ fun EditRecipe(
                 .padding(horizontal = 10.dp)
         ) {
             item {
-                EditRecipeImage()
                 Spacer(modifier = Modifier.height(12.dp))
                 EditRecipeTime(
                     timeRecipeText = timeRecipeText,
@@ -392,53 +389,6 @@ fun EditRecipeTopBar(
                     controller.popBackStack()
                 }
         )
-    }
-}
-
-@SuppressLint("UnrememberedMutableInteractionSource")
-@Composable
-fun EditRecipeImage() {
-    Box(
-        modifier = Modifier
-            .padding(top = 10.dp)
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.recipe_space_image),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxSize()
-                .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp))
-                .alpha(.7f)
-                .clickable(
-                    interactionSource = MutableInteractionSource(),
-                    indication = null
-                ) { }
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .alpha(0.9f)
-                .background(
-                    color = EditRecipeColor,
-                    shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
-                )
-                .height(height = 98.dp)
-                .align(Alignment.BottomCenter)
-                .clip(shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp))
-                .clickable { }
-        ) {
-            Text(
-                text = stringResource(id = R.string.click_change_image),
-                style = TextStyle(
-                    fontSize = 24.sp,
-                    color = SoftGray,
-                    textAlign = TextAlign.Center
-                ),
-                modifier = Modifier.align(Alignment.Center)
-            )
-        }
-
     }
 }
 

@@ -74,11 +74,6 @@ fun ProfileScreen(
                         .fillMaxWidth()
                         .padding(top = 34.dp)
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(size = 100.dp)
-                            .background(color = SoftGray, shape = RoundedCornerShape(size = 50.dp))
-                    ) { }
                     userInfo?.let {
                         Text(
                             text = it.userName,

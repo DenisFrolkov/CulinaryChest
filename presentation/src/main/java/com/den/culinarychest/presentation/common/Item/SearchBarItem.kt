@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -56,12 +57,7 @@ fun SearchBarItem(
 
 //    val recipeList = recipeViewModel.listRecipes.collectAsState().value
 
-    val searchHistoryCollection = mutableListOf(
-        "Блюдо 1",
-        "Блюдо 2",
-        "Блюдо 3"
-    )
-
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(enteredSearchText) {
         onTextChanged(enteredSearchText.text)
@@ -73,18 +69,12 @@ fun SearchBarItem(
                 .fillMaxWidth()
                 .background(
                     color = SoftOrange,
-                    shape =
-                    if (isHistoryVisible) {
-                        RoundedCornerShape(topStart = 14.dp, topEnd = 14.dp)
-                    } else RoundedCornerShape(14.dp)
+                    shape = RoundedCornerShape(14.dp)
                 )
                 .border(
                     width = 0.1.dp,
                     color = SoftGray,
-                    shape =
-                    if (isHistoryVisible) {
-                        RoundedCornerShape(topStart = 14.dp, topEnd = 14.dp)
-                    } else RoundedCornerShape(14.dp)
+                    shape = RoundedCornerShape(14.dp)
                 )
                 .padding(start = 12.dp, top = 15.dp, end = 12.dp, bottom = 16.dp)
         ) {
@@ -106,6 +96,7 @@ fun SearchBarItem(
                 keyboardActions = KeyboardActions(
                     onDone = {
                         tokenManager.getToken()?.let { token -> recipeViewModel.getRecipes(token, enteredSearchText.text) }
+                        keyboardController?.hide()
                     }
                 ),
                 modifier = Modifier
@@ -132,67 +123,6 @@ fun SearchBarItem(
                         .align(Alignment.CenterStart)
                 )
             }
-            if (enteredSearchText.text.isEmpty()) {
-                Icon(
-                    painter = painterResource(id = R.drawable.search_searchbar_icon),
-                    contentDescription = null,
-                    tint = Color.Black,
-                    modifier = Modifier
-                        .padding(end = 12.dp)
-                        .size(20.dp)
-                        .align(Alignment.CenterEnd)
-                )
-            }
-            if (enteredSearchText.text.isNotEmpty()) {
-                Icon(
-                    painter = painterResource(id = R.drawable.clear_searchbar_icon),
-                    contentDescription = null,
-                    tint = Color.Black,
-                    modifier = Modifier
-                        .padding(end = 12.dp)
-                        .size(18.dp)
-                        .align(Alignment.CenterEnd)
-                        .clickable {
-                            enteredSearchText = TextFieldValue()
-                            isHintVisible = true
-                        }
-                )
-            }
         }
-//        if (isHistoryVisible) {
-//            Column(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .background(color = SoftOrange)
-//                    .border(
-//                        width = .5.dp,
-//                        color = SoftGray,
-//                        shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
-//                    )
-//                    .padding(10.dp)
-//            ) {
-//                Divider(color = Color.Gray, thickness = .5.dp)
-//                recipeList.forEach { historyTextItem ->
-//                    Box(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .clickable {
-//                                enteredSearchText = TextFieldValue(historyTextItem.title)
-//                            }
-//                    ) {
-//                        Text(
-//                            text = historyTextItem.title,
-//                            style = TextStyle(
-//                                fontSize = 18.sp,
-//                                color = SoftGray
-//                            ),
-//                            modifier = Modifier
-//                                .padding(10.dp)
-//                        )
-//                    }
-//                    Divider(color = Color.Gray, thickness = .5.dp)
-//                }
-//            }
-//        }
     }
 }

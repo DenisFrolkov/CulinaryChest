@@ -5,8 +5,6 @@ import com.google.gson.annotations.SerializedName
 data class UpdateRecipe(
     @SerializedName("Title", alternate = ["title"])
     val title: String,
-    @SerializedName("RecipeImage", alternate = ["recipeImage"])
-    val recipeImage: String,
     @SerializedName("Ingredients", alternate = ["ingredients"])
     val ingredients: String,
     @SerializedName("CreationDate", alternate = ["creationDate"])

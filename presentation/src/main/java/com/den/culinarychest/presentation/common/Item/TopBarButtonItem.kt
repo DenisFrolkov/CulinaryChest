@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,7 +32,6 @@ fun TopBarButtonItem(
             .size(width = 159.dp, height = 46.dp)
             .background(color = SoftOrange, shape = RoundedCornerShape(size = 12.dp))
             .border(
-
                 width = if (isSelected) 0.50.dp else 0.15.dp,
                 color = SoftGray,
                 shape = RoundedCornerShape(12.dp)
@@ -47,8 +47,8 @@ fun TopBarButtonItem(
         Text(
             text = textButton,
             style = TextStyle(
-                color = SoftGray,
-                fontSize = if (isSelected) 16.sp else 14.sp,
+                color = if (isSelected) Color.Black else SoftGray,
+                fontSize = 14.sp,
             )
         )
     }
