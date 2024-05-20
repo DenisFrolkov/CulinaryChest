@@ -121,7 +121,8 @@ fun ProfileScreen(
                     borderColor = Color.Red,
                     textButton = stringResource(R.string.exit_text),
                     textColor = Color.Red,
-                    tokenManager = tokenManager
+                    tokenManager = tokenManager,
+                    applicationUserViewModel = applicationUserViewModel
                 )
             }
         }

@@ -1,6 +1,5 @@
 package com.den.culinarychest.presentation.screens
 
-import android.util.Patterns
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -10,15 +9,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -27,12 +29,17 @@ import androidx.navigation.NavController
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.Button.PushButton
 import com.den.culinarychest.presentation.common.TextInput.AccountTextInput
-import com.den.culinarychest.presentation.models.ScreenUiState
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
+import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 
 @Composable
 fun AuthorizationScreen(
@@ -54,31 +61,28 @@ fun Authorization(
     controller: NavController,
     applicationUserViewModel: ApplicationUserViewModel,
     tokenManager: TokenManager
-
 ) {
-    var uiState by remember { mutableStateOf(ScreenUiState()) }
 
-    val isUserNameValid by remember {
-        derivedStateOf {
-            uiState.textUserNameField.isEmpty()
-        }
+    val coroutineScope = rememberCoroutineScope()
+
+    var login by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
+
+    val tokenVerification by remember {
+        derivedStateOf { tokenManager.getToken() == null }
     }
-    val isPasswordValid by remember { derivedStateOf { uiState.textPasswordField.isNotEmpty() && uiState.textPasswordField.length >= 13 } }
 
-    val isUserNameNotEmptyAndValid by remember {
-        derivedStateOf {
-            uiState.textUserNameField.isNotEmpty()
-        }
+    val userNameValidation by remember {
+        derivedStateOf { login.length < 3 && login.isNotBlank() }
     }
-    val isPasswordNotEmptyAndValid by remember { derivedStateOf { uiState.textPasswordField.isNotEmpty() && uiState.textPasswordField.length >= 13 } }
+    val passwordValidation by remember {
+        derivedStateOf { password.length < 12 && password.isNotBlank() }
+    }
 
-    val hasValidInput by remember { derivedStateOf { isUserNameValid || isPasswordValid } }
-    val allFieldsAreValid by remember { derivedStateOf { isUserNameNotEmptyAndValid && isPasswordNotEmptyAndValid } }
-
-    var checkTextOnClick by remember { mutableStateOf(false) }
-
-    var emailVerificationResult by remember { mutableStateOf(false) }
-    var passwordVerificationResult by remember { mutableStateOf(false) }
+    var clickButton by remember {
+        mutableStateOf(false)
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -100,36 +104,73 @@ fun Authorization(
                 .padding(horizontal = 16.dp)
         ) {
             AccountTextInput(
-                outputTextHint = stringResource(R.string.user_name_text),
-                onTextChanged = { uiState = uiState.copy(textUserNameField = it) },
-                onTextValidation = { text -> Patterns.EMAIL_ADDRESS.matcher(text).matches() },
-                checkTextOnClick = checkTextOnClick,
-                transferVerification = { newShow -> checkTextOnClick = newShow },
-                returnValidation = { validation -> emailVerificationResult = validation }
+                hintOutput = "Введите логин",
+                errorText = "Проверьте правильность введенного логина",
+                validationEnteredText = if (clickButton) tokenVerification else userNameValidation,
+                enteredText = { enteredText -> login = enteredText },
             )
             Spacer(modifier = Modifier.height(16.dp))
             AccountTextInput(
-                outputTextHint = stringResource(R.string.password_text),
-                onTextChanged = { uiState = uiState.copy(textPasswordField = it) },
-                onTextValidation = { text -> text.length >= 8 },
-                checkTextOnClick = checkTextOnClick,
-                transferVerification = { newShow -> checkTextOnClick = newShow },
-                returnValidation = { validation -> passwordVerificationResult = validation }
+                hintOutput = "Введите пароль",
+                errorText = "Проверьте правильность введенного пароля",
+                validationEnteredText = if (clickButton) tokenVerification else passwordValidation,
+                enteredText = { enteredText -> password = enteredText },
             )
             Spacer(modifier = Modifier.height(32.dp))
         }
-        PushButton(
-            textButton = stringResource(R.string.enter_text),
-            fieldCheck = hasValidInput,
-            controller = controller,
-            route = AppNavigationRoute.BottomAppNavigationBar.route,
-            onButtonClick = { newValue -> checkTextOnClick = newValue },
-            fieldValidityCheck = allFieldsAreValid,
-            uiState.textUserNameField,
-            uiState.textPasswordField,
-            applicationUserViewModel,
-            tokenManager
-        )
+//        if (isLoading) {
+//            CircularProgressIndicator(
+//                color = SoftGray,
+//                strokeWidth = 1.5.dp
+//            )
+//        } else {
+//            PushButton(
+//                onClick = {
+//                    clickButton = true
+//                    applicationUserViewModel.authorizeUser(
+//                        username = login,
+//                        password = password
+//                    )
+//                    CoroutineScope(Dispatchers.Main).launch {
+//                        if (tokenManager.getToken() == null){
+//                            isLoading = true
+//                            delay(2000)
+//                            if (tokenManager.getToken() == null){
+//                                isLoading = false
+//                            } else controller.navigate(AppNavigationRoute.BottomAppNavigationBar.route)
+//                        }
+//                    }
+//                }
+//            )
+//        }
+
+        if (isLoading) {
+            CircularProgressIndicator(
+                color = SoftGray,
+                strokeWidth = 1.5.dp
+            )
+        } else {
+            PushButton(
+                onClick = {
+                    applicationUserViewModel.authorizeUser(
+                        username = login,
+                        password = password
+                    )
+                    coroutineScope.launch {
+                        isLoading = true
+                        delay(1000)
+                        if (tokenManager.getToken() == null) {
+                            isLoading = false
+                            clickButton = true
+                        } else {
+                            clickButton = false
+                            controller.navigate(AppNavigationRoute.BottomAppNavigationBar.route)
+                        }
+                    }
+                }
+            )
+        }
+
         Spacer(modifier = Modifier.height(height = 8.dp))
         Text(
             modifier = Modifier.clickable(

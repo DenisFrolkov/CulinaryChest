@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
+import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 
 @Composable
@@ -30,7 +31,8 @@ fun SettingButton(
     borderColor: Color,
     textButton: String,
     textColor: Color,
-    tokenManager: TokenManager
+    tokenManager: TokenManager,
+    applicationUserViewModel: ApplicationUserViewModel
 ) {
     Spacer(modifier = Modifier.height(16.dp))
     Box(
@@ -45,6 +47,7 @@ fun SettingButton(
             ) {
                 controller.navigate(navigationText)
                 tokenManager.clearToken()
+                applicationUserViewModel.clearApplicationUserViewModel()
             },
     ) {
         Text(

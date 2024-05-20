@@ -30,34 +30,25 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.models.ScreenUiState
 import com.den.culinarychest.presentation.ui.theme.LightGray
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 
 @Composable
 fun AccountTextInput(
-    outputTextHint: String,
-    onTextChanged: (String) -> Unit,
-    onTextValidation: (String) -> Boolean,
-    checkTextOnClick: Boolean,
-    transferVerification: (Boolean) -> Unit, // Нужно подумать насчет этой переменной
-    returnValidation: (Boolean) -> Unit // Нужно подумать насчет этой переменной
+    hintOutput: String,
+    errorText: String,
+    validationEnteredText: Boolean,
+    enteredText: (String) -> Unit,
 ) {
-    var enteredText by remember { mutableStateOf(TextFieldValue()) }
+    var textFieldValue by remember { mutableStateOf(TextFieldValue()) }
     var isHintVisible by remember { mutableStateOf(true) }
     var isErrorVisible by remember { mutableStateOf(false) }
 
-    LaunchedEffect(enteredText, checkTextOnClick) {
-        if (checkTextOnClick) {
-            isErrorVisible = !onTextValidation(enteredText.text)
-            transferVerification(false)
-        }
-        onTextChanged(enteredText.text)
+    LaunchedEffect(textFieldValue, validationEnteredText) {
+        enteredText(textFieldValue.text)
+        isErrorVisible = validationEnteredText
     }
-
-
-    if (isErrorVisible) returnValidation(true)
 
     Box(
         contentAlignment = Alignment.CenterStart,
@@ -68,9 +59,9 @@ fun AccountTextInput(
             .padding(start = 12.dp, top = 15.dp, end = 12.dp, bottom = 16.dp)
     ) {
         BasicTextField(
-            value = enteredText,
+            value = textFieldValue,
             onValueChange = {
-                enteredText = it
+                textFieldValue = it
                 isHintVisible = it.text.isEmpty()
             },
             textStyle = TextStyle(
@@ -86,7 +77,7 @@ fun AccountTextInput(
         )
         if (isHintVisible) {
             Text(
-                text = outputTextHint,
+                text = hintOutput,
                 style = TextStyle(
                     fontSize = 16.sp,
                     color = LightGray
@@ -96,7 +87,7 @@ fun AccountTextInput(
                     .align(Alignment.CenterStart)
             )
         }
-        if (enteredText.text.isNotEmpty()) {
+        if (textFieldValue.text.isNotEmpty()) {
             Icon(
                 painter = painterResource(id = R.drawable.clear_searchbar_icon),
                 contentDescription = null,
@@ -106,7 +97,7 @@ fun AccountTextInput(
                     .size(16.dp)
                     .align(Alignment.CenterEnd)
                     .clickable {
-                        enteredText = TextFieldValue("")
+                        textFieldValue = TextFieldValue("")
                         isHintVisible = true
                     }
             )
@@ -125,7 +116,7 @@ fun AccountTextInput(
                 modifier = Modifier.size(16.dp)
             )
             Text(
-                text = stringResource(R.string.mistake_text),
+                text = errorText,
                 style = TextStyle(
                     fontSize = 12.sp,
                     color = Red

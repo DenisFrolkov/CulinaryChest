@@ -10,6 +10,7 @@ import com.example.culinarychest.domain.domain.model.application_user.Applicatio
 import com.example.culinarychest.domain.domain.model.application_user.ApplicationUserInfo
 import com.example.culinarychest.domain.domain.repository.ApplicationUserRepository
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -26,6 +27,9 @@ class ApplicationUserViewModel(
     private val _registrationResult = MutableLiveData<ProcessingResult<ApplicationUser>>()
     val registrationResult: LiveData<ProcessingResult<ApplicationUser>> = _registrationResult
 
+    private val _authState = MutableLiveData<ProcessingResult<String>>()
+    val authState: LiveData<ProcessingResult<String>> = _authState
+
     private val _token = MutableLiveData<String?>(null)
     val token get() = _token
 
@@ -34,7 +38,6 @@ class ApplicationUserViewModel(
 
     private val _showErrorToastChannel = Channel<String>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
-
 
     fun registerApplicationUser(
         user: ApplicationUser
@@ -53,34 +56,29 @@ class ApplicationUserViewModel(
         }
     }
 
-    fun authorizeUser(
-        username: String,
-        password: String,
-        tokenManager: TokenManager,
-    ) {
+    fun authorizeUser(username: String, password: String) {
         viewModelScope.launch {
             try {
                 val result = applicationUserRepository.authorizationApplicationUser(username, password)
                 if (result is ProcessingResult.Success) {
-                    val token = result.data?.token ?: ""
+                    val token = result.data?.token.orEmpty()
                     tokenManager.saveToken(token)
+                    _authState.value = ProcessingResult.Success(token)
                 } else {
-
+                    _authState.value = ProcessingResult.Error("Authorization failed")
                 }
             } catch (e: Exception) {
                 val errorMessage = when (e) {
                     is HttpException -> when (e.code()) {
-                        401 -> "Неправильное имя пользователя или пароль"
-                        else -> "Произошла ошибка при авторизации! Но мы скоро все починим ;)"
+                        401 -> "Incorrect username or password"
+                        else -> "An error occurred during authorization. We'll fix it soon."
                     }
-                    else -> "Произошла ошибка при авторизации! Но мы скоро все починим ;)"
+                    else -> "An error occurred during authorization. We'll fix it soon."
                 }
-                _showErrorToastChannel.send(errorMessage)
+                _authState.value = ProcessingResult.Error(errorMessage)
             }
         }
     }
-
-
 
     fun getApplicationUserInfo(token: String) {
         viewModelScope.launch {
@@ -103,8 +101,11 @@ class ApplicationUserViewModel(
         }
     }
 
-    private fun setToken(token: String) {
-        _token.value = token
+    fun clearApplicationUserViewModel() {
+        _registrationResult.value = null
+        _authState.value = null
+        _token.value = null
+        _userInfoResult.value = null
     }
 }
 

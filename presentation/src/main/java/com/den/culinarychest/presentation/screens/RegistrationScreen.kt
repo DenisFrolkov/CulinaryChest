@@ -61,52 +61,6 @@ fun Registration(
     tokenManager: TokenManager
 ) {
 
-    var uiState by remember { mutableStateOf(ScreenUiState()) }
-
-    val isLoginValid by remember {
-        derivedStateOf {
-            uiState.textUserNameField.isEmpty() || uiState.textUserNameField.matches(
-                Regex("[a-zA-Z0-9_]+")
-            ) && uiState.textUserNameField.length in 5..20
-        }
-    }
-    val isEmailValid by remember {
-        derivedStateOf {
-            uiState.textEmailField.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(
-                uiState.textEmailField
-            ).matches()
-        }
-    }
-    val isPasswordValid by remember { derivedStateOf { uiState.textPasswordField.isEmpty() || uiState.textPasswordField.length >= 8 } }
-    val isRetryPasswordValid by remember { derivedStateOf { uiState.textRetryPasswordField.isEmpty() && uiState.textRetryPasswordField == uiState.textPasswordField } }
-
-    val isLoginNotEmptyAndValid by remember {
-        derivedStateOf {
-            uiState.textUserNameField.isNotEmpty() && uiState.textUserNameField.matches(
-                Regex("[a-zA-Z0-9_]+")
-            ) && uiState.textUserNameField.length in 5..20
-        }
-    }
-    val isEmailNotEmptyAndValid by remember {
-        derivedStateOf {
-            uiState.textEmailField.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(
-                uiState.textEmailField
-            ).matches()
-        }
-    }
-    val isPasswordNotEmptyAndValid by remember { derivedStateOf { uiState.textPasswordField.isNotEmpty() && uiState.textPasswordField.length >= 8 } }
-    val isRetryPasswordNotEmptyAndValid by remember { derivedStateOf { uiState.textRetryPasswordField.isNotEmpty() && uiState.textRetryPasswordField == uiState.textPasswordField } }
-
-    val hasValidInput by remember { derivedStateOf { isLoginValid || isEmailValid || isPasswordValid || isRetryPasswordValid } }
-    val allFieldsAreValid by remember { derivedStateOf { isLoginNotEmptyAndValid && isEmailNotEmptyAndValid && isPasswordNotEmptyAndValid && isRetryPasswordNotEmptyAndValid } }
-
-    var checkTextOnClick by remember { mutableStateOf(false) }
-
-    var loginVerificationResult by remember { mutableStateOf(false) }
-    var emailVerificationResult by remember { mutableStateOf(false) }
-    var passwordVerificationResult by remember { mutableStateOf(false) }
-    var passwordRetryVerificationResult by remember { mutableStateOf(false) }
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -125,58 +79,37 @@ fun Registration(
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
             Spacer(modifier = Modifier.height(24.dp))
-            AccountTextInput(
-                outputTextHint = stringResource(R.string.user_name_text),
-                onTextChanged = { uiState = uiState.copy(textUserNameField = it) },
-                onTextValidation = { it.matches(Regex("[a-zA-Z0-9_]+")) && it.length in 5..20 },
-                checkTextOnClick = checkTextOnClick,
-                transferVerification = { newShow -> checkTextOnClick = newShow },
-                returnValidation = { validation -> loginVerificationResult = validation }
-            )
-            Spacer(modifier = Modifier.height(32.dp))
-            AccountTextInput(
-                outputTextHint = stringResource(R.string.email_text),
-                onTextChanged = { uiState = uiState.copy(textEmailField = it) },
-                onTextValidation = { text -> Patterns.EMAIL_ADDRESS.matcher(text).matches() },
-                checkTextOnClick = checkTextOnClick,
-                transferVerification = { newShow -> checkTextOnClick = newShow },
-                returnValidation = { validation -> emailVerificationResult = validation }
-
-            )
-            Spacer(modifier = Modifier.height(32.dp))
-            AccountTextInput(
-                outputTextHint = stringResource(R.string.password_text),
-                onTextChanged = { uiState = uiState.copy(textPasswordField = it) },
-                onTextValidation = { text -> text.length >= 8 },
-                checkTextOnClick = checkTextOnClick,
-                transferVerification = { newShow -> checkTextOnClick = newShow },
-                returnValidation = { validation -> passwordVerificationResult = validation }
-            )
-            Spacer(modifier = Modifier.height(32.dp))
-            AccountTextInput(
-                outputTextHint = stringResource(R.string.verification_text),
-                onTextChanged = { uiState = uiState.copy(textPasswordField = it) },
-                onTextValidation = { text -> text.isNotEmpty() && text == uiState.textPasswordField },
-                checkTextOnClick = checkTextOnClick,
-                transferVerification = { newShow -> checkTextOnClick = newShow },
-                returnValidation = { validation -> passwordRetryVerificationResult = validation }
-            )
+//            AccountTextInput(
+//                hintOutput = "Введите пользовательское имя"
+//            )
+//            Spacer(modifier = Modifier.height(32.dp))
+//            AccountTextInput(
+//                hintOutput = "Введите пользовательское имя"
+//            )
+//            Spacer(modifier = Modifier.height(32.dp))
+//            AccountTextInput(
+//                hintOutput = "Введите пользовательское имя"
+//            )
+//            Spacer(modifier = Modifier.height(32.dp))
+//            AccountTextInput(
+//                hintOutput = "Введите пользовательское имя"
+//            )
         }
         Spacer(modifier = Modifier.height(52.dp))
-        RegistrationButton(
-            textButton = stringResource(R.string.new_account_text),
-            fieldCheck = hasValidInput,
-            controller = controller,
-            route = AppNavigationRoute.AuthorizationScreen.route,
-            onButtonClick = { newValue -> checkTextOnClick = newValue },
-            fieldValidityCheck = allFieldsAreValid,
-            uiState.textUserNameField,
-            uiState.textEmailField,
-            uiState.textPasswordField,
-            uiState.textRetryPasswordField,
-            applicationUserViewModel,
-            tokenManager
-        )
+//        RegistrationButton(
+//            textButton = stringResource(R.string.new_account_text),
+//            fieldCheck = hasValidInput,
+//            controller = controller,
+//            route = AppNavigationRoute.AuthorizationScreen.route,
+//            onButtonClick = { newValue -> checkTextOnClick = newValue },
+//            fieldValidityCheck = allFieldsAreValid,
+//            uiState.textUserNameField,
+//            uiState.textEmailField,
+//            uiState.textPasswordField,
+//            uiState.textRetryPasswordField,
+//            applicationUserViewModel,
+//            tokenManager
+//        )
         Spacer(modifier = Modifier.height(height = 8.dp))
         Text(
             modifier = Modifier.clickable(
