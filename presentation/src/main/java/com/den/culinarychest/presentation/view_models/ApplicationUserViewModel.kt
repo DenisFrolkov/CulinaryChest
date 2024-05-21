@@ -10,7 +10,6 @@ import com.example.culinarychest.domain.domain.model.application_user.Applicatio
 import com.example.culinarychest.domain.domain.model.application_user.ApplicationUserInfo
 import com.example.culinarychest.domain.domain.repository.ApplicationUserRepository
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -102,7 +101,6 @@ class ApplicationUserViewModel(
     }
 
     fun clearApplicationUserViewModel() {
-        _registrationResult.value = null
         _authState.value = null
         _token.value = null
         _userInfoResult.value = null

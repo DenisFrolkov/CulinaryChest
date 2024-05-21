@@ -13,12 +13,8 @@ class ApplicationUserRepositoryImpl(
     private val culinaryChestAPI: CulinaryChestAPI
 ) : ApplicationUserRepository {
 
-    override suspend fun registrationApplicationUser(
-        user: ApplicationUser
-    ) {
-        culinaryChestAPI.registrationApplicationUser(
-            applicationUser = user
-        )
+    override suspend fun registrationApplicationUser(user: ApplicationUser) {
+        culinaryChestAPI.registrationApplicationUser(applicationUser = user)
     }
 
     override suspend fun authorizationApplicationUser(

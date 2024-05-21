@@ -20,7 +20,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -31,15 +30,11 @@ import com.den.culinarychest.presentation.common.Button.PushButton
 import com.den.culinarychest.presentation.common.TextInput.AccountTextInput
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
-import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
 
 @Composable
 fun AuthorizationScreen(
@@ -73,7 +68,7 @@ fun Authorization(
         derivedStateOf { tokenManager.getToken() == null }
     }
 
-    val userNameValidation by remember {
+    val loginValidation by remember {
         derivedStateOf { login.length < 3 && login.isNotBlank() }
     }
     val passwordValidation by remember {
@@ -106,7 +101,7 @@ fun Authorization(
             AccountTextInput(
                 hintOutput = "Введите логин",
                 errorText = "Проверьте правильность введенного логина",
-                validationEnteredText = if (clickButton) tokenVerification else userNameValidation,
+                validationEnteredText = if (clickButton) tokenVerification else loginValidation,
                 enteredText = { enteredText -> login = enteredText },
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -118,31 +113,6 @@ fun Authorization(
             )
             Spacer(modifier = Modifier.height(32.dp))
         }
-//        if (isLoading) {
-//            CircularProgressIndicator(
-//                color = SoftGray,
-//                strokeWidth = 1.5.dp
-//            )
-//        } else {
-//            PushButton(
-//                onClick = {
-//                    clickButton = true
-//                    applicationUserViewModel.authorizeUser(
-//                        username = login,
-//                        password = password
-//                    )
-//                    CoroutineScope(Dispatchers.Main).launch {
-//                        if (tokenManager.getToken() == null){
-//                            isLoading = true
-//                            delay(2000)
-//                            if (tokenManager.getToken() == null){
-//                                isLoading = false
-//                            } else controller.navigate(AppNavigationRoute.BottomAppNavigationBar.route)
-//                        }
-//                    }
-//                }
-//            )
-//        }
 
         if (isLoading) {
             CircularProgressIndicator(
