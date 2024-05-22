@@ -45,7 +45,6 @@ import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.application_user.ApplicationUser
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.launch
 
 @Composable
@@ -77,10 +76,6 @@ fun Registration(
     var verificationPassword by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
 
-    val tokenVerification by remember {
-        derivedStateOf { tokenManager.getToken() == null }
-    }
-
     val loginValidation by remember {
         derivedStateOf { login.length < 3 && login.isNotBlank() }
     }
@@ -94,12 +89,14 @@ fun Registration(
     }
 
     val verificationPasswordValidation by remember {
-        derivedStateOf { password.length < 12 && password.isNotBlank() && verificationPassword == password }
+        derivedStateOf { password.isNotBlank() && verificationPassword != password }
     }
 
     var clickButton by remember {
         mutableStateOf(false)
     }
+
+    val duplicationUserInfo by applicationUserViewModel.duplicationUserInfo.collectAsState()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -115,33 +112,35 @@ fun Registration(
                 color = SoftGray
             )
         )
+        duplicationUserInfo?.duplicateUserName?.let { Text(text = it) }
+        duplicationUserInfo?.duplicateEmail?.let { Text(text = it) }
         Column(
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
             Spacer(modifier = Modifier.height(24.dp))
             AccountTextInput(
                 hintOutput = "Введите логин",
-                errorText = "Проверьте правильность введенного логина",
-                validationEnteredText = loginValidation,
+                errorText = if (duplicationUserInfo?.duplicateUserName != null) "Данный логин занят другим пользователем" else "Проверьте правильность введенного логина",
+                validationEnteredText = if (duplicationUserInfo?.duplicateUserName != null) true else loginValidation,
                 enteredText = { enteredText -> login = enteredText },
             )
             Spacer(modifier = Modifier.height(32.dp))
             AccountTextInput(
-                hintOutput = "Введите пользовательское имя",
-                errorText = "Проверьте правильность введенного почты",
-                validationEnteredText = emailValidation,
+                hintOutput = "Введите почту",
+                errorText = if (duplicationUserInfo?.duplicateEmail != null) "Аккаунт с такой почтой уже существует" else "Проверьте правильность введенной почты",
+                validationEnteredText = if (duplicationUserInfo?.duplicateEmail != null) true else emailValidation,
                 enteredText = { enteredText -> email = enteredText },
             )
             Spacer(modifier = Modifier.height(32.dp))
             AccountTextInput(
-                hintOutput = "Введите пользовательское имя",
+                hintOutput = "Введите пароля",
                 errorText = "Проверьте правильность введенного пароля",
                 validationEnteredText = passwordValidation,
                 enteredText = { enteredText -> password = enteredText },
             )
             Spacer(modifier = Modifier.height(32.dp))
             AccountTextInput(
-                hintOutput = "Введите пользовательское имя",
+                hintOutput = "Введите пароль повторно",
                 errorText = "Проверьте правильность введенного пароля аунтификации",
                 validationEnteredText = verificationPasswordValidation,
                 enteredText = { enteredText -> verificationPassword = enteredText },
@@ -157,6 +156,7 @@ fun Registration(
         } else {
             PushButton(
                 onClick = {
+                    applicationUserViewModel.clearApplicationUserViewModel()
                     applicationUserViewModel.registerApplicationUser(
                         user = ApplicationUser(
                             userName = login,
@@ -165,17 +165,17 @@ fun Registration(
                             roles = listOf("User")
                         )
                     )
-//                    coroutineScope.launch {
-//                        isLoading = true
-//                        delay(1000)
-//                        if (tokenManager.getToken() == null) {
-//                            isLoading = false
-//                            clickButton = true
-//                        } else {
-//                            clickButton = false
-//                            controller.navigate(AppNavigationRoute.BottomAppNavigationBar.route)
-//                        }
-//                    }
+                    coroutineScope.launch {
+                        isLoading = true
+                        delay(1000)
+                        if (duplicationUserInfo?.duplicateUserName != null || duplicationUserInfo?.duplicateEmail != null || password != verificationPassword) {
+                            isLoading = false
+                        } else {
+                            applicationUserViewModel.authorizeUser(username = login, password = password)
+                            delay(1000)
+                            if (tokenManager.getToken() != null) controller.navigate(AppNavigationRoute.BottomAppNavigationBar.route) else isLoading = false
+                        }
+                    }
                 }
             )
         }

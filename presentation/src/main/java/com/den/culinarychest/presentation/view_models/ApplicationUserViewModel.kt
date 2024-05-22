@@ -8,6 +8,7 @@ import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.repository.ProcessingResult
 import com.example.culinarychest.domain.domain.model.application_user.ApplicationUser
 import com.example.culinarychest.domain.domain.model.application_user.ApplicationUserInfo
+import com.example.culinarychest.domain.domain.model.application_user.DuplicationUserInfo
 import com.example.culinarychest.domain.domain.repository.ApplicationUserRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import retrofit2.HttpException
 
 class ApplicationUserViewModel(
@@ -23,8 +25,8 @@ class ApplicationUserViewModel(
     private val applicationUserRepository: ApplicationUserRepository
 ) : ViewModel() {
 
-    private val _registrationResult = MutableLiveData<ProcessingResult<ApplicationUser>>()
-    val registrationResult: LiveData<ProcessingResult<ApplicationUser>> = _registrationResult
+    private val _duplicationUserInfo = MutableStateFlow<DuplicationUserInfo?>(null)
+    val duplicationUserInfo = _duplicationUserInfo.asStateFlow()
 
     private val _authState = MutableLiveData<ProcessingResult<String>>()
     val authState: LiveData<ProcessingResult<String>> = _authState
@@ -38,20 +40,37 @@ class ApplicationUserViewModel(
     private val _showErrorToastChannel = Channel<String>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
 
-    fun registerApplicationUser(
-        user: ApplicationUser
-    ) {
+    fun registerApplicationUser(user: ApplicationUser) {
         viewModelScope.launch {
             try {
-                applicationUserRepository.registrationApplicationUser(
-                    user = user
-                )
-                _registrationResult.value = ProcessingResult.Success(null)
+                val response = applicationUserRepository.registrationApplicationUser(user)
+                if (response.isSuccessful) {
+                    _duplicationUserInfo.value = null
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val duplicationInfo = parseErrorMessage(errorBody)
+                    _duplicationUserInfo.value = duplicationInfo
+                }
             } catch (e: Exception) {
-                _registrationResult.value =
-                    ProcessingResult.Error(message = "Error registering user: ${e.message}")
-//                _showErrorToastChannel.send("Error")
+                _duplicationUserInfo.value = DuplicationUserInfo(
+                    duplicateUserName = null,
+                    duplicateEmail = null
+                )
             }
+        }
+    }
+
+    private fun parseErrorMessage(errorBody: String?): DuplicationUserInfo? {
+        return try {
+            val jsonObject = JSONObject(errorBody)
+            val duplicateEmailMessage = jsonObject.optJSONArray("DuplicateEmail")?.optString(0)
+            val duplicateUserNameMessage = jsonObject.optJSONArray("DuplicateUserName")?.optString(0)
+            DuplicationUserInfo(
+                duplicateUserName = duplicateUserNameMessage,
+                duplicateEmail = duplicateEmailMessage
+            )
+        } catch (e: Exception) {
+            null
         }
     }
 
@@ -101,11 +120,14 @@ class ApplicationUserViewModel(
     }
 
     fun clearApplicationUserViewModel() {
+        _duplicationUserInfo.value = null
         _authState.value = null
         _token.value = null
         _userInfoResult.value = null
     }
 }
+
+
 
 
 

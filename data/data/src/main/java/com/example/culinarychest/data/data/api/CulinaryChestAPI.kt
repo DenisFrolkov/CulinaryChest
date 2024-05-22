@@ -2,6 +2,7 @@ package com.example.culinarychest.data.data.api
 
 import com.example.culinarychest.domain.domain.model.application_user.ApplicationUser
 import com.example.culinarychest.domain.domain.model.application_user.ApplicationUserInfo
+import com.example.culinarychest.domain.domain.model.application_user.DuplicationUserInfo
 import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.domain.model.application_user.Login
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
@@ -11,6 +12,7 @@ import com.example.culinarychest.domain.domain.model.application_user.Token
 import com.example.culinarychest.domain.domain.model.recipe.CreateRecipe
 import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
 import com.example.culinarychest.domain.domain.model.step.CreateStep
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -26,7 +28,7 @@ const val BASE_URL = "https://10.0.2.2:7286"
 interface CulinaryChestAPI {
 
     @POST("/api/authentication/register")
-    suspend fun registrationApplicationUser(@Body applicationUser: ApplicationUser)
+    suspend fun registrationApplicationUser(@Body applicationUser: ApplicationUser) : Response<DuplicationUserInfo>
     @POST("/api/authentication/login")
     suspend fun authorizationApplicationUser(@Body login: Login): Response<Token>
     @GET("/api/authentication/user")

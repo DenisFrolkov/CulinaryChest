@@ -4,17 +4,20 @@ import com.example.culinarychest.data.data.api.CulinaryChestAPI
 import com.example.culinarychest.domain.domain.repository.ProcessingResult
 import com.example.culinarychest.domain.domain.model.application_user.ApplicationUser
 import com.example.culinarychest.domain.domain.model.application_user.ApplicationUserInfo
+import com.example.culinarychest.domain.domain.model.application_user.DuplicationUserInfo
 import com.example.culinarychest.domain.domain.model.application_user.Login
 import com.example.culinarychest.domain.domain.model.application_user.Token
 import com.example.culinarychest.domain.domain.repository.ApplicationUserRepository
 import kotlinx.coroutines.flow.Flow
+import okhttp3.ResponseBody
+import retrofit2.Response
 
 class ApplicationUserRepositoryImpl(
     private val culinaryChestAPI: CulinaryChestAPI
 ) : ApplicationUserRepository {
 
-    override suspend fun registrationApplicationUser(user: ApplicationUser) {
-        culinaryChestAPI.registrationApplicationUser(applicationUser = user)
+    override suspend fun registrationApplicationUser(user: ApplicationUser) : Response<DuplicationUserInfo> {
+        return culinaryChestAPI.registrationApplicationUser(applicationUser = user)
     }
 
     override suspend fun authorizationApplicationUser(
