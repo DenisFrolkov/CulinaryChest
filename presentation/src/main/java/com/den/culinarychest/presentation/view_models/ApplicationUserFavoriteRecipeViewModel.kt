@@ -8,6 +8,7 @@ import com.example.culinarychest.domain.domain.repository.ProcessingResult
 import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.domain.model.favorite_recipe.CreateFavoriteRecipe
 import com.example.culinarychest.domain.domain.repository.ApplicationUserFavoriteRecipeRepository
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -74,5 +75,15 @@ class ApplicationUserFavoriteRecipeViewModel(
                 // Обработка ошибки
             }
         }
+    }
+
+    override fun onCleared() {
+        Log.d("AAA", "onCleared")
+        super.onCleared()
+        viewModelScope.cancel()
+    }
+
+    fun clear(){
+        onCleared()
     }
 }

@@ -1,5 +1,6 @@
 package com.den.culinarychest.presentation
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -12,6 +13,7 @@ import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.den.culinarychest.presentation.navigation.appNavigation.AppNavigation
 import com.den.culinarychest.presentation.ui.theme.CulinaryChestTheme
 import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
@@ -89,7 +91,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        Log.d("AAA", "onCreate")
         setContent {
             CulinaryChestTheme {
                 AppNavigation(
@@ -103,5 +105,16 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onStop() {
+        super.onStop()
+        applicationUserViewModel.clear()
+        recipeViewModel.clear()
+        applicationUserFavoriteRecipeViewModel.clear()
+        applicationUserRecipeViewModel.clear()
+        recipeStepsViewModel.clear()
+        Log.d("AAA", "onStop")
+    }
+
 }
 

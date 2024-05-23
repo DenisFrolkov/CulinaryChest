@@ -11,6 +11,7 @@ import com.example.culinarychest.domain.domain.model.application_user.Applicatio
 import com.example.culinarychest.domain.domain.model.application_user.ApplicationUserInfo
 import com.example.culinarychest.domain.domain.model.application_user.DuplicationUserInfo
 import com.example.culinarychest.domain.domain.repository.ApplicationUserRepository
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -115,6 +116,16 @@ class ApplicationUserViewModel(
                 }
             }
         }
+    }
+
+    override fun onCleared() {
+        Log.d("AAA", "onCleared")
+        super.onCleared()
+        viewModelScope.cancel()
+    }
+
+    fun clear(){
+        onCleared()
     }
 }
 

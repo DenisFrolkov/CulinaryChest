@@ -1,10 +1,12 @@
 package com.den.culinarychest.presentation.view_models
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.culinarychest.domain.domain.repository.ProcessingResult
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.domain.repository.RecipeRepository
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -82,6 +84,16 @@ class RecipeViewModel(
                 }
             }
         }
+    }
+
+    override fun onCleared() {
+        Log.d("AAA", "onCleared")
+        super.onCleared()
+        viewModelScope.cancel()
+    }
+
+    fun clear(){
+        onCleared()
     }
 }
 
