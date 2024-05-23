@@ -126,6 +126,7 @@ fun BottomNavigationBar(
                 SearchScreen(
                     navController = navController,
                     applicationUserViewModel = applicationUserViewModel,
+                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
                     recipeViewModel = recipeViewModel,
                     tokenManager = tokenManager
                 )

@@ -28,13 +28,17 @@ import androidx.navigation.NavController
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.R
+import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
+import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 
 @Composable
 fun RecipeItem(
     controller: NavController,
     textRouteNavigation: String,
-    recipe: Recipe
+    recipe: Recipe,
+    tokenManager: TokenManager,
+    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel
 ) {
     Column(
         modifier = Modifier
@@ -44,6 +48,13 @@ fun RecipeItem(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
+                tokenManager.getToken()
+                    ?.let {
+                        applicationUserFavoriteRecipeViewModel.getFavoriteRecipeByRecipeId(
+                            it,
+                            recipe.recipeId
+                        )
+                    }
                 controller.navigate("${textRouteNavigation}/${recipe.recipeId}")
             }
             .border(width = .15.dp, color = SoftGray, shape = RoundedCornerShape(12.dp))

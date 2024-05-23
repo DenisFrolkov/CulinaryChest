@@ -52,7 +52,7 @@ fun FavoriteScreen(
     if (recipe.isEmpty()) {
         EmptyScreenText()
     } else {
-        ListRecipes(controller, recipe, recipeViewModel, tokenManager)
+        ListRecipes(controller, recipe, recipeViewModel, applicationUserFavoriteRecipeViewModel, tokenManager)
     }
 }
 
@@ -61,6 +61,7 @@ private fun ListRecipes(
     controller: NavController,
     recipeList: List<Recipe>,
     recipeViewModel: RecipeViewModel,
+    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
     tokenManager: TokenManager
 ) {
     LazyColumn(
@@ -81,6 +82,7 @@ private fun ListRecipes(
                     textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
                     recipe = recipe,
                     recipeViewModel = recipeViewModel,
+                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
                     tokenManager = tokenManager
                 )
             }

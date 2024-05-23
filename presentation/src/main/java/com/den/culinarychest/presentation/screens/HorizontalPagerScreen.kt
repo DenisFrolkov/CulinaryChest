@@ -100,6 +100,7 @@ fun HorizontalPager(
                 1 -> CreatedScreen(
                     controller = controller,
                     applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
                     tokenManager = tokenManager
                 )
             }

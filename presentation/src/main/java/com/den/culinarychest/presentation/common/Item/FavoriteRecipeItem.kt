@@ -27,6 +27,7 @@ import androidx.navigation.NavController
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
+import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
@@ -38,6 +39,7 @@ fun FavoriteRecipeItem(
     textRouteNavigation: String,
     recipe: Recipe,
     recipeViewModel: RecipeViewModel,
+    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
     tokenManager: TokenManager,
 ) {
     Column(
@@ -45,6 +47,13 @@ fun FavoriteRecipeItem(
             .fillMaxWidth()
             .padding(bottom = 16.dp)
             .clickable {
+                tokenManager.getToken()
+                    ?.let {
+                        applicationUserFavoriteRecipeViewModel.getFavoriteRecipeByRecipeId(
+                            it,
+                            recipe.recipeId
+                        )
+                    }
                 controller.navigate("${textRouteNavigation}/${recipe.recipeId}")
             }
             .border(width = .15.dp, color = SoftGray, shape = RoundedCornerShape(12.dp))

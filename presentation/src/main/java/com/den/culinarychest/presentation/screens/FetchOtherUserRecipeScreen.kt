@@ -1,5 +1,6 @@
 package com.den.culinarychest.presentation.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,13 +22,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import com.den.culinarychest.R
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,29 +45,49 @@ import com.den.culinarychest.presentation.common.Item.StepRecipeItem
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
+import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
+import com.example.culinarychest.data.data.repository.TokenManager
+import com.example.culinarychest.domain.domain.model.favorite_recipe.CreateFavoriteRecipe
+import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
+import java.time.LocalDateTime
 
 @Composable
 fun FetchOtherUserRecipeScreen(
     navController: NavController,
-    recipe: Recipe
+    recipe: Recipe,
+    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
+    tokenManager: TokenManager
 ) {
     FetchOtherUserRecipe(
         controller = navController,
-        recipe = recipe
+        recipe = recipe,
+        applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
+        tokenManager = tokenManager
     )
 }
 
 @Composable
 fun FetchOtherUserRecipe(
     controller: NavController,
-    recipe: Recipe
+    recipe: Recipe,
+    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
+    tokenManager: TokenManager
 ) {
-    var clickElementLike by remember { mutableStateOf(false) }
+
+    var clickElementLike by remember {
+        mutableStateOf(false)
+    }
+    val favoriteRecipeByRecipeId by applicationUserFavoriteRecipeViewModel.favoriteRecipeByRecipeId.collectAsState()
+
     Column {
         FetchOtherUserRecipeTopBar(
             controller = controller,
+            recipeId = recipe.recipeId,
+            favoriteRecipeByRecipeId = favoriteRecipeByRecipeId,
             clickElement = clickElementLike,
+            applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
+            tokenManager = tokenManager,
             passClickElement = { clickElementLike = it }
         )
         LazyColumn(
@@ -84,12 +105,22 @@ fun FetchOtherUserRecipe(
     }
 }
 
+@SuppressLint("NewApi")
 @Composable
 fun FetchOtherUserRecipeTopBar(
     controller: NavController,
+    recipeId: String,
+    favoriteRecipeByRecipeId: FavoriteRecipe?,
+    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
+    tokenManager: TokenManager,
     clickElement: Boolean,
     passClickElement: (Boolean) -> Unit
 ) {
+
+    var clickElement1 by remember {
+        mutableStateOf(clickElement)
+    }
+
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
@@ -110,14 +141,31 @@ fun FetchOtherUserRecipeTopBar(
                     controller.popBackStack()
                 }
         )
-        if (clickElement == false) {
+        if (clickElement1 != ("${favoriteRecipeByRecipeId?.recipeId}" != recipeId)) {
             Icon(
                 modifier = Modifier
                     .size(26.dp)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
-                    ) { passClickElement(true) },
+                    ) {
+                        tokenManager
+                            .getToken()
+                            ?.let {
+                                applicationUserFavoriteRecipeViewModel.createApplicationUserFavoriteRecipes(
+                                    it,
+                                    recipeId.toInt(),
+                                    CreateFavoriteRecipe(
+                                        LocalDateTime
+                                            .now()
+                                            .toString()
+                                    )
+                                )
+                            }
+                        clickElement1 = true
+                        if ("${favoriteRecipeByRecipeId?.recipeId}" != recipeId) clickElement1 = true else clickElement1 = false
+                        passClickElement("${favoriteRecipeByRecipeId?.recipeId}" == recipeId)
+                    },
                 imageVector = Icons.Default.Favorite,
                 contentDescription = null,
                 tint = SoftGray
@@ -129,7 +177,17 @@ fun FetchOtherUserRecipeTopBar(
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
-                    ) { passClickElement(false) },
+                    ) {
+                        tokenManager
+                            .getToken()
+                            ?.let {
+                                applicationUserFavoriteRecipeViewModel.deleteApplicationUserFavoriteRecipe(
+                                    it, recipeId
+                                )
+                            }
+                        if ("${favoriteRecipeByRecipeId?.recipeId}" == recipeId) clickElement1 = true else clickElement1 = false
+                        passClickElement("${favoriteRecipeByRecipeId?.recipeId}" != recipeId)
+                    },
                 imageVector = Icons.Default.Favorite,
                 contentDescription = null,
                 tint = Color.Red

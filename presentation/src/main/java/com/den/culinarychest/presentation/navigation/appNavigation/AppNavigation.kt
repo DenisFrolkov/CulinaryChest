@@ -99,7 +99,9 @@ fun AppNavigation(
             recipeInfo.forEach { recipe ->
                 FetchOtherUserRecipeScreen(
                     navController = appNavigationController,
-                    recipe = recipe
+                    recipe = recipe,
+                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
+                    tokenManager = tokenManager
                 )
             }
         }
@@ -130,9 +132,10 @@ fun AppNavigation(
                 )
             }
         }
-        composable(AppNavigationRoute.EditRecipeScreen.route + "/{recipeId}",
+        composable(
+            AppNavigationRoute.EditRecipeScreen.route + "/{recipeId}",
             arguments = listOf(navArgument("recipeId") { type = NavType.StringType })
-            ) { backStackEntry ->
+        ) { backStackEntry ->
             val recipeId = backStackEntry.arguments?.getString("recipeId")
                 ?: "Надо придумать реализацию, если такого рецепта не существует"
 

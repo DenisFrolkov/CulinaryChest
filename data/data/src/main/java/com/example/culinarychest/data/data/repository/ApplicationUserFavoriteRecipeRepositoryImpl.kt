@@ -1,6 +1,7 @@
 package com.example.culinarychest.data.data.repository
 
 import com.example.culinarychest.data.data.api.CulinaryChestAPI
+import com.example.culinarychest.domain.domain.model.application_user.ApplicationUserInfo
 import com.example.culinarychest.domain.domain.repository.ProcessingResult
 import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.domain.model.favorite_recipe.CreateFavoriteRecipe
@@ -14,6 +15,15 @@ class ApplicationUserFavoriteRecipeRepositoryImpl(
     override suspend fun getApplicationUserFavoriteRecipes(token: String): Flow<ProcessingResult<List<FavoriteRecipe>>> {
         return safeApiCall {
             culinaryChestAPI.getApplicationUserFavoriteRecipes(token = token)
+        }
+    }
+
+    override suspend fun getFavoriteRecipeByRecipeId(
+        token: String,
+        recipeId: String
+    ): Flow<ProcessingResult<FavoriteRecipe>> {
+        return safeApiCall {
+            culinaryChestAPI.getFavoriteRecipeByRecipeId(token, recipeId)
         }
     }
 

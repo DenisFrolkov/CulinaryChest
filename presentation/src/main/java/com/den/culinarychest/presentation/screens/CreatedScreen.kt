@@ -24,6 +24,7 @@ import com.den.culinarychest.presentation.common.Item.RecipeItem
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftPink
+import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
@@ -32,6 +33,7 @@ import com.example.culinarychest.domain.domain.model.recipe.Recipe
 fun CreatedScreen(
     controller: NavController,
     applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
+    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
     tokenManager: TokenManager
 ) {
 
@@ -43,7 +45,7 @@ fun CreatedScreen(
             .fillMaxSize()
             .background(color = SoftPink)
     ) {
-        ListRecipeCreatedUser(controller, listRecipeCreatedUser)
+        ListRecipeCreatedUser(controller, listRecipeCreatedUser, tokenManager = tokenManager, applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel)
         FABButton(controller)
     }
 }
@@ -63,7 +65,7 @@ private fun FABButton(controller: NavController) {
 }
 
 @Composable
-private fun ListRecipeCreatedUser(controller: NavController, listRecipeCreatedUser: List<Recipe>) {
+private fun ListRecipeCreatedUser(controller: NavController, listRecipeCreatedUser: List<Recipe>, tokenManager: TokenManager, applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -97,7 +99,9 @@ private fun ListRecipeCreatedUser(controller: NavController, listRecipeCreatedUs
                 RecipeItem(
                     controller = controller,
                     textRouteNavigation = AppNavigationRoute.FetchUserRecipeScreen.route,
-                    recipe = recipeCreatedUser
+                    recipe = recipeCreatedUser,
+                    tokenManager = tokenManager,
+                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel
                 )
             }
         }

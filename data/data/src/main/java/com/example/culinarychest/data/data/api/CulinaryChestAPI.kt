@@ -36,12 +36,10 @@ interface CulinaryChestAPI {
 
     @GET("/api/applicationUser/favoriteRecipe")
     suspend fun getApplicationUserFavoriteRecipes(@Header("Authorization") token: String): List<FavoriteRecipe>
+    @GET("/api/applicationUser/favoriteRecipe/{recipeId}")
+    suspend fun getFavoriteRecipeByRecipeId(@Header("Authorization") token: String, @Path("recipeId") recipeId: String): FavoriteRecipe
     @POST("/api/applicationUser/favoriteRecipe/{recipeId}")
-    suspend fun createApplicationUserFavoriteRecipes(
-        @Header("Authorization") token: String,
-        @Path("recipeId") recipeId: Int,
-        @Body addedDate: CreateFavoriteRecipe
-    )
+    suspend fun createApplicationUserFavoriteRecipes( @Header("Authorization") token: String, @Path("recipeId") recipeId: Int, @Body addedDate: CreateFavoriteRecipe)
     @DELETE("/api/applicationUser/favoriteRecipe/{favoriteRecipeId}")
     suspend fun deleteApplicationUserFavoriteRecipe(@Header("Authorization") token: String, @Path("favoriteRecipeId") favoriteRecipeId: String)
 

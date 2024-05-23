@@ -25,6 +25,9 @@ class ApplicationUserFavoriteRecipeViewModel(
     private val _userFavoriteRecipes = MutableStateFlow<List<FavoriteRecipe>>(emptyList())
     val userFavoriteRecipes = _userFavoriteRecipes.asStateFlow()
 
+    private val _favoriteRecipeByRecipeId = MutableStateFlow<FavoriteRecipe?>(null)
+    val favoriteRecipeByRecipeId = _favoriteRecipeByRecipeId.asStateFlow()
+
     private val _showErrorToastChannel = Channel<Boolean>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
 
@@ -39,6 +42,24 @@ class ApplicationUserFavoriteRecipeViewModel(
                         is ProcessingResult.Success -> {
                             result.data?.let { favoriteRecipe ->
                                 _userFavoriteRecipes.update { favoriteRecipe }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+    fun getFavoriteRecipeByRecipeId(token: String, recipeId: String) {
+        viewModelScope.launch {
+            favoriteRecipeRepository.getFavoriteRecipeByRecipeId(token, recipeId)
+                .collectLatest { result ->
+                    when (result) {
+                        is ProcessingResult.Error -> {
+                            _favoriteRecipeByRecipeId.update { null }
+                        }
+                        is ProcessingResult.Success -> {
+                            result.data?.let { favoriteRecipeByRecipeId ->
+                                _favoriteRecipeByRecipeId.update { favoriteRecipeByRecipeId }
                             }
                         }
                     }
