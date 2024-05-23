@@ -1,9 +1,15 @@
 package com.den.culinarychest.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.Lifecycling
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.den.culinarychest.presentation.navigation.appNavigation.AppNavigation
@@ -23,22 +29,6 @@ import com.example.culinarychest.data.data.repository.RecipeStepsRepositoryImpl
 
 class MainActivity : ComponentActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            CulinaryChestTheme {
-                AppNavigation(
-                    applicationUserViewModel,
-                    recipeViewModel,
-                    applicationUserFavoriteRecipeViewModel,
-                    applicationUserRecipeViewModel,
-                    recipeStepsViewModel,
-                    TokenManager(this)
-                )
-            }
-        }
-    }
-
     val tokenManager = TokenManager(this)
 
     private val applicationUserViewModel by viewModels<ApplicationUserViewModel>(factoryProducer = {
@@ -52,7 +42,6 @@ class MainActivity : ComponentActivity() {
         }
     })
 
-
     private val recipeViewModel by viewModels<RecipeViewModel>(factoryProducer = {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -64,8 +53,7 @@ class MainActivity : ComponentActivity() {
         }
     })
 
-    private val applicationUserFavoriteRecipeViewModel by viewModels<ApplicationUserFavoriteRecipeViewModel>(
-        factoryProducer = {
+    private val applicationUserFavoriteRecipeViewModel by viewModels<ApplicationUserFavoriteRecipeViewModel>( factoryProducer = {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return ApplicationUserFavoriteRecipeViewModel(
@@ -75,11 +63,9 @@ class MainActivity : ComponentActivity() {
                             as T
                 }
             }
-        }
-    )
+        })
 
-    private val applicationUserRecipeViewModel by viewModels<ApplicationUserRecipeViewModel>(
-        factoryProducer = {
+    private val applicationUserRecipeViewModel by viewModels<ApplicationUserRecipeViewModel>( factoryProducer = {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return ApplicationUserRecipeViewModel(
@@ -88,19 +74,34 @@ class MainActivity : ComponentActivity() {
                             as T
                 }
             }
-        }
-    )
+        })
 
-    private val recipeStepsViewModel by viewModels<RecipeStepsViewModel>(
-        factoryProducer = {
-            object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return RecipeStepsViewModel(
-                        RecipeStepsRepositoryImpl(RetrofitInstance(tokenManager).culinaryChestApi)
-                    )
-                            as T
-                }
+    private val recipeStepsViewModel by viewModels<RecipeStepsViewModel>(factoryProducer = {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return RecipeStepsViewModel(
+                    RecipeStepsRepositoryImpl(RetrofitInstance(tokenManager).culinaryChestApi)
+                )
+                        as T
             }
         }
-    )
+    })
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContent {
+            CulinaryChestTheme {
+                AppNavigation(
+                    applicationUserViewModel,
+                    recipeViewModel,
+                    applicationUserFavoriteRecipeViewModel,
+                    applicationUserRecipeViewModel,
+                    recipeStepsViewModel,
+                    TokenManager(this)
+                )
+            }
+        }
+    }
 }
+

@@ -80,6 +80,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation("androidx.compose.material:material:1.6.6")
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.androidx.lifecycle.process)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

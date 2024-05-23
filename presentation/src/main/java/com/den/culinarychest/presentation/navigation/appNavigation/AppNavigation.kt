@@ -1,8 +1,13 @@
+@file:Suppress("DEPRECATION")
+
 package com.den.culinarychest.presentation.navigation.appNavigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycling
+import androidx.lifecycle.OnLifecycleEvent
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,6 +27,7 @@ import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.den.culinarychest.presentation.view_models.RecipeStepsViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
+
 
 @Composable
 fun AppNavigation(

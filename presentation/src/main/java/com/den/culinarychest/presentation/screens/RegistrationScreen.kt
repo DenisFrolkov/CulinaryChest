@@ -112,8 +112,6 @@ fun Registration(
                 color = SoftGray
             )
         )
-        duplicationUserInfo?.duplicateUserName?.let { Text(text = it) }
-        duplicationUserInfo?.duplicateEmail?.let { Text(text = it) }
         Column(
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
@@ -156,7 +154,6 @@ fun Registration(
         } else {
             PushButton(
                 onClick = {
-                    applicationUserViewModel.clearApplicationUserViewModel()
                     applicationUserViewModel.registerApplicationUser(
                         user = ApplicationUser(
                             userName = login,
@@ -171,9 +168,14 @@ fun Registration(
                         if (duplicationUserInfo?.duplicateUserName != null || duplicationUserInfo?.duplicateEmail != null || password != verificationPassword) {
                             isLoading = false
                         } else {
-                            applicationUserViewModel.authorizeUser(username = login, password = password)
+                            applicationUserViewModel.authorizeUser(
+                                username = login,
+                                password = password
+                            )
                             delay(1000)
-                            if (tokenManager.getToken() != null) controller.navigate(AppNavigationRoute.BottomAppNavigationBar.route) else isLoading = false
+                            if (tokenManager.getToken() != null) controller.navigate(
+                                AppNavigationRoute.BottomAppNavigationBar.route
+                            ) else isLoading = false
                         }
                     }
                 }

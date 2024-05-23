@@ -1,5 +1,6 @@
 package com.den.culinarychest.presentation.view_models
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,12 +24,8 @@ class ApplicationUserFavoriteRecipeViewModel(
     private val _userFavoriteRecipes = MutableStateFlow<List<FavoriteRecipe>>(emptyList())
     val userFavoriteRecipes = _userFavoriteRecipes.asStateFlow()
 
-    private val _createFavoriteRecipe = MutableLiveData<ProcessingResult<FavoriteRecipe>>()
-    val createFavoriteRecipe = _createFavoriteRecipe
-
     private val _showErrorToastChannel = Channel<Boolean>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
-
 
     fun getApplicationUserFavoriteRecipes(token: String) {
         viewModelScope.launch {
@@ -38,7 +35,6 @@ class ApplicationUserFavoriteRecipeViewModel(
                         is ProcessingResult.Error -> {
                             _showErrorToastChannel.send(true)
                         }
-
                         is ProcessingResult.Success -> {
                             result.data?.let { favoriteRecipe ->
                                 _userFavoriteRecipes.update { favoriteRecipe }
@@ -62,7 +58,7 @@ class ApplicationUserFavoriteRecipeViewModel(
                     addedDate
                 )
             } catch (e: Exception) {
-
+                // Обработка ошибки
             }
         }
     }
@@ -75,7 +71,7 @@ class ApplicationUserFavoriteRecipeViewModel(
                     favoriteRecipeId
                 )
             } catch (e: Exception) {
-
+                // Обработка ошибки
             }
         }
     }

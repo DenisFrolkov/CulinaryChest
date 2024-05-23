@@ -1,5 +1,6 @@
 package com.den.culinarychest.presentation.view_models
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -30,9 +31,6 @@ class ApplicationUserViewModel(
 
     private val _authState = MutableLiveData<ProcessingResult<String>>()
     val authState: LiveData<ProcessingResult<String>> = _authState
-
-    private val _token = MutableLiveData<String?>(null)
-    val token get() = _token
 
     private val _userInfoResult = MutableStateFlow<ApplicationUserInfo?>(null)
     val userInfoResult = _userInfoResult.asStateFlow()
@@ -117,13 +115,6 @@ class ApplicationUserViewModel(
                 }
             }
         }
-    }
-
-    fun clearApplicationUserViewModel() {
-        _duplicationUserInfo.value = null
-        _authState.value = null
-        _token.value = null
-        _userInfoResult.value = null
     }
 }
 

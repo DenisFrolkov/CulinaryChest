@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -116,13 +114,13 @@ fun ProfileScreen(
                     .padding(horizontal = 88.dp)
             ) {
                 SettingButton(
-                    controller = navController,
-                    navigationText = AppNavigationRoute.AuthorizationScreen.route,
                     borderColor = Color.Red,
                     textButton = stringResource(R.string.exit_text),
                     textColor = Color.Red,
-                    tokenManager = tokenManager,
-                    applicationUserViewModel = applicationUserViewModel
+                    onClick = {
+                        navController.navigate(AppNavigationRoute.AuthorizationScreen.route)
+                        tokenManager.clearToken()
+                    }
                 )
             }
         }
