@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import com.den.culinarychest.R
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -96,6 +97,7 @@ fun FetchOtherUserRecipe(
                 .background(color = SoftPink)
         ) {
             item {
+                FetchOtherUserRecipeImage()
                 FetchOtherUserRecipeMiniInformation(recipe = recipe)
                 FetchOtherUserRecipeTitle(recipe = recipe)
                 FetchOtherUserRecipeIngredient(recipe = recipe)
@@ -194,6 +196,19 @@ fun FetchOtherUserRecipeTopBar(
             )
         }
     }
+}
+
+@Composable
+fun FetchOtherUserRecipeImage() {
+    Image(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 10.dp, top = 10.dp, end = 10.dp)
+            .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp)),
+        painter = painterResource(id = R.drawable.recipe_space_image),
+        contentDescription = null,
+        contentScale = ContentScale.Crop
+    )
 }
 
 @Composable

@@ -44,10 +44,7 @@ fun RecipeItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 16.dp)
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) {
+            .clickable {
                 tokenManager.getToken()
                     ?.let {
                         applicationUserFavoriteRecipeViewModel.getFavoriteRecipeByRecipeId(
@@ -60,25 +57,34 @@ fun RecipeItem(
             .border(width = .15.dp, color = SoftGray, shape = RoundedCornerShape(12.dp))
             .background(SoftOrange, RoundedCornerShape(12.dp))
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 12.dp)
-        ) {
-            Text(
-                text = recipe.title,
-                style = TextStyle(
-                    fontSize = 18.sp,
-                    color = SoftGray
+        Row {
+            Image(
+                painter = painterResource(id = R.drawable.recipe_space_image),
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .padding(start = 16.dp, top = 16.dp)
+                    .size(size = 94.dp)
+            )
+            Column(
+                modifier = Modifier.padding(start = 10.dp, top = 12.dp)
+            ) {
+                Text(
+                    text = recipe.title,
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        color = SoftGray
+                    )
                 )
-            )
-            Text(
-                text = recipe.ingredients,
-                style = TextStyle(
-                    fontSize = 12.sp,
-                    color = SoftGray
-                ),
-                modifier = Modifier.padding(top = 4.dp),
-            )
+                Text(
+                    text = recipe.ingredients,
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        color = SoftGray
+                    ),
+                    modifier = Modifier.padding(top = 4.dp),
+                )
+            }
         }
         Row(
             modifier = Modifier.padding(start = 23.dp, top = 6.dp, end = 8.dp, bottom = 4.dp)

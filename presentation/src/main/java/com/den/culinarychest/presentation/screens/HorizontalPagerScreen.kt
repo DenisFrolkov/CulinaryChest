@@ -32,6 +32,7 @@ fun HorizontalPagerScreen(
     recipeViewModel: RecipeViewModel,
     tokenManager: TokenManager
 ) {
+
     tokenManager.getToken()?.let {
         applicationUserFavoriteRecipeViewModel.getApplicationUserFavoriteRecipes(it)
         applicationUserRecipeViewModel.getApplicationUserRecipes(it)

@@ -42,6 +42,8 @@ fun SearchScreen(
         recipeViewModel.getRecipes(it, null)
         applicationUserViewModel.getApplicationUserInfo(it)
     }
+
+
     Search(
         controller = navController,
         recipeViewModel = recipeViewModel,

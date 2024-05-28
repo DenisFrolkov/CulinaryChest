@@ -91,7 +91,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("AAA", "onCreate")
         setContent {
             CulinaryChestTheme {
                 AppNavigation(
@@ -113,8 +112,6 @@ class MainActivity : ComponentActivity() {
         applicationUserFavoriteRecipeViewModel.clear()
         applicationUserRecipeViewModel.clear()
         recipeStepsViewModel.clear()
-        Log.d("AAA", "onStop")
     }
-
 }
 
