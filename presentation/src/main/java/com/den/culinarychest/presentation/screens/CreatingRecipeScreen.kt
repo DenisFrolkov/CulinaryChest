@@ -105,7 +105,7 @@ fun CreatingRecipe(
                 .background(color = SoftPink)
         ) {
             item {
-//                AddRecipePhoto()
+                AddRecipePhoto()
                 RecipeInputs(
                     onTitleTextChanged = { textTitle = it },
                     onIngredientsTextChanged = { textIngredient = it },
