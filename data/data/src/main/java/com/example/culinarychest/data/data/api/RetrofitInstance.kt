@@ -6,32 +6,25 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.security.cert.X509Certificate
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
 class RetrofitInstance(private var tokenManager: TokenManager) {
 
+    // Создаем OkHttpClient с небезопасными настройками
     val okHttpClient = OkHttpClient.Builder()
         .apply {
             try {
                 val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
                     @SuppressLint("TrustAllX509TrustManager")
-                    override fun checkClientTrusted(
-                        chain: Array<out java.security.cert.X509Certificate>?,
-                        authType: String?
-                    ) {
-                    }
+                    override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
 
                     @SuppressLint("TrustAllX509TrustManager")
-                    override fun checkServerTrusted(
-                        chain: Array<out java.security.cert.X509Certificate>?,
-                        authType: String?
-                    ) {
-                    }
+                    override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
 
-                    override fun getAcceptedIssuers(): Array<java.security.cert.X509Certificate> =
-                        arrayOf()
+                    override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
                 })
                 val sslContext = SSLContext.getInstance("SSL")
                 sslContext.init(null, trustAllCerts, java.security.SecureRandom())
@@ -56,7 +49,7 @@ class RetrofitInstance(private var tokenManager: TokenManager) {
         })
         .build()
 
-    fun getToken(): String? {
+    private fun getToken(): String? {
         return tokenManager.getToken()
     }
 
@@ -66,4 +59,6 @@ class RetrofitInstance(private var tokenManager: TokenManager) {
         .client(okHttpClient)
         .build()
         .create(CulinaryChestAPI::class.java)
+
 }
+

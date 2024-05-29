@@ -25,7 +25,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.ui.theme.SoftGray
@@ -33,12 +32,6 @@ import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
-import okhttp3.OkHttpClient
-import java.security.cert.X509Certificate
-import javax.net.ssl.HostnameVerifier
-import javax.net.ssl.SSLContext
-import javax.net.ssl.TrustManager
-import javax.net.ssl.X509TrustManager
 
 @Composable
 fun RecipeItem(
@@ -67,17 +60,15 @@ fun RecipeItem(
             .background(SoftOrange, RoundedCornerShape(12.dp))
     ) {
         Row {
-            val desiredPath = recipe.imageUrl.substringAfter("/wwwroot/")
-            val imageUrl = "https://10.0.2.2:7286/${desiredPath}"
             LoadImage(
-                LocalContext.current,
-                imageUrl = imageUrl
+                context = LocalContext.current,
+                recipeImageUrl = recipe.imageUrl
             )
             Column(
                 modifier = Modifier.padding(start = 10.dp, top = 12.dp)
             ) {
                 Text(
-                    text = imageUrl,
+                    text = recipe.title,
                     style = TextStyle(
                         fontSize = 14.sp,
                         color = SoftGray
@@ -125,41 +116,11 @@ fun RecipeItem(
     }
 }
 
-fun getUnsafeOkHttpClient(): OkHttpClient {
-    try {
-        // Создаем доверенного менеджера, который доверяет всем сертификатам
-        val trustAllCerts = arrayOf<TrustManager>(
-            object : X509TrustManager {
-                override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
-                override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
-                override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
-            }
-        )
-
-        // Устанавливаем SSL-контекст с нашими доверенными сертификатами
-        val sslContext = SSLContext.getInstance("SSL")
-        sslContext.init(null, trustAllCerts, java.security.SecureRandom())
-
-        // Создаем OkHttpClient
-        return OkHttpClient.Builder()
-            .sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
-            .hostnameVerifier(HostnameVerifier { _, _ -> true })
-            .build()
-    } catch (e: Exception) {
-        throw RuntimeException(e)
-    }
-}
-
-
-fun createImageLoader(context: Context): ImageLoader {
-    val okHttpClient = getUnsafeOkHttpClient()
-    return ImageLoader.Builder(context)
-        .okHttpClient { okHttpClient }
-        .build()
-}
-
 @Composable
-fun LoadImage(context: Context, imageUrl: String) {
+fun LoadImage(context: Context, recipeImageUrl: String) {
+
+    val desiredPath = recipeImageUrl.substringAfter("/wwwroot/")
+    val imageUrl = "https://10.0.2.2:7286/${desiredPath}"
     val imageLoader = createImageLoader(context)
 
     val painter = rememberAsyncImagePainter(

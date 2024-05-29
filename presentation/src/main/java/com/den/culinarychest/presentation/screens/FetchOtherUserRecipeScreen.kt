@@ -1,17 +1,20 @@
 package com.den.culinarychest.presentation.screens
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -27,10 +30,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import com.den.culinarychest.R
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -41,8 +45,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
+import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.Item.DisplayRecipeInfo
 import com.den.culinarychest.presentation.common.Item.StepRecipeItem
+import com.den.culinarychest.presentation.common.Item.createImageLoader
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
@@ -97,7 +104,10 @@ fun FetchOtherUserRecipe(
                 .background(color = SoftPink)
         ) {
             item {
-                FetchOtherUserRecipeImage()
+                FetchOtherUserRecipeImage(
+                    context = LocalContext.current,
+                    recipeImageUrl = recipe.imageUrl
+                )
                 FetchOtherUserRecipeMiniInformation(recipe = recipe)
                 FetchOtherUserRecipeTitle(recipe = recipe)
                 FetchOtherUserRecipeIngredient(recipe = recipe)
@@ -199,16 +209,32 @@ fun FetchOtherUserRecipeTopBar(
 }
 
 @Composable
-fun FetchOtherUserRecipeImage() {
-    Image(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 10.dp, top = 10.dp, end = 10.dp)
-            .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp)),
-        painter = painterResource(id = R.drawable.recipe_space_image),
-        contentDescription = null,
-        contentScale = ContentScale.Crop
-    )
+fun FetchOtherUserRecipeImage(
+    context: Context,
+    recipeImageUrl: String
+    ) {
+        val desiredPath = recipeImageUrl.substringAfter("/wwwroot/")
+        val imageUrl = "https://10.0.2.2:7286/${desiredPath}"
+        val imageLoader = createImageLoader(context)
+
+        val painter = rememberAsyncImagePainter(
+            model = imageUrl,
+            imageLoader = imageLoader
+        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Image(
+                painter = painter,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp))
+                    .padding(start = 10.dp, top = 10.dp, end = 10.dp)
+                    .height(300.dp)
+            )
+        }
 }
 
 @Composable

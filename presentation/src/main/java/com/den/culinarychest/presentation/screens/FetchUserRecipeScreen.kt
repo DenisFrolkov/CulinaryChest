@@ -1,6 +1,7 @@
 package com.den.culinarychest.presentation.screens
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -28,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -38,9 +41,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.Item.DisplayRecipeInfo
 import com.den.culinarychest.presentation.common.Item.StepRecipeItem
+import com.den.culinarychest.presentation.common.Item.createImageLoader
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
@@ -94,7 +99,10 @@ fun FetchUserRecipe(
                 .background(color = SoftPink)
         ) {
             item {
-                FetchUserRecipeImage()
+                FetchUserRecipeImage(
+                    context = LocalContext.current,
+                    recipeImageUrl = recipe.imageUrl
+                )
                 FetchUserRecipeMiniInformation(recipe = recipe)
                 FetchUserRecipeTitle(recipe = recipe)
                 FetchUserRecipeIngredient(recipeIngredients = recipeIngredients)
@@ -123,7 +131,10 @@ fun FetchUserRecipe(
                         "Удалить" -> {
                             controller.popBackStack()
                             tokenManager.getToken()?.let {
-                                applicationUserRecipeViewModel.deleteApplicationUserRecipe(it, recipe.recipeId)
+                                applicationUserRecipeViewModel.deleteApplicationUserRecipe(
+                                    it,
+                                    recipe.recipeId
+                                )
                             }
                         }
                     }
@@ -176,17 +187,33 @@ fun FetchUserRecipeTopBar(
 }
 
 @Composable
-fun FetchUserRecipeImage() {
+fun FetchUserRecipeImage(
+    context: Context,
+    recipeImageUrl: String
+) {
+    val desiredPath = recipeImageUrl.substringAfter("/wwwroot/")
+    val imageUrl = "https://10.0.2.2:7286/${desiredPath}"
+    val imageLoader = createImageLoader(context)
+
+    val painter = rememberAsyncImagePainter(
+        model = imageUrl,
+        imageLoader = imageLoader
+    )
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
         Image(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 10.dp, top = 10.dp, end = 10.dp)
-                .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp)),
-            painter = painterResource(id = R.drawable.recipe_space_image),
+            painter = painter,
             contentDescription = null,
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .padding(start = 10.dp, top = 10.dp, end = 10.dp)
+                .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp))
+                .height(500.dp)
         )
     }
+}
 
 @Composable
 fun FetchUserRecipeMiniInformation(
@@ -291,7 +318,7 @@ fun FetchUserRecipeSteps(
             color = SoftGray
         )
     )
-    recipeSteps.forEach {step ->
+    recipeSteps.forEach { step ->
         StepRecipeItem(
             numberStep = "${step.order}",
             textStep = step.description

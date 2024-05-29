@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.common.Item.FavoriteRecipeItem
+import com.den.culinarychest.presentation.common.Item.RecipeItem
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
@@ -77,13 +77,12 @@ private fun ListRecipes(
 
         if (recipeList != null) {
             items(recipeList) { recipe ->
-                FavoriteRecipeItem(
+                RecipeItem(
                     controller = controller,
                     textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
                     recipe = recipe,
-                    recipeViewModel = recipeViewModel,
-                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
-                    tokenManager = tokenManager
+                    tokenManager = tokenManager,
+                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel
                 )
             }
         } else {
