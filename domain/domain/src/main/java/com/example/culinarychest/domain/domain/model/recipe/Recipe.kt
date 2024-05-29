@@ -8,6 +8,8 @@ data class Recipe(
     val recipeId: String,
     @SerializedName("Id", alternate = ["id"])
     val id: String,
+    @SerializedName("recipeImage", alternate = ["RecipeImage"])
+    val imageUrl: String,
     @SerializedName("Title", alternate = ["title"])
     val title: String,
     @SerializedName("Ingredients", alternate = ["ingredients"])

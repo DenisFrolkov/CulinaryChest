@@ -5,16 +5,13 @@ package com.den.culinarychest.presentation.navigation.appNavigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Lifecycling
-import androidx.lifecycle.OnLifecycleEvent
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.navigation.bottomNavigation.BottomNavigationBar
+import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.screens.AuthorizationScreen
 import com.den.culinarychest.presentation.screens.CreatingRecipeScreen
 import com.den.culinarychest.presentation.screens.EditRecipeScreen
@@ -125,7 +122,6 @@ fun AppNavigation(
             recipeInfo.forEach { recipe ->
                 FetchUserRecipeScreen(
                     navController = appNavigationController,
-                    applicationUserViewModel = applicationUserViewModel,
                     applicationUserRecipeViewModel = applicationUserRecipeViewModel,
                     recipe = recipe,
                     tokenManager = tokenManager

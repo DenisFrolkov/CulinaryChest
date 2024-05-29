@@ -1,19 +1,11 @@
 package com.den.culinarychest.presentation
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.Lifecycling
-import androidx.lifecycle.OnLifecycleEvent
-import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import com.den.culinarychest.presentation.navigation.appNavigation.AppNavigation
 import com.den.culinarychest.presentation.ui.theme.CulinaryChestTheme
 import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
@@ -21,13 +13,13 @@ import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewM
 import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.den.culinarychest.presentation.view_models.RecipeStepsViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
-import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.data.data.api.RetrofitInstance
 import com.example.culinarychest.data.data.repository.ApplicationUserFavoriteRecipeRepositoryImpl
 import com.example.culinarychest.data.data.repository.ApplicationUserRecipeRepositoryImpl
 import com.example.culinarychest.data.data.repository.ApplicationUserRepositoryImpl
 import com.example.culinarychest.data.data.repository.RecipeRepositoryImpl
 import com.example.culinarychest.data.data.repository.RecipeStepsRepositoryImpl
+import com.example.culinarychest.data.data.repository.TokenManager
 
 class MainActivity : ComponentActivity() {
 

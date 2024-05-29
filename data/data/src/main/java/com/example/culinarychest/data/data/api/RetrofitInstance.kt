@@ -12,7 +12,7 @@ import javax.net.ssl.X509TrustManager
 
 class RetrofitInstance(private var tokenManager: TokenManager) {
 
-    private val okHttpClient = OkHttpClient.Builder()
+    val okHttpClient = OkHttpClient.Builder()
         .apply {
             try {
                 val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {

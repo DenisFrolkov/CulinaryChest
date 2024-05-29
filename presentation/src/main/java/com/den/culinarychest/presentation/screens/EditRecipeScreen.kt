@@ -20,7 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -131,7 +131,7 @@ fun EditRecipe(
     var ingredientsRecipeText by remember { mutableStateOf(recipe.ingredients) }
 
     var timeRecipeText by remember { mutableStateOf(recipe.preparationTime) }
-    var savedCountRecipeText by remember { mutableStateOf(recipe.savedCount) }
+    val savedCountRecipeText by remember { mutableIntStateOf(recipe.savedCount) }
 
     var showEditRecipeMenu by remember { mutableStateOf(false) }
     var showEditRecipeMenuStep by remember { mutableStateOf(false) }
@@ -271,8 +271,8 @@ fun EditRecipe(
 
                     stepsFromServer.forEachIndexed { index, step ->
                         EditRecipeStepItem(
-                            stepId = "${step.stepId}",
-                            numberStep = "${step.order}",
+                            stepId = step.stepId,
+                            numberStep = step.order,
                             indexStep = "$index",
                             textStep = step.description,
                             passStepId = { stepId ->
@@ -486,10 +486,10 @@ fun EditRecipeTime(
                         .width(24.dp)
                         .align(Alignment.CenterHorizontally)
                 )
-                Divider(
+                HorizontalDivider(
+                    modifier = Modifier.width(30.dp),
                     thickness = 0.8.dp,
-                    color = Color.Black,
-                    modifier = Modifier.width(30.dp)
+                    color = Color.Black
                 )
             }
         }
@@ -748,7 +748,7 @@ fun EditRecipeMenu(
 ) {
     if (showDialog) {
         var editText by remember { mutableStateOf(textEditRecipeMenu) }
-        var titleText by remember { mutableStateOf(titleEditRecipeMenu) }
+        val titleText by remember { mutableStateOf(titleEditRecipeMenu) }
 
         var isHintVisible by remember { mutableStateOf(editText.isEmpty()) }
 
@@ -845,7 +845,7 @@ fun EditRecipeMenuStep(
 ) {
     if (showDialog) {
         var editText by remember { mutableStateOf(textEditRecipeMenu) }
-        var titleText by remember { mutableStateOf(titleEditRecipeMenu) }
+        val titleText by remember { mutableStateOf(titleEditRecipeMenu) }
 
         var isHintVisible by remember { mutableStateOf(editText.isEmpty()) }
 

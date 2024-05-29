@@ -46,7 +46,6 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
-import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.domain.model.step.Step
@@ -54,14 +53,12 @@ import com.example.culinarychest.domain.domain.model.step.Step
 @Composable
 fun FetchUserRecipeScreen(
     navController: NavController,
-    applicationUserViewModel: ApplicationUserViewModel,
     applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
     recipe: Recipe,
     tokenManager: TokenManager
 ) {
     FetchUserRecipe(
         controller = navController,
-        applicationUserViewModel = applicationUserViewModel,
         applicationUserRecipeViewModel = applicationUserRecipeViewModel,
         recipe = recipe,
         tokenManager = tokenManager
@@ -71,7 +68,6 @@ fun FetchUserRecipeScreen(
 @Composable
 fun FetchUserRecipe(
     controller: NavController,
-    applicationUserViewModel: ApplicationUserViewModel,
     applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
     recipe: Recipe,
     tokenManager: TokenManager
