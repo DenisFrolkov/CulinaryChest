@@ -56,10 +56,6 @@ dependencies {
     implementation(project(":data:data"))
     implementation(project(":domain:domain"))
 
-    implementation ("com.github.bumptech.glide:glide:4.12.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
-
-
     implementation("io.coil-kt:coil-compose:2.3.0")
 
     //Retrofit 2

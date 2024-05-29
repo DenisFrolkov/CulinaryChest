@@ -5,11 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.culinarychest.domain.domain.repository.ProcessingResult
 import com.example.culinarychest.domain.domain.model.recipe.CreateRecipe
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
+import com.example.culinarychest.domain.domain.model.step.CreateStep
 import com.example.culinarychest.domain.domain.repository.ApplicationUserRecipeRepository
+import com.example.culinarychest.domain.domain.repository.ProcessingResult
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,11 +52,11 @@ class ApplicationUserRecipeViewModel(
         }
     }
 
-    fun createApplicationUserRecipe(token: String, recipe: CreateRecipe) {
+    fun createApplicationUserRecipe(token: String, title: String, recipeImage: String, ingredients: String, step: List<CreateStep>, creationDate: String, preparationTime: String) {
         viewModelScope.launch {
             try {
                 applicationUserRecipeRepository.createApplicationUserRecipe(
-                    token, recipe
+                    token, title, recipeImage, ingredients, step, creationDate, preparationTime
                 )
                 _createdRecipeResult.value = ProcessingResult.Success(null)
             } catch (e: Exception) {

@@ -1,6 +1,7 @@
 package com.den.culinarychest.presentation.screens
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -38,6 +39,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -49,8 +51,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.common.Button.SaveButton
+import com.den.culinarychest.presentation.common.Item.createImageLoader
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.EditRecipeColor
 import com.den.culinarychest.presentation.ui.theme.LightGray
@@ -160,22 +164,22 @@ fun EditRecipe(
         titleRecipeText = textEditRecipeMenu
     } else if (labelEditRecipeMenu == "ingredients") {
         ingredientsRecipeText = textEditRecipeMenu
-    } else if (labelEditRecipeMenu == "createStep"){
+    } else if (labelEditRecipeMenu == "createStep") {
         if (textEditRecipeMenu != "") {
             addStepCreateApp(
                 textRecipeStep = textEditRecipeMenu,
                 numberTextRecipeStep = numberEditRecipeMenu
             )
         }
-    } else if (labelEditRecipeMenu == "updateStepCreateApp"){
+    } else if (labelEditRecipeMenu == "updateStepCreateApp") {
         updateStepCreateApp(
             index = indexStepEditRecipeMenu,
             stepCreateApp = CreateStep(textEditRecipeMenu, numberEditRecipeMenu)
         )
-    } else if (labelEditRecipeMenu == "updateStepFromServer"){
+    } else if (labelEditRecipeMenu == "updateStepFromServer") {
         updateStepFromServer(
             index = indexStepEditRecipeMenu,
-            stepFromServer = UpdateStep(idStep , textEditRecipeMenu, numberEditRecipeMenu)
+            stepFromServer = UpdateStep(idStep, textEditRecipeMenu, numberEditRecipeMenu)
         )
     }
 
@@ -198,7 +202,10 @@ fun EditRecipe(
                 .padding(horizontal = 10.dp)
         ) {
             item {
-                EditRecipeImage()
+                EditRecipeImage(
+                    context = LocalContext.current,
+                    recipeImageUrl = recipe.imageUrl
+                )
                 Spacer(modifier = Modifier.height(12.dp))
                 EditRecipeTime(
                     timeRecipeText = timeRecipeText,
@@ -282,12 +289,16 @@ fun EditRecipe(
                                 numberEditRecipeMenu = newNumberText
                             },
                             textEditRecipeMenu = { newText -> textEditRecipeMenu = newText },
-                            indexEditRecipeMenu = { indexStep -> indexStepEditRecipeMenu = indexStep.toInt() },
+                            indexEditRecipeMenu = { indexStep ->
+                                indexStepEditRecipeMenu = indexStep.toInt()
+                            },
                             clickShowEditRecipeMenu = { newValue -> showEditRecipeMenu = newValue },
                             passedEditRecipeMenuTitle = { newTitleEditRecipeMenuText ->
                                 titleEditRecipeMenu = newTitleEditRecipeMenuText
                             },
-                            passedEditRecipeMenuLabel = { labelEditRecipeMenu = "updateStepFromServer" }
+                            passedEditRecipeMenuLabel = {
+                                labelEditRecipeMenu = "updateStepFromServer"
+                            }
                         )
                         Spacer(modifier = Modifier.height(height = 10.dp))
                     }
@@ -305,12 +316,16 @@ fun EditRecipe(
                                 numberEditRecipeMenu = newNumberText
                             },
                             textEditRecipeMenu = { newText -> textEditRecipeMenu = newText },
-                            indexEditRecipeMenu = { indexStep -> indexStepEditRecipeMenu = indexStep.toInt() },
+                            indexEditRecipeMenu = { indexStep ->
+                                indexStepEditRecipeMenu = indexStep.toInt()
+                            },
                             clickShowEditRecipeMenu = { newValue -> showEditRecipeMenu = newValue },
                             passedEditRecipeMenuTitle = { newTitleEditRecipeMenuText ->
                                 titleEditRecipeMenu = newTitleEditRecipeMenuText
                             },
-                            passedEditRecipeMenuLabel = { labelEditRecipeMenu = "updateStepCreateApp" }
+                            passedEditRecipeMenuLabel = {
+                                labelEditRecipeMenu = "updateStepCreateApp"
+                            }
                         )
                         Spacer(modifier = Modifier.height(height = 10.dp))
                     }
@@ -395,23 +410,38 @@ fun EditRecipeTopBar(
 
 @SuppressLint("UnrememberedMutableInteractionSource")
 @Composable
-fun EditRecipeImage() {
+fun EditRecipeImage(
+    context: Context,
+    recipeImageUrl: String
+) {
     Box(
         modifier = Modifier
             .padding(top = 10.dp)
     ) {
+        val desiredPath = recipeImageUrl.substringAfter("/wwwroot/")
+        val imageUrl = "https://10.0.2.2:7286/${desiredPath}"
+        val imageLoader = createImageLoader(context)
+
+        val painter = rememberAsyncImagePainter(
+            model = imageUrl,
+            imageLoader = imageLoader
+        )
+
         Image(
-            painter = painterResource(id = R.drawable.recipe_space_image),
+            painter = painter,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .fillMaxSize()
+                .size(400.dp)
+                .clip(shape = RoundedCornerShape(12.dp))
                 .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp))
                 .alpha(.7f)
                 .clickable(
                     interactionSource = MutableInteractionSource(),
                     indication = null
-                ) { }
+                ) {
+
+                }
         )
         Box(
             modifier = Modifier
@@ -423,7 +453,6 @@ fun EditRecipeImage() {
                 )
                 .height(height = 98.dp)
                 .align(Alignment.BottomCenter)
-                .clip(shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp))
                 .clickable { }
         ) {
             Text(

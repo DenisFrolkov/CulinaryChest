@@ -108,6 +108,7 @@ fun FetchUserRecipe(
                 FetchUserRecipeIngredient(recipeIngredients = recipeIngredients)
                 FetchUserRecipeSteps(recipeSteps = recipe.steps)
             }
+
         }
     }
     if (mappingDropdownMenu) {
@@ -206,11 +207,11 @@ fun FetchUserRecipeImage(
         Image(
             painter = painter,
             contentDescription = null,
-            contentScale = ContentScale.Fit,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .padding(start = 10.dp, top = 10.dp, end = 10.dp)
                 .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp))
-                .height(500.dp)
+                .height(400.dp)
         )
     }
 }

@@ -40,9 +40,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.common.TextInput.SmallTextInput
 import com.den.culinarychest.presentation.common.TextInput.NumberTextInput
 import com.den.culinarychest.presentation.common.TextInput.RecipeDetailsTextInput
+import com.den.culinarychest.presentation.common.TextInput.SmallTextInput
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
@@ -89,6 +89,7 @@ fun CreatingRecipe(
     }
 
     val createRecipe = CreateRecipe(
+        recipeImage = textTitle,
         title = textTitle,
         ingredients = textIngredient,
         steps = steps.toList(),
@@ -296,7 +297,13 @@ private fun CreatingRecipeSaveButton(
                     .getToken()
                     ?.let {
                         applicationUserRecipeViewModel.createApplicationUserRecipe(
-                            it, recipeInfo
+                            it,
+                            recipeImage = recipeInfo.recipeImage,
+                            title = recipeInfo.title,
+                            ingredients = recipeInfo.ingredients,
+                            step = recipeInfo.steps,
+                            creationDate = recipeInfo.creationDate,
+                            preparationTime = recipeInfo.preparationTime
                         )
                     }
                 controller.navigate(navigationRoute)

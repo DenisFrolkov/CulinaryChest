@@ -232,7 +232,7 @@ fun FetchOtherUserRecipeImage(
                 modifier = Modifier
                     .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp))
                     .padding(start = 10.dp, top = 10.dp, end = 10.dp)
-                    .height(300.dp)
+                    .height(400.dp)
             )
         }
 }
