@@ -1,16 +1,16 @@
 package com.den.culinarychest.presentation.view_models
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.data.data.repository.TokenManager
-import com.example.culinarychest.domain.domain.repository.ProcessingResult
 import com.example.culinarychest.domain.domain.model.application_user.ApplicationUser
 import com.example.culinarychest.domain.domain.model.application_user.ApplicationUserInfo
 import com.example.culinarychest.domain.domain.model.application_user.DuplicationUserInfo
+import com.example.culinarychest.domain.domain.model.application_user.Login
 import com.example.culinarychest.domain.domain.repository.ApplicationUserRepository
+import com.example.culinarychest.domain.domain.repository.ProcessingResult
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import retrofit2.HttpException
 
 class ApplicationUserViewModel(
     private val tokenManager: TokenManager,
@@ -41,21 +40,19 @@ class ApplicationUserViewModel(
 
     fun registerApplicationUser(user: ApplicationUser) {
         viewModelScope.launch {
-            try {
-                val response = applicationUserRepository.registrationApplicationUser(user)
-                if (response.isSuccessful) {
-                    _duplicationUserInfo.value = null
-                } else {
-                    val errorBody = response.errorBody()?.string()
-                    val duplicationInfo = parseErrorMessage(errorBody)
-                    _duplicationUserInfo.value = duplicationInfo
+            applicationUserRepository.registrationApplicationUser(user)
+                .collectLatest { result ->
+                    when (result) {
+                        is ProcessingResult.Error -> {
+                            val errorBody = result.message
+                            val duplicationInfo = parseErrorMessage(errorBody)
+                            _duplicationUserInfo.value = duplicationInfo
+                        }
+                        is ProcessingResult.Success -> {
+                            _duplicationUserInfo.value = null
+                        }
+                    }
                 }
-            } catch (e: Exception) {
-                _duplicationUserInfo.value = DuplicationUserInfo(
-                    duplicateUserName = null,
-                    duplicateEmail = null
-                )
-            }
         }
     }
 
@@ -73,62 +70,51 @@ class ApplicationUserViewModel(
         }
     }
 
-    fun authorizeUser(username: String, password: String) {
+    fun authorizeUser(login: Login) {
         viewModelScope.launch {
-            try {
-                val result = applicationUserRepository.authorizationApplicationUser(username, password)
-                if (result is ProcessingResult.Success) {
-                    val token = result.data?.token.orEmpty()
-                    tokenManager.saveToken(token)
-                    _authState.value = ProcessingResult.Success(token)
-                } else {
-                    _authState.value = ProcessingResult.Error("Authorization failed")
-                }
-            } catch (e: Exception) {
-                val errorMessage = when (e) {
-                    is HttpException -> when (e.code()) {
-                        401 -> "Incorrect username or password"
-                        else -> "An error occurred during authorization. We'll fix it soon."
+            applicationUserRepository.authorizationApplicationUser(login)
+                .collectLatest { result ->
+                    when (result) {
+                        is ProcessingResult.Error -> {
+                            _authState.value = ProcessingResult.Error("Authorization failed")
+                        }
+                        is ProcessingResult.Success -> {
+                            val token = result.data?.token.orEmpty()
+                            tokenManager.saveToken(token)
+                            _authState.value = ProcessingResult.Success(token)
+                        }
                     }
-                    else -> "An error occurred during authorization. We'll fix it soon."
                 }
-                _authState.value = ProcessingResult.Error(errorMessage)
-            }
         }
     }
 
     fun getApplicationUserInfo(token: String) {
         viewModelScope.launch {
-            applicationUserRepository.getApplicationUserId(token = token).collectLatest { result ->
-                when (result) {
-                    is ProcessingResult.Error -> {
-
-                    }
-                    is ProcessingResult.Success -> {
-                        result.data.let { userInfo ->
-                            _userInfoResult.update { userInfo }
+            applicationUserRepository.getApplicationUserInfo(token)
+                .collectLatest { result ->
+                    when (result) {
+                        is ProcessingResult.Error -> {
+                            // Handle error
+                        }
+                        is ProcessingResult.Success -> {
+                            result.data?.let { userInfo ->
+                                _userInfoResult.update { userInfo }
+                            }
                         }
                     }
-
-                    else -> {
-
-                    }
                 }
-            }
         }
     }
 
     override fun onCleared() {
-        Log.d("AAA", "onCleared")
         super.onCleared()
         viewModelScope.cancel()
     }
 
-    fun clear(){
+    fun clear() {
         onCleared()
     }
 }
-
 
 
 

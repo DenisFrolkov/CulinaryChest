@@ -3,8 +3,6 @@ package com.example.culinarychest.domain.domain.repository
 import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.domain.model.favorite_recipe.CreateFavoriteRecipe
 import kotlinx.coroutines.flow.Flow
-import retrofit2.http.Header
-import retrofit2.http.Path
 
 interface ApplicationUserFavoriteRecipeRepository {
     suspend fun getApplicationUserFavoriteRecipes(token: String): Flow<ProcessingResult<List<FavoriteRecipe>>>

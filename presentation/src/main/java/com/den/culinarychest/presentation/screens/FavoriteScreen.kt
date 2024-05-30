@@ -59,7 +59,7 @@ fun FavoriteScreen(
 @Composable
 private fun ListRecipes(
     controller: NavController,
-    recipeList: List<Recipe>,
+    recipeDtoList: List<Recipe>,
     recipeViewModel: RecipeViewModel,
     applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
     tokenManager: TokenManager
@@ -75,8 +75,8 @@ private fun ListRecipes(
             Spacer(modifier = Modifier.height(72.dp))
         }
 
-        if (recipeList != null) {
-            items(recipeList) { recipe ->
+        if (recipeDtoList != null) {
+            items(recipeDtoList) { recipe ->
                 RecipeItem(
                     controller = controller,
                     textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,

@@ -2,9 +2,9 @@ package com.den.culinarychest.presentation.view_models
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.culinarychest.domain.domain.repository.ProcessingResult
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
+import com.example.culinarychest.domain.domain.repository.ProcessingResult
 import com.example.culinarychest.domain.domain.repository.RecipeRepository
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
@@ -25,8 +25,8 @@ class RecipeViewModel(
     private val _recipesById = MutableStateFlow<List<Recipe>>(emptyList())
     val recipesById = _recipesById.asStateFlow()
 
-    private val _recipe = MutableStateFlow<List<Recipe>>(emptyList())
-    val recipe = _recipe.asStateFlow()
+    private val _recipeDto = MutableStateFlow<List<Recipe>>(emptyList())
+    val recipe = _recipeDto.asStateFlow()
 
     private val _showErrorToastChannel = Channel<Boolean>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
@@ -78,7 +78,7 @@ class RecipeViewModel(
 
                     is ProcessingResult.Success -> {
                         result.data?.let { recipe ->
-                            _recipe.update { recipe }
+                            _recipeDto.update { recipe }
                         }
                     }
                 }

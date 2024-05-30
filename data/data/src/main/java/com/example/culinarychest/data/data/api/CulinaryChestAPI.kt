@@ -1,16 +1,17 @@
 package com.example.culinarychest.data.data.api
 
-import com.example.culinarychest.domain.domain.model.application_user.ApplicationUser
-import com.example.culinarychest.domain.domain.model.application_user.ApplicationUserInfo
-import com.example.culinarychest.domain.domain.model.application_user.DuplicationUserInfo
-import com.example.culinarychest.domain.domain.model.application_user.Login
-import com.example.culinarychest.domain.domain.model.application_user.Token
-import com.example.culinarychest.domain.domain.model.favorite_recipe.CreateFavoriteRecipe
-import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe
-import com.example.culinarychest.domain.domain.model.recipe.Recipe
-import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
+import com.example.culinarychest.data.data.model.application_user.ApplicationUserDto
+import com.example.culinarychest.data.data.model.application_user.ApplicationUserInfoDto
+import com.example.culinarychest.data.data.model.application_user.DuplicationUserInfoDto
+import com.example.culinarychest.data.data.model.application_user.LoginDto
+import com.example.culinarychest.data.data.model.application_user.TokenDto
+import com.example.culinarychest.data.data.model.favorite_recipe.CreateFavoriteRecipeDto
+import com.example.culinarychest.data.data.model.favorite_recipe.FavoriteRecipeDto
+import com.example.culinarychest.data.data.model.recipe.RecipeDto
+import com.example.culinarychest.data.data.model.recipe.UpdateRecipeDto
+import com.example.culinarychest.data.data.model.step.CreateStepDto
+import com.example.culinarychest.data.data.model.step.StepDto
 import com.example.culinarychest.domain.domain.model.step.CreateStep
-import com.example.culinarychest.domain.domain.model.step.Step
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -26,28 +27,28 @@ const val BASE_URL = "https://10.0.2.2:7286"
 interface CulinaryChestAPI {
 
     @POST("/api/authentication/register")
-    suspend fun registrationApplicationUser(@Body applicationUser: ApplicationUser): Response<DuplicationUserInfo>
+    suspend fun registrationApplicationUser(@Body applicationUserDto: ApplicationUserDto): Response<DuplicationUserInfoDto>
 
     @POST("/api/authentication/login")
-    suspend fun authorizationApplicationUser(@Body login: Login): Response<Token>
+    suspend fun authorizationApplicationUser(@Body loginDto: LoginDto): Response<TokenDto>
 
     @GET("/api/authentication/user")
-    suspend fun getApplicationUserInfo(@Header("Authorization") token: String): ApplicationUserInfo
+    suspend fun getApplicationUserInfo(@Header("Authorization") token: String): ApplicationUserInfoDto
 
     @GET("/api/applicationUser/favoriteRecipe")
-    suspend fun getApplicationUserFavoriteRecipes(@Header("Authorization") token: String): List<FavoriteRecipe>
+    suspend fun getApplicationUserFavoriteRecipes(@Header("Authorization") token: String): List<FavoriteRecipeDto>
 
     @GET("/api/applicationUser/favoriteRecipe/{recipeId}")
     suspend fun getFavoriteRecipeByRecipeId(
         @Header("Authorization") token: String,
         @Path("recipeId") recipeId: String
-    ): FavoriteRecipe
+    ): FavoriteRecipeDto
 
     @POST("/api/applicationUser/favoriteRecipe/{recipeId}")
     suspend fun createApplicationUserFavoriteRecipes(
         @Header("Authorization") token: String,
         @Path("recipeId") recipeId: Int,
-        @Body addedDate: CreateFavoriteRecipe
+        @Body addedDate: CreateFavoriteRecipeDto
     )
 
     @DELETE("/api/applicationUser/favoriteRecipe/{favoriteRecipeId}")
@@ -60,23 +61,23 @@ interface CulinaryChestAPI {
     suspend fun getRecipes(
         @Header("Authorization") token: String,
         @Query("SearchTerm") searchTerm: String?
-    ): List<Recipe>
+    ): List<RecipeDto>
 
     @GET("/api/recipe/listRecipeByIds")
     suspend fun getRecipeByIds(
         @Header("Authorization") token: String,
         @Query("recipeIds") recipeIds: List<String>
-    ): List<Recipe>
+    ): List<RecipeDto>
 
     @GET("/api/recipe/{recipeId}")
     suspend fun getRecipeById(
         @Header("Authorization") token: String,
         @Path("recipeId") recipeId: String
-    ): List<Recipe>
+    ): List<RecipeDto>
 
 
     @GET("/api/applicationUser/recipe")
-    suspend fun getApplicationUserRecipes(@Header("Authorization") token: String): List<Recipe>
+    suspend fun getApplicationUserRecipes(@Header("Authorization") token: String): List<RecipeDto>
 
     @POST("/api/applicationUser/recipe")
     suspend fun createApplicationUserRecipe(
@@ -93,7 +94,7 @@ interface CulinaryChestAPI {
     suspend fun updateApplicationUserRecipe(
         @Header("Authorization") token: String,
         @Path("recipeId") recipeId: String,
-        @Body recipe: UpdateRecipe
+        @Body recipe: UpdateRecipeDto
     )
 
     @DELETE("/api/applicationUser/Recipe/{recipeId}")
@@ -106,13 +107,13 @@ interface CulinaryChestAPI {
     suspend fun getRecipeSteps(
         @Header("Authorization") token: String,
         @Path("recipeId") recipeId: String
-    ): List<Step>
+    ): List<StepDto>
 
     @POST("/api/recipe/{recipeId}/steps")
     suspend fun createRecipeStep(
         @Header("Authorization") token: String,
         @Path("recipeId") recipeId: String,
-        @Body step: CreateStep
+        @Body step: CreateStepDto
     )
 
     @PUT("/api/recipe/{recipeId}/steps/{stepId}")
@@ -120,7 +121,7 @@ interface CulinaryChestAPI {
         @Header("Authorization") token: String,
         @Path("recipeId") recipeId: String,
         @Path("stepId") stepId: String,
-        @Body updateStep: CreateStep
+        @Body updateStep: CreateStepDto
     )
 
     @DELETE("/api/recipe/{recipeId}/steps/{stepId}")

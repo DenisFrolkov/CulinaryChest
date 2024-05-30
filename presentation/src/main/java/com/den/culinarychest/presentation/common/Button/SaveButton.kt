@@ -37,8 +37,8 @@ fun SaveButton(
     colorButtonText: Color,
     recipeId: String,
     updateInfoRecipe: UpdateRecipe,
-    updateStep: List<UpdateStep>,
-    createStep: List<CreateStep>,
+    updateStepDto: List<UpdateStep>,
+    createStepDto: List<CreateStep>,
     applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
     recipeStepsViewModel: RecipeStepsViewModel,
     tokenManager: TokenManager,
@@ -59,13 +59,13 @@ fun SaveButton(
                     applicationUserRecipeViewModel.updateApplicationUserRecipe(
                         it, recipeId, updateInfoRecipe)
                 }
-                updateStep.forEach {updateStep ->
+                updateStepDto.forEach { updateStep ->
                     tokenManager.getToken()?.let {
                         recipeStepsViewModel.updateRecipeStep(it, recipeId, stepId = updateStep.stepId, updateStep = CreateStep(updateStep.description, updateStep.order))
                     }
                 }
 
-                createStep.forEach {createStep ->
+                createStepDto.forEach { createStep ->
                     tokenManager.getToken()?.let {
                         recipeStepsViewModel.createRecipeSteps(it, recipeId, step = CreateStep(createStep.description, createStep.order))
                     }

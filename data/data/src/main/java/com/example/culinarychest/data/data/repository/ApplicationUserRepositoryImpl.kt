@@ -1,49 +1,73 @@
 package com.example.culinarychest.data.data.repository
 
 import com.example.culinarychest.data.data.api.CulinaryChestAPI
-import com.example.culinarychest.domain.domain.repository.ProcessingResult
+import com.example.culinarychest.data.data.model.Mappers.toDomain
+import com.example.culinarychest.data.data.model.Mappers.toDto
+import com.example.culinarychest.data.data.model.application_user.DuplicationUserInfoDto
 import com.example.culinarychest.domain.domain.model.application_user.ApplicationUser
 import com.example.culinarychest.domain.domain.model.application_user.ApplicationUserInfo
 import com.example.culinarychest.domain.domain.model.application_user.DuplicationUserInfo
 import com.example.culinarychest.domain.domain.model.application_user.Login
 import com.example.culinarychest.domain.domain.model.application_user.Token
 import com.example.culinarychest.domain.domain.repository.ApplicationUserRepository
+import com.example.culinarychest.domain.domain.repository.ProcessingResult
 import kotlinx.coroutines.flow.Flow
-import okhttp3.ResponseBody
+import kotlinx.coroutines.flow.flow
 import retrofit2.Response
 
 class ApplicationUserRepositoryImpl(
     private val culinaryChestAPI: CulinaryChestAPI
 ) : ApplicationUserRepository {
-
-    override suspend fun registrationApplicationUser(user: ApplicationUser) : Response<DuplicationUserInfo> {
-        return culinaryChestAPI.registrationApplicationUser(applicationUser = user)
-    }
-
-    override suspend fun authorizationApplicationUser(
-        username: String,
-        password: String
-    ): ProcessingResult<Token> {
-        return try {
-            val response = culinaryChestAPI.authorizationApplicationUser(Login(username, password))
-            if (response.isSuccessful) {
-                val token = response.body()
-                if (token != null) {
-                    ProcessingResult.Success(token)
+    override suspend fun registrationApplicationUser(user: ApplicationUser): Flow<ProcessingResult<DuplicationUserInfo>> {
+        return flow {
+            try {
+                val response: Response<DuplicationUserInfoDto> = culinaryChestAPI.registrationApplicationUser(user.toDto())
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    if (body != null) {
+                        emit(ProcessingResult.Success(body.toDomain()))
+                    } else {
+                        emit(ProcessingResult.Error("Empty response body"))
+                    }
                 } else {
-                    ProcessingResult.Error(message = "Token is null")
+                    val errorBody = response.errorBody()?.string()
+                    emit(ProcessingResult.Error(errorBody ?: "Unknown error"))
                 }
-            } else {
-                ProcessingResult.Error(message = "Failed to authenticate: ${response.message()}")
+            } catch (e: Exception) {
+                emit(ProcessingResult.Error(e.message ?: "An error occurred"))
             }
-        } catch (e: Exception) {
-            ProcessingResult.Error(message = "Error during authentication: ${e.message}")
         }
     }
 
-    override suspend fun getApplicationUserId(token: String): Flow<ProcessingResult<ApplicationUserInfo>> {
-        return safeApiCall {
-            culinaryChestAPI.getApplicationUserInfo(token = token)
+    override suspend fun authorizationApplicationUser(login: Login): Flow<ProcessingResult<Token>> {
+        return flow {
+            try {
+                val response = culinaryChestAPI.authorizationApplicationUser(login.toDto())
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    if (body != null) {
+                        emit(ProcessingResult.Success(body.toDomain()))
+                    } else {
+                        emit(ProcessingResult.Error("Empty response body"))
+                    }
+                } else {
+                    emit(ProcessingResult.Error("HTTP error ${response.code()}: ${response.message()}"))
+                }
+            } catch (e: Exception) {
+                emit(ProcessingResult.Error(e.message ?: "An error occurred"))
+            }
+        }
+    }
+
+
+    override suspend fun getApplicationUserInfo(token: String): Flow<ProcessingResult<ApplicationUserInfo>> {
+        return flow {
+            try {
+                val recipe = culinaryChestAPI.getApplicationUserInfo(token).toDomain()
+                emit(ProcessingResult.Success(recipe))
+            } catch (e: Exception) {
+                emit(ProcessingResult.Error(e.message ?: "An error occurred"))
+            }
         }
     }
 }

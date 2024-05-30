@@ -1,13 +1,12 @@
 package com.den.culinarychest.presentation.view_models
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.culinarychest.domain.domain.repository.ProcessingResult
-import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.domain.model.favorite_recipe.CreateFavoriteRecipe
+import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.domain.repository.ApplicationUserFavoriteRecipeRepository
+import com.example.culinarychest.domain.domain.repository.ProcessingResult
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,11 +21,11 @@ class ApplicationUserFavoriteRecipeViewModel(
     private val applicationUserViewModel: ApplicationUserViewModel
 ) : ViewModel() {
 
-    private val _userFavoriteRecipes = MutableStateFlow<List<FavoriteRecipe>>(emptyList())
-    val userFavoriteRecipes = _userFavoriteRecipes.asStateFlow()
+    private val _userDtoFavoriteRecipes = MutableStateFlow<List<FavoriteRecipe>>(emptyList())
+    val userFavoriteRecipes = _userDtoFavoriteRecipes.asStateFlow()
 
-    private val _favoriteRecipeByRecipeId = MutableStateFlow<FavoriteRecipe?>(null)
-    val favoriteRecipeByRecipeId = _favoriteRecipeByRecipeId.asStateFlow()
+    private val _favoriteRecipeByRecipeIdDto = MutableStateFlow<FavoriteRecipe?>(null)
+    val favoriteRecipeByRecipeId = _favoriteRecipeByRecipeIdDto.asStateFlow()
 
     private val _showErrorToastChannel = Channel<Boolean>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
@@ -41,7 +40,7 @@ class ApplicationUserFavoriteRecipeViewModel(
                         }
                         is ProcessingResult.Success -> {
                             result.data?.let { favoriteRecipe ->
-                                _userFavoriteRecipes.update { favoriteRecipe }
+                                _userDtoFavoriteRecipes.update { favoriteRecipe }
                             }
                         }
                     }
@@ -55,11 +54,11 @@ class ApplicationUserFavoriteRecipeViewModel(
                 .collectLatest { result ->
                     when (result) {
                         is ProcessingResult.Error -> {
-                            _favoriteRecipeByRecipeId.update { null }
+                            _favoriteRecipeByRecipeIdDto.update { null }
                         }
                         is ProcessingResult.Success -> {
                             result.data?.let { favoriteRecipeByRecipeId ->
-                                _favoriteRecipeByRecipeId.update { favoriteRecipeByRecipeId }
+                                _favoriteRecipeByRecipeIdDto.update { favoriteRecipeByRecipeId }
                             }
                         }
                     }
