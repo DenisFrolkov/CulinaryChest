@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.common.Item.ProfileStatisticsItem
 import com.den.culinarychest.presentation.common.Button.SettingButton
+import com.den.culinarychest.presentation.common.Item.ProfileStatisticsItem
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
@@ -52,14 +52,8 @@ fun ProfileScreen(
     val userInfo = applicationUserViewModel.userInfoResult.collectAsState().value
 
     val applicationUserRecipeSize = applicationUserRecipeViewModel.applicationUserRecipes.collectAsState().value.size
-    val favoriteRecipeList = applicationUserFavoriteRecipeViewModel.userFavoriteRecipes.collectAsState().value
-    tokenManager.getToken()?.let { token ->
-        val recipeIds = favoriteRecipeList.map { it.recipeId.toString() }
-        recipeViewModel.getRecipesByIds(token, recipeIds)
-    }
+    val favoriteRecipeSize = applicationUserFavoriteRecipeViewModel.userFavoriteRecipes.collectAsState().value.size
 
-    val applicationUserFavoriteRecipeSize =
-        recipeViewModel.recipesById.collectAsState().value.size
     Column {
         Column(
             modifier = Modifier
@@ -96,7 +90,7 @@ fun ProfileScreen(
                 ) {
                     ProfileStatisticsItem(
                         textStatistic = stringResource(R.string.favorite_recipe_text),
-                        numberStatistic = "$applicationUserFavoriteRecipeSize"
+                        numberStatistic = "$favoriteRecipeSize"
                     )
                     ProfileStatisticsItem(
                         textStatistic = stringResource(R.string.created_recipe_text),

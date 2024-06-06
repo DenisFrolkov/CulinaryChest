@@ -18,14 +18,13 @@ import kotlinx.coroutines.launch
 
 class ApplicationUserFavoriteRecipeViewModel(
     private val favoriteRecipeRepository: ApplicationUserFavoriteRecipeRepository,
-    private val applicationUserViewModel: ApplicationUserViewModel
 ) : ViewModel() {
 
     private val _userDtoFavoriteRecipes = MutableStateFlow<List<FavoriteRecipe>>(emptyList())
     val userFavoriteRecipes = _userDtoFavoriteRecipes.asStateFlow()
 
-    private val _favoriteRecipeByRecipeIdDto = MutableStateFlow<FavoriteRecipe?>(null)
-    val favoriteRecipeByRecipeId = _favoriteRecipeByRecipeIdDto.asStateFlow()
+    private val _favoriteRecipeByRecipeId = MutableStateFlow<FavoriteRecipe?>(null)
+    val favoriteRecipeByRecipeId = _favoriteRecipeByRecipeId.asStateFlow()
 
     private val _showErrorToastChannel = Channel<Boolean>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
@@ -54,11 +53,11 @@ class ApplicationUserFavoriteRecipeViewModel(
                 .collectLatest { result ->
                     when (result) {
                         is ProcessingResult.Error -> {
-                            _favoriteRecipeByRecipeIdDto.update { null }
+                            _favoriteRecipeByRecipeId.update { null }
                         }
                         is ProcessingResult.Success -> {
                             result.data?.let { favoriteRecipeByRecipeId ->
-                                _favoriteRecipeByRecipeIdDto.update { favoriteRecipeByRecipeId }
+                                _favoriteRecipeByRecipeId.update { favoriteRecipeByRecipeId }
                             }
                         }
                     }

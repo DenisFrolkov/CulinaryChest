@@ -51,8 +51,8 @@ class MainActivity : ComponentActivity() {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return ApplicationUserFavoriteRecipeViewModel(
-                        ApplicationUserFavoriteRecipeRepositoryImpl(RetrofitInstance(tokenManager).culinaryChestApi),
-                        applicationUserViewModel = applicationUserViewModel
+                        ApplicationUserFavoriteRecipeRepositoryImpl(RetrofitInstance(tokenManager)
+                            .culinaryChestApi)
                     )
                             as T
                 }
@@ -91,7 +91,7 @@ class MainActivity : ComponentActivity() {
                     applicationUserFavoriteRecipeViewModel,
                     applicationUserRecipeViewModel,
                     recipeStepsViewModel,
-                    TokenManager(this)
+                    tokenManager
                 )
             }
         }
@@ -102,7 +102,7 @@ class MainActivity : ComponentActivity() {
         applicationUserViewModel.clear()
         recipeViewModel.clear()
         applicationUserFavoriteRecipeViewModel.clear()
-        applicationUserRecipeViewModel.clear()
+//        applicationUserRecipeViewModel.clear()
         recipeStepsViewModel.clear()
     }
 }

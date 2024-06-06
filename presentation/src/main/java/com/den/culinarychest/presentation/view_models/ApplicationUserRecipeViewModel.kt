@@ -1,6 +1,5 @@
 package com.den.culinarychest.presentation.view_models
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,7 +10,6 @@ import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
 import com.example.culinarychest.domain.domain.model.step.CreateStep
 import com.example.culinarychest.domain.domain.repository.ApplicationUserRecipeRepository
 import com.example.culinarychest.domain.domain.repository.ProcessingResult
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,6 +17,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.File
 
 class ApplicationUserRecipeViewModel(
     private val applicationUserRecipeRepository: ApplicationUserRecipeRepository
@@ -52,7 +51,15 @@ class ApplicationUserRecipeViewModel(
         }
     }
 
-    fun createApplicationUserRecipe(token: String, title: String, recipeImage: String, ingredients: String, step: List<CreateStep>, creationDate: String, preparationTime: String) {
+    fun createApplicationUserRecipe(
+        token: String,
+        title: String,
+        recipeImage: File,
+        ingredients: String,
+        step: List<CreateStep>,
+        creationDate: String,
+        preparationTime: String
+    ) {
         viewModelScope.launch {
             try {
                 applicationUserRecipeRepository.createApplicationUserRecipe(
@@ -60,8 +67,7 @@ class ApplicationUserRecipeViewModel(
                 )
                 _createdRecipeResult.value = ProcessingResult.Success(null)
             } catch (e: Exception) {
-                _createdRecipeResult.value =
-                    ProcessingResult.Error(message = "Error create recipe: ${e.message}")
+                _createdRecipeResult.value = ProcessingResult.Error(message = "Error create recipe: ${e.message}")
                 _showErrorToastChannel.send(true)
             }
         }
@@ -90,15 +96,5 @@ class ApplicationUserRecipeViewModel(
 
             }
         }
-    }
-
-    override fun onCleared() {
-        Log.d("AAA", "onCleared")
-        super.onCleared()
-        viewModelScope.cancel()
-    }
-
-    fun clear(){
-        onCleared()
     }
 }

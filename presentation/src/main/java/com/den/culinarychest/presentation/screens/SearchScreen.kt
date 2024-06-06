@@ -24,14 +24,12 @@ import com.den.culinarychest.presentation.common.Item.SearchBarItem
 import com.den.culinarychest.presentation.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
-import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 
 @Composable
 fun SearchScreen(
     navController: NavController,
-    applicationUserViewModel: ApplicationUserViewModel,
     applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
     recipeViewModel: RecipeViewModel,
     tokenManager: TokenManager
@@ -39,9 +37,7 @@ fun SearchScreen(
 
     tokenManager.getToken()?.let {
         recipeViewModel.getRecipes(it, null)
-        applicationUserViewModel.getApplicationUserInfo(it)
     }
-
 
     Search(
         controller = navController,

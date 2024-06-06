@@ -85,9 +85,6 @@ fun Registration(
         derivedStateOf { password.isNotBlank() && verificationPassword != password }
     }
 
-    var clickButton by remember {
-        mutableStateOf(false)
-    }
 
     val duplicationUserInfo by applicationUserViewModel.duplicationUserInfo.collectAsState()
 

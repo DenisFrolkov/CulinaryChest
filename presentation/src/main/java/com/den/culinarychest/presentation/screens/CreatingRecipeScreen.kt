@@ -1,6 +1,11 @@
 package com.den.culinarychest.presentation.screens
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -32,7 +37,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -51,6 +58,8 @@ import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewM
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.CreateRecipe
 import com.example.culinarychest.domain.domain.model.step.CreateStep
+import java.io.File
+import java.io.InputStream
 import java.time.LocalDateTime
 
 @Composable
@@ -76,6 +85,7 @@ fun CreatingRecipe(
 ) {
 
     var textTitle by remember { mutableStateOf("") }
+    var imageFile by remember { mutableStateOf<File?>(null) }
     var textIngredient by remember { mutableStateOf("") }
     var textRecipeStep by remember { mutableStateOf("") }
     var numberTextRecipeStep by remember { mutableStateOf("") }
@@ -88,14 +98,16 @@ fun CreatingRecipe(
         steps.add(newStep)
     }
 
-    val createRecipe = CreateRecipe(
-        recipeImage = textTitle,
-        title = textTitle,
-        ingredients = textIngredient,
-        steps = steps.toList(),
-        creationDate = LocalDateTime.now().toString(),
-        preparationTime = textPreparationTime
-    )
+    val createRecipe = imageFile?.let {
+        CreateRecipe(
+            recipeImage = it,
+            title = textTitle,
+            ingredients = textIngredient,
+            steps = steps.toList(),
+            creationDate = LocalDateTime.now().toString(),
+            preparationTime = textPreparationTime
+        )
+    }
     Column {
         TopBar(navController = navController)
         LazyColumn(
@@ -105,7 +117,7 @@ fun CreatingRecipe(
                 .background(color = SoftPink)
         ) {
             item {
-                AddRecipePhoto()
+                AddRecipePhoto({ imageFile = it })
                 RecipeInputs(
                     onTitleTextChanged = { textTitle = it },
                     onIngredientsTextChanged = { textIngredient = it },
@@ -139,16 +151,34 @@ fun CreatingRecipe(
                         .padding(top = 24.dp, bottom = 16.dp)
                         .padding(horizontal = 80.dp)
                 ) {
-                    CreatingRecipeSaveButton(
-                        controller = navController,
-                        navigationRoute = AppNavigationRoute.BottomAppNavigationBar.route,
-                        applicationUserRecipeViewModel = applicationUserRecipeViewModel,
-                        tokenManager = tokenManager,
-                        recipeInfo = createRecipe,
-                        buttonText = stringResource(id = R.string.save_recipe_text),
-                        colorButtonText = SoftGray,
-                        buttonColor = SoftOrange
-                    )
+                    createRecipe?.let { createRecipe ->
+                        CreatingRecipeSaveButton(
+                            controller = navController,
+                            navigationRoute = AppNavigationRoute.BottomAppNavigationBar.route,
+                            applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+                            tokenManager = tokenManager,
+                            recipeInfo = createRecipe,
+                            buttonText = stringResource(id = R.string.save_recipe_text),
+                            colorButtonText = SoftGray,
+                            buttonColor = SoftOrange,
+                            onClick = {
+                                tokenManager
+                                    .getToken()
+                                    ?.let {
+                                        applicationUserRecipeViewModel.createApplicationUserRecipe(
+                                            it,
+                                            recipeImage = createRecipe.recipeImage,
+                                            title = createRecipe.title,
+                                            ingredients = createRecipe.ingredients,
+                                            step = createRecipe.steps,
+                                            creationDate = createRecipe.creationDate,
+                                            preparationTime = createRecipe.preparationTime
+                                        )
+                                    }
+                                navController.popBackStack()
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -180,18 +210,56 @@ fun TopBar(navController: NavController) {
     }
 }
 
+
 @Composable
-fun AddRecipePhoto() {
-    Image(
-        painter = painterResource(id = R.drawable.add_recipe_image),
-        contentDescription = null,
-        contentScale = ContentScale.FillWidth,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 6.dp)
-            .clip(shape = RoundedCornerShape(14.dp))
-            .clickable { /* Handle photo addition */ }
-    )
+fun AddRecipePhoto(
+    addImage: (File) -> Unit
+) {
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
+    val context = LocalContext.current
+
+    val imagePickerLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            selectedImageUri = uri
+            uri?.let {
+                val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
+                val bitmap = BitmapFactory.decodeStream(inputStream)
+                selectedImageBitmap = bitmap
+            }
+        }
+    selectedImageUri?.let { uri ->
+        val file = File(context.cacheDir, uri.path.toString().substringAfter("document/")+".png" )
+        selectedImageBitmap?.let { bitmap ->
+            addImage(file)
+        }
+    }
+    if (selectedImageBitmap == null) {
+
+        Image(
+            painter = painterResource(id = R.drawable.add_recipe_image),
+            contentDescription = null,
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp, vertical = 6.dp)
+                .clip(shape = RoundedCornerShape(14.dp))
+                .clickable { imagePickerLauncher.launch("image/*") }
+        )
+    } else {
+        selectedImageBitmap?.let { bitmap ->
+            Image(
+                bitmap = bitmap.asImageBitmap(),
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp, vertical = 6.dp)
+                    .clip(shape = RoundedCornerShape(14.dp))
+                    .clickable { imagePickerLauncher.launch("image/*") }
+            )
+        }
+    }
 }
 
 @Composable
@@ -281,6 +349,7 @@ private fun CreatingRecipeSaveButton(
     buttonText: String,
     colorButtonText: Color,
     buttonColor: Color,
+    onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -293,20 +362,7 @@ private fun CreatingRecipeSaveButton(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
-                tokenManager
-                    .getToken()
-                    ?.let {
-                        applicationUserRecipeViewModel.createApplicationUserRecipe(
-                            it,
-                            recipeImage = recipeInfo.recipeImage,
-                            title = recipeInfo.title,
-                            ingredients = recipeInfo.ingredients,
-                            step = recipeInfo.steps,
-                            creationDate = recipeInfo.creationDate,
-                            preparationTime = recipeInfo.preparationTime
-                        )
-                    }
-                controller.navigate(navigationRoute)
+                onClick()
             },
         contentAlignment = Alignment.Center
     ) {
@@ -320,6 +376,8 @@ private fun CreatingRecipeSaveButton(
         )
     }
 }
+
+
 
 
 

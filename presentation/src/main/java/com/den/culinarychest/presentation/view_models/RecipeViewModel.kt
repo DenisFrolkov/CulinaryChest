@@ -25,8 +25,8 @@ class RecipeViewModel(
     private val _recipesById = MutableStateFlow<List<Recipe>>(emptyList())
     val recipesById = _recipesById.asStateFlow()
 
-    private val _recipeDto = MutableStateFlow<List<Recipe>>(emptyList())
-    val recipe = _recipeDto.asStateFlow()
+    private val _recipe = MutableStateFlow<List<Recipe>>(emptyList())
+    val recipe = _recipe.asStateFlow()
 
     private val _showErrorToastChannel = Channel<Boolean>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
@@ -78,7 +78,7 @@ class RecipeViewModel(
 
                     is ProcessingResult.Success -> {
                         result.data?.let { recipe ->
-                            _recipeDto.update { recipe }
+                            _recipe.update { recipe }
                         }
                     }
                 }

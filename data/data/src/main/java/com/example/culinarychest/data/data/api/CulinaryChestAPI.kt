@@ -11,18 +11,19 @@ import com.example.culinarychest.data.data.model.recipe.RecipeDto
 import com.example.culinarychest.data.data.model.recipe.UpdateRecipeDto
 import com.example.culinarychest.data.data.model.step.CreateStepDto
 import com.example.culinarychest.data.data.model.step.StepDto
-import com.example.culinarychest.domain.domain.model.step.CreateStep
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
-
-const val BASE_URL = "https://10.0.2.2:7286"
 
 interface CulinaryChestAPI {
 
@@ -54,7 +55,7 @@ interface CulinaryChestAPI {
     @DELETE("/api/applicationUser/favoriteRecipe/{favoriteRecipeId}")
     suspend fun deleteApplicationUserFavoriteRecipe(
         @Header("Authorization") token: String,
-        @Path("favoriteRecipeId") favoriteRecipeId: String
+        @Path("favoriteRecipeId") recipeId: String
     )
 
     @GET("/api/recipe/listRecipe")
@@ -79,15 +80,16 @@ interface CulinaryChestAPI {
     @GET("/api/applicationUser/recipe")
     suspend fun getApplicationUserRecipes(@Header("Authorization") token: String): List<RecipeDto>
 
+    @Multipart
     @POST("/api/applicationUser/recipe")
     suspend fun createApplicationUserRecipe(
         @Header("Authorization") token: String,
-        @Path("Title") title: String,
-        @Path("RecipeImage") recipeImage: String,
-        @Path("Ingredients") ingredients: String,
-        @Path("Steps") step: List<CreateStep>,
-        @Path("CreationDate") creationDate: String,
-        @Path("PreparationTime") preparationTime: String
+        @Part("title") title: RequestBody,
+        @Part recipeImage: MultipartBody.Part,
+        @Part("ingredients") ingredients: RequestBody,
+        @Part("steps") steps: RequestBody,
+        @Part("creationDate") creationDate: RequestBody,
+        @Part("preparationTime") preparationTime: RequestBody
     )
 
     @PUT("/api/applicationUser/Recipe/{recipeId}")
