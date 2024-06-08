@@ -4,12 +4,14 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,6 +24,7 @@ import androidx.navigation.NavController
 import com.den.culinarychest.presentation.common.Item.RecipeItem
 import com.den.culinarychest.presentation.common.Item.SearchBarItem
 import com.den.culinarychest.presentation.route.AppNavigationRoute
+import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
 import com.den.culinarychest.presentation.view_models.RecipeViewModel
@@ -80,19 +83,30 @@ fun Search(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 8.dp)
-        ) {
-            items(recipeList) { recipe ->
-                RecipeItem(
-                    controller = controller,
-                    textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
-                    recipe = recipe,
-                    tokenManager = tokenManager,
-                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel
+        if (recipeList.isEmpty()) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                CircularProgressIndicator(
+                    color = SoftGray,
+                    strokeWidth = 1.5.dp
                 )
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp),
+            ) {
+                items(recipeList) { recipe ->
+                    RecipeItem(
+                        controller = controller,
+                        textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
+                        recipe = recipe,
+                        tokenManager = tokenManager,
+                        applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel
+                    )
+                }
             }
         }
 

@@ -1,6 +1,5 @@
 package com.example.culinarychest.data.data.model.recipe
 
-import com.example.culinarychest.data.data.model.step.CreateStepDto
 import com.google.gson.annotations.SerializedName
 import java.io.File
 
@@ -12,7 +11,7 @@ data class CreateRecipeDto(
     @SerializedName("Ingredients", alternate = ["ingredients"])
     val ingredients: String,
     @SerializedName("Steps", alternate = ["steps"])
-    val steps: List<CreateStepDto>,
+    val steps: List<String>,
     @SerializedName("CreationDate", alternate = ["creationDate"])
     val creationDate: String,
     @SerializedName("PreparationTime", alternate = ["preparationTime"])

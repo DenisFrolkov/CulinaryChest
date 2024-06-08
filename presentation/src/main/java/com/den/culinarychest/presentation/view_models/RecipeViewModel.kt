@@ -34,19 +34,19 @@ class RecipeViewModel(
 
     fun getRecipes(token: String, searchTerm: String?) {
         viewModelScope.launch {
-            recipeRepository.getRecipes(token, searchTerm).collectLatest { result ->
-                when (result) {
-                    is ProcessingResult.Error -> {
-                        _showErrorToastChannel.send(true)
-                    }
-
-                    is ProcessingResult.Success -> {
-                        result.data?.let { recipes ->
-                            _listRecipes.update { recipes }
+            recipeRepository.getRecipes(token, searchTerm)
+                .collectLatest { result ->
+                    when (result) {
+                        is ProcessingResult.Error -> {
+                            // Handle error
+                        }
+                        is ProcessingResult.Success -> {
+                            result.data?.let { userInfo ->
+                                _listRecipes.update { userInfo }
+                            }
                         }
                     }
                 }
-            }
         }
     }
 
@@ -62,6 +62,7 @@ class RecipeViewModel(
                             _recipesById.update { recipes }
                         }
                     }
+
                 }
             }
         }

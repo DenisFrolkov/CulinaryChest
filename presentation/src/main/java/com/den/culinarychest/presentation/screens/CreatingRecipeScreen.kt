@@ -57,7 +57,6 @@ import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.CreateRecipe
-import com.example.culinarychest.domain.domain.model.step.CreateStep
 import java.io.File
 import java.io.InputStream
 import java.time.LocalDateTime
@@ -90,11 +89,11 @@ fun CreatingRecipe(
     var textRecipeStep by remember { mutableStateOf("") }
     var numberTextRecipeStep by remember { mutableStateOf("") }
     var textPreparationTime by remember { mutableStateOf("") }
-    val steps = remember { mutableStateListOf<CreateStep>() }
+    val steps = remember { mutableStateListOf<String>() }
     var countRecipeSteps by remember { mutableIntStateOf(1) }
 
     fun addStep(textRecipeStep: String, numberTextRecipeStep: String) {
-        val newStep = CreateStep(textRecipeStep, numberTextRecipeStep)
+        val newStep = "{\"Description\": \"$textRecipeStep\", \"Order\": \"$numberTextRecipeStep\"}"
         steps.add(newStep)
     }
 
@@ -117,7 +116,9 @@ fun CreatingRecipe(
                 .background(color = SoftPink)
         ) {
             item {
-                AddRecipePhoto({ imageFile = it })
+                AddRecipePhoto { file ->
+                    imageFile = file
+                }
                 RecipeInputs(
                     onTitleTextChanged = { textTitle = it },
                     onIngredientsTextChanged = { textIngredient = it },
@@ -170,12 +171,12 @@ fun CreatingRecipe(
                                             recipeImage = createRecipe.recipeImage,
                                             title = createRecipe.title,
                                             ingredients = createRecipe.ingredients,
-                                            step = createRecipe.steps,
+                                            steps = createRecipe.steps.toString(),
                                             creationDate = createRecipe.creationDate,
                                             preparationTime = createRecipe.preparationTime
                                         )
                                     }
-                                navController.popBackStack()
+                                // navController.popBackStack()
                             }
                         )
                     }
@@ -210,7 +211,6 @@ fun TopBar(navController: NavController) {
     }
 }
 
-
 @Composable
 fun AddRecipePhoto(
     addImage: (File) -> Unit
@@ -226,16 +226,16 @@ fun AddRecipePhoto(
                 val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
                 val bitmap = BitmapFactory.decodeStream(inputStream)
                 selectedImageBitmap = bitmap
+                // Сохранение изображения в файл
+                val file = File(context.cacheDir, "selectedImage.png")
+                file.outputStream().use { out ->
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                }
+                addImage(file)
             }
         }
-    selectedImageUri?.let { uri ->
-        val file = File(context.cacheDir, uri.path.toString().substringAfter("document/")+".png" )
-        selectedImageBitmap?.let { bitmap ->
-            addImage(file)
-        }
-    }
-    if (selectedImageBitmap == null) {
 
+    if (selectedImageBitmap == null) {
         Image(
             painter = painterResource(id = R.drawable.add_recipe_image),
             contentDescription = null,
@@ -261,6 +261,7 @@ fun AddRecipePhoto(
         }
     }
 }
+
 
 @Composable
 fun RecipeInputs(

@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.domain.model.recipe.CreateRecipe
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
-import com.example.culinarychest.domain.domain.model.step.CreateStep
 import com.example.culinarychest.domain.domain.repository.ApplicationUserRecipeRepository
 import com.example.culinarychest.domain.domain.repository.ProcessingResult
 import kotlinx.coroutines.channels.Channel
@@ -56,14 +55,14 @@ class ApplicationUserRecipeViewModel(
         title: String,
         recipeImage: File,
         ingredients: String,
-        step: List<CreateStep>,
+        steps: String,
         creationDate: String,
         preparationTime: String
     ) {
         viewModelScope.launch {
             try {
                 applicationUserRecipeRepository.createApplicationUserRecipe(
-                    token, title, recipeImage, ingredients, step, creationDate, preparationTime
+                    token, title, recipeImage, ingredients, steps, creationDate, preparationTime
                 )
                 _createdRecipeResult.value = ProcessingResult.Success(null)
             } catch (e: Exception) {
@@ -72,6 +71,7 @@ class ApplicationUserRecipeViewModel(
             }
         }
     }
+
 
     fun updateApplicationUserRecipe(token: String, recipeId: String, recipe: UpdateRecipe) {
         viewModelScope.launch {

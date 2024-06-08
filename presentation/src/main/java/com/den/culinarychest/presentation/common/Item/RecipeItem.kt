@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -60,10 +61,20 @@ fun RecipeItem(
             .background(SoftOrange, RoundedCornerShape(12.dp))
     ) {
         Row {
-            LoadImage(
-                context = LocalContext.current,
-                recipeImageUrl = recipe.imageUrl
-            )
+            if (recipe.imageUrl.isEmpty()) {
+                Row(
+                ) {
+                    CircularProgressIndicator(
+                        color = SoftGray,
+                        strokeWidth = 1.5.dp
+                    )
+                }
+            } else {
+                LoadImage(
+                    context = LocalContext.current,
+                    recipeImageUrl = recipe.imageUrl
+                )
+            }
             Column(
                 modifier = Modifier.padding(start = 10.dp, top = 12.dp)
             ) {

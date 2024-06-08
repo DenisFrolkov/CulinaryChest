@@ -145,7 +145,7 @@ object Mappers {
             title = this.title,
             recipeImage = this.recipeImage,
             ingredients = this.ingredients,
-            steps = this.steps.map { it.toDto() },
+            steps = this.steps,
             creationDate = this.creationDate,
             preparationTime = this.preparationTime
         )
@@ -156,7 +156,7 @@ object Mappers {
             title = this.title,
             recipeImage = this.recipeImage,
             ingredients = this.ingredients,
-            steps = this.steps.map { it.toDomain() },
+            steps = this.steps,
             creationDate = this.creationDate,
             preparationTime = this.preparationTime
         )
@@ -170,7 +170,7 @@ object Mappers {
             imageUrl = this.imageUrl,
             title = this.title,
             ingredients = this.ingredients,
-            steps = this.steps as List<StepDto>,
+            steps = this.steps.map { it.toDto() },
             creationDate = this.creationDate,
             preparationTime = this.preparationTime,
             savedCount = this.savedCount
@@ -184,7 +184,7 @@ object Mappers {
             imageUrl = this.imageUrl,
             title = this.title,
             ingredients = this.ingredients,
-            steps = this.steps as List<Step>,
+            steps = this.steps.map { it.toDomain() },
             creationDate = this.creationDate,
             preparationTime = this.preparationTime,
             savedCount = this.savedCount
