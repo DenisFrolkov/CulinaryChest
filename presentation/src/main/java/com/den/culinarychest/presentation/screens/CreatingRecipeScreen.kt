@@ -102,7 +102,7 @@ fun CreatingRecipe(
             recipeImage = it,
             title = textTitle,
             ingredients = textIngredient,
-            steps = steps.toList(),
+                    steps = steps.toList(),
             creationDate = LocalDateTime.now().toString(),
             preparationTime = textPreparationTime
         )
@@ -227,7 +227,7 @@ fun AddRecipePhoto(
                 val bitmap = BitmapFactory.decodeStream(inputStream)
                 selectedImageBitmap = bitmap
                 // Сохранение изображения в файл
-                val file = File(context.cacheDir, "selectedImage.png")
+                val file = File(context.cacheDir, uri.path.toString().substringAfter("document/")+".png")
                 file.outputStream().use { out ->
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
                 }

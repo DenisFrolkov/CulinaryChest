@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.domain.model.recipe.CreateRecipe
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
-import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
 import com.example.culinarychest.domain.domain.repository.ApplicationUserRecipeRepository
 import com.example.culinarychest.domain.domain.repository.ProcessingResult
 import kotlinx.coroutines.channels.Channel
@@ -66,18 +65,27 @@ class ApplicationUserRecipeViewModel(
                 )
                 _createdRecipeResult.value = ProcessingResult.Success(null)
             } catch (e: Exception) {
-                _createdRecipeResult.value = ProcessingResult.Error(message = "Error create recipe: ${e.message}")
+                _createdRecipeResult.value =
+                    ProcessingResult.Error(message = "Error create recipe: ${e.message}")
                 _showErrorToastChannel.send(true)
             }
         }
     }
 
 
-    fun updateApplicationUserRecipe(token: String, recipeId: String, recipe: UpdateRecipe) {
+    fun updateApplicationUserRecipe(
+        token: String,
+        recipeId: String,
+        title: String,
+        recipeImage: File? = null,
+        ingredients: String,
+        creationDate: String,
+        preparationTime: String
+    ) {
         viewModelScope.launch {
             try {
                 applicationUserRecipeRepository.updateApplicationUserRecipe(
-                    token, recipeId, recipe
+                    token, recipeId, title, recipeImage, ingredients, creationDate, preparationTime
                 )
             } catch (e: Exception) {
 

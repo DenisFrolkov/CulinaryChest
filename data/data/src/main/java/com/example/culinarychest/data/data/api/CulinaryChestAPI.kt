@@ -8,7 +8,6 @@ import com.example.culinarychest.data.data.model.application_user.TokenDto
 import com.example.culinarychest.data.data.model.favorite_recipe.CreateFavoriteRecipeDto
 import com.example.culinarychest.data.data.model.favorite_recipe.FavoriteRecipeDto
 import com.example.culinarychest.data.data.model.recipe.RecipeDto
-import com.example.culinarychest.data.data.model.recipe.UpdateRecipeDto
 import com.example.culinarychest.data.data.model.step.CreateStepDto
 import com.example.culinarychest.data.data.model.step.StepDto
 import okhttp3.MultipartBody
@@ -92,11 +91,16 @@ interface CulinaryChestAPI {
         @Part("preparationTime") preparationTime: RequestBody
     )
 
+    @Multipart
     @PUT("/api/applicationUser/Recipe/{recipeId}")
     suspend fun updateApplicationUserRecipe(
         @Header("Authorization") token: String,
         @Path("recipeId") recipeId: String,
-        @Body recipe: UpdateRecipeDto
+        @Part("Title") title: RequestBody,
+        @Part recipeImage: MultipartBody.Part? = null,
+        @Part("Ingredients") ingredients: RequestBody,
+        @Part("CreationDate") creationDate: RequestBody,
+        @Part("preparationTime") preparationTime: RequestBody
     )
 
     @DELETE("/api/applicationUser/Recipe/{recipeId}")

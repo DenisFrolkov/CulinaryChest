@@ -2,6 +2,11 @@ package com.den.culinarychest.presentation.screens
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -38,6 +43,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -69,6 +75,8 @@ import com.example.culinarychest.domain.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
 import com.example.culinarychest.domain.domain.model.step.CreateStep
 import com.example.culinarychest.domain.domain.model.step.UpdateStep
+import java.io.File
+import java.io.InputStream
 
 @Composable
 fun EditRecipeScreen(
@@ -125,6 +133,7 @@ fun EditRecipe(
 
 
     var titleEditRecipeMenu by remember { mutableStateOf("") }
+    var imageFile by remember { mutableStateOf<File?>(null) }
     var textEditRecipeMenu by remember { mutableStateOf("") }
     var numberEditRecipeMenu by remember { mutableStateOf("") }
     var labelEditRecipeMenu by remember { mutableStateOf("") }
@@ -185,6 +194,7 @@ fun EditRecipe(
 
     val updateInfoRecipe = UpdateRecipe(
         title = titleRecipeText,
+        recipeImage = imageFile,
         ingredients = ingredientsRecipeText,
         creationDate = recipe.creationDate,
         preparationTime = timeRecipeText,
@@ -204,7 +214,8 @@ fun EditRecipe(
             item {
                 EditRecipeImage(
                     context = LocalContext.current,
-                    recipeImageUrl = recipe.imageUrl
+                    recipeImageUrl = recipe.imageUrl,
+                    addImage = { image -> imageFile = image }
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 EditRecipeTime(
@@ -412,7 +423,8 @@ fun EditRecipeTopBar(
 @Composable
 fun EditRecipeImage(
     context: Context,
-    recipeImageUrl: String
+    recipeImageUrl: String,
+    addImage: (File?) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -426,23 +438,53 @@ fun EditRecipeImage(
             model = imageUrl,
             imageLoader = imageLoader
         )
+        var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+        var selectedImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
+        val context = LocalContext.current
 
-        Image(
-            painter = painter,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(400.dp)
-                .clip(shape = RoundedCornerShape(12.dp))
-                .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp))
-                .alpha(.7f)
-                .clickable(
-                    interactionSource = MutableInteractionSource(),
-                    indication = null
-                ) {
-
+        val imagePickerLauncher =
+            rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+                selectedImageUri = uri
+                uri?.let {
+                    val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
+                    val bitmap = BitmapFactory.decodeStream(inputStream)
+                    selectedImageBitmap = bitmap
+                    // Сохранение изображения в файл
+                    val file = File(context.cacheDir, "selectedImage.png")
+                    file.outputStream().use { out ->
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                    }
+                    addImage(file)
                 }
-        )
+            }
+
+        if (selectedImageBitmap == null) {
+            Image(
+                painter = painter,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(400.dp)
+                    .clip(shape = RoundedCornerShape(12.dp))
+                    .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp))
+                    .alpha(.7f)
+            )
+            addImage(null)
+        } else {
+            selectedImageBitmap?.let { bitmap ->
+                Image(
+                    bitmap = bitmap.asImageBitmap(),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp, vertical = 6.dp)
+                        .clip(shape = RoundedCornerShape(14.dp))
+                        .clickable { imagePickerLauncher.launch("image/*") }
+
+                )
+            }
+        }
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -453,7 +495,7 @@ fun EditRecipeImage(
                 )
                 .height(height = 98.dp)
                 .align(Alignment.BottomCenter)
-                .clickable { }
+                .clickable {imagePickerLauncher.launch("image/*") }
         ) {
             Text(
                 text = stringResource(id = R.string.click_change_image),
@@ -773,7 +815,6 @@ fun EditRecipeMenu(
     passNewText: (String) -> Unit,
     passLabelText: (String) -> Unit,
     onDismiss: (Boolean) -> Unit,
-//    onClick: () -> Unit
 ) {
     if (showDialog) {
         var editText by remember { mutableStateOf(textEditRecipeMenu) }
@@ -844,7 +885,6 @@ fun EditRecipeMenu(
                                 passNewText(editText)
                                 passLabelText(labelEditRecipeMenu)
                                 onDismiss(false)
-//                                onClick()
                             }
                             .padding(all = 16.dp),
                         contentAlignment = Alignment.Center

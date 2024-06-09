@@ -57,21 +57,21 @@ fun SaveButton(
             ) {
                 tokenManager.getToken()?.let {
                     applicationUserRecipeViewModel.updateApplicationUserRecipe(
-                        it, recipeId, updateInfoRecipe)
+                        it, recipeId, updateInfoRecipe.title, updateInfoRecipe.recipeImage, updateInfoRecipe.ingredients, updateInfoRecipe.creationDate, updateInfoRecipe.preparationTime)
                 }
-                updateStepDto.forEach { updateStep ->
-                    tokenManager.getToken()?.let {
-                        recipeStepsViewModel.updateRecipeStep(it, recipeId, stepId = updateStep.stepId, updateStep = CreateStep(updateStep.description, updateStep.order))
-                    }
-                }
+//                updateStepDto.forEach { updateStep ->
+//                    tokenManager.getToken()?.let {
+//                        recipeStepsViewModel.updateRecipeStep(it, recipeId, stepId = updateStep.stepId, updateStep = CreateStep(updateStep.description, updateStep.order))
+//                    }
+//                }
+//
+//                createStepDto.forEach { createStep ->
+//                    tokenManager.getToken()?.let {
+//                        recipeStepsViewModel.createRecipeSteps(it, recipeId, step = CreateStep(createStep.description, createStep.order))
+//                    }
+//                }
 
-                createStepDto.forEach { createStep ->
-                    tokenManager.getToken()?.let {
-                        recipeStepsViewModel.createRecipeSteps(it, recipeId, step = CreateStep(createStep.description, createStep.order))
-                    }
-                }
-
-                controller.navigate(navigationRoute)
+//                controller.navigate(navigationRoute)
             },
         contentAlignment = Alignment.Center
     ) {
