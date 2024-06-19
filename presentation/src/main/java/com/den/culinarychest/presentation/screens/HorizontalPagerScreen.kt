@@ -32,12 +32,6 @@ fun HorizontalPagerScreen(
     recipeViewModel: RecipeViewModel,
     tokenManager: TokenManager
 ) {
-
-    tokenManager.getToken()?.let {
-        applicationUserFavoriteRecipeViewModel.getApplicationUserFavoriteRecipes(it)
-        applicationUserRecipeViewModel.getApplicationUserRecipes(it)
-    }
-
     HorizontalPager(
         controller = navController,
         applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
@@ -57,6 +51,12 @@ fun HorizontalPager(
     recipeViewModel: RecipeViewModel,
     tokenManager: TokenManager
 ) {
+
+    tokenManager.getToken()?.let {
+        applicationUserFavoriteRecipeViewModel.getApplicationUserFavoriteRecipes(it)
+        applicationUserRecipeViewModel.getApplicationUserRecipes(it)
+    }
+
     val pagerState = rememberPagerState(pageCount = { 2 })
 
     val coroutineScope = rememberCoroutineScope()
@@ -71,7 +71,7 @@ fun HorizontalPager(
             ) {
                 TopBarButtonItem(
                     isSelected = pagerState.currentPage == 0,
-                    textButton = stringResource(R.string.favorite_text),
+                    textButton = stringResource(R.string.created_recipe_text),
                     onClick = {
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(0)
@@ -80,7 +80,7 @@ fun HorizontalPager(
                 )
                 TopBarButtonItem(
                     isSelected = pagerState.currentPage == 1,
-                    textButton = stringResource(R.string.created_recipe_text),
+                    textButton = stringResource(R.string.favorite_text),
                     onClick = {
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(1)
@@ -92,16 +92,18 @@ fun HorizontalPager(
     ) {
         HorizontalPager(state = pagerState) { page ->
             when (page) {
-                0 -> FavoriteScreen(
+                0 -> CreatedScreen(
                     controller = controller,
+                    applicationUserRecipeViewModel = applicationUserRecipeViewModel,
                     applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
                     recipeViewModel = recipeViewModel,
                     tokenManager = tokenManager
                 )
-                1 -> CreatedScreen(
+                1 -> FavoriteScreen(
                     controller = controller,
-                    applicationUserRecipeViewModel = applicationUserRecipeViewModel,
                     applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
+                    applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+                    recipeViewModel = recipeViewModel,
                     tokenManager = tokenManager
                 )
             }

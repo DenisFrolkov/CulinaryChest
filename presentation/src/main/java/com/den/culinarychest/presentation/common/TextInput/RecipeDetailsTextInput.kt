@@ -20,10 +20,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -35,20 +35,19 @@ import com.den.culinarychest.presentation.ui.theme.SoftOrange
 
 @Composable
 fun RecipeDetailsTextInput(
-    outputTextHint: String,
-    onTextChanged: (String) -> Unit,
-    onTextValidation: (String) -> Boolean
+    hintOutput: String,
+    errorText: String,
+    validationEnteredText: Boolean,
+    enteredText: (String) -> Unit,
 ) {
-    var enteredText by remember { mutableStateOf(TextFieldValue()) }
+    var textFieldValue by remember { mutableStateOf(TextFieldValue()) }
     var isHintVisible by remember { mutableStateOf(true) }
     var isErrorVisible by remember { mutableStateOf(false) }
 
-    LaunchedEffect(enteredText) {
-        isErrorVisible = !onTextValidation(enteredText.text)
-        onTextChanged(enteredText.text)
+    LaunchedEffect(textFieldValue, validationEnteredText) {
+        enteredText(textFieldValue.text)
+        isErrorVisible = validationEnteredText
     }
-
-    if (enteredText.text.isEmpty()) isErrorVisible = false
 
     Box(
         contentAlignment = Alignment.CenterStart,
@@ -59,25 +58,26 @@ fun RecipeDetailsTextInput(
             .padding(start = 12.dp, top = 15.dp, end = 12.dp, bottom = 16.dp)
     ) {
         BasicTextField(
-            value = enteredText,
+            value = textFieldValue,
             onValueChange = {
-                enteredText = it
+                textFieldValue = it
                 isHintVisible = it.text.isEmpty()
             },
             textStyle = TextStyle(
                 fontSize = 16.sp,
-                color = Color.Black
+                color = Black
             ),
             singleLine = true,
-            cursorBrush = SolidColor(Color.Black),
+            cursorBrush = SolidColor(Black),
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterStart)
-                .padding(end = 40.dp)
+                .padding(end = 40.dp),
+
         )
         if (isHintVisible) {
             Text(
-                text = outputTextHint,
+                text = hintOutput,
                 style = TextStyle(
                     fontSize = 16.sp,
                     color = LightGray
@@ -87,17 +87,17 @@ fun RecipeDetailsTextInput(
                     .align(Alignment.CenterStart)
             )
         }
-        if (enteredText.text.isNotEmpty()) {
+        if (textFieldValue.text.isNotEmpty()) {
             Icon(
                 painter = painterResource(id = R.drawable.clear_searchbar_icon),
                 contentDescription = null,
-                tint = Color.Black,
+                tint = Black,
                 modifier = Modifier
                     .padding(end = 12.dp)
                     .size(16.dp)
                     .align(Alignment.CenterEnd)
                     .clickable {
-                        enteredText = TextFieldValue("")
+                        textFieldValue = TextFieldValue("")
                         isHintVisible = true
                     }
             )
@@ -112,14 +112,14 @@ fun RecipeDetailsTextInput(
             Icon(
                 painter = painterResource(id = R.drawable.red_mistake_icon),
                 contentDescription = null,
-                tint = Color.Red,
+                tint = Red,
                 modifier = Modifier.size(16.dp)
             )
             Text(
-                text = stringResource(R.string.mistake_text),
+                text = errorText,
                 style = TextStyle(
                     fontSize = 12.sp,
-                    color = Color.Red
+                    color = Red
                 ),
                 modifier = Modifier.padding(start = 4.dp)
             )

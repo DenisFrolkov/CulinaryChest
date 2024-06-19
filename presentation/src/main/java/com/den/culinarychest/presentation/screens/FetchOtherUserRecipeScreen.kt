@@ -32,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -223,15 +224,16 @@ fun FetchOtherUserRecipeImage(
         )
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(15.dp))
         ) {
             Image(
                 painter = painter,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp))
                     .padding(start = 10.dp, top = 10.dp, end = 10.dp)
+                    .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(15.dp))
+                    .clip(shape = RoundedCornerShape(15.dp))
                     .height(400.dp)
             )
         }

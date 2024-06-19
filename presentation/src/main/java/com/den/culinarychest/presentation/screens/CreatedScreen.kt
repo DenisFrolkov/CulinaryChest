@@ -26,6 +26,7 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
 import com.den.culinarychest.presentation.view_models.ApplicationUserRecipeViewModel
+import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 
@@ -33,9 +34,14 @@ import com.example.culinarychest.domain.domain.model.recipe.Recipe
 fun CreatedScreen(
     controller: NavController,
     applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
+    recipeViewModel: RecipeViewModel,
     applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
     tokenManager: TokenManager
 ) {
+
+    tokenManager.getToken()?.let {
+        applicationUserRecipeViewModel.getApplicationUserRecipes(it)
+    }
 
     val listRecipeCreatedUser =
         applicationUserRecipeViewModel.applicationUserRecipes.collectAsState().value
@@ -45,7 +51,13 @@ fun CreatedScreen(
             .fillMaxSize()
             .background(color = SoftPink)
     ) {
-        ListRecipeCreatedUser(controller, listRecipeCreatedUser, tokenManager = tokenManager, applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel)
+        ListRecipeCreatedUser(
+            controller,
+            listRecipeCreatedUser,
+            tokenManager = tokenManager,
+            applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
+            recipeViewModel = recipeViewModel
+        )
         FABButton(controller)
     }
 }
@@ -65,7 +77,13 @@ private fun FABButton(controller: NavController) {
 }
 
 @Composable
-private fun ListRecipeCreatedUser(controller: NavController, listRecipeCreatedUser: List<Recipe>, tokenManager: TokenManager, applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel) {
+private fun ListRecipeCreatedUser(
+    controller: NavController,
+    listRecipeCreatedUser: List<Recipe>,
+    tokenManager: TokenManager,
+    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
+    recipeViewModel: RecipeViewModel
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -101,7 +119,8 @@ private fun ListRecipeCreatedUser(controller: NavController, listRecipeCreatedUs
                     textRouteNavigation = AppNavigationRoute.FetchUserRecipeScreen.route,
                     recipe = recipeCreatedUser,
                     tokenManager = tokenManager,
-                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel
+                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
+                    recipeViewModel = recipeViewModel
                 )
             }
         }

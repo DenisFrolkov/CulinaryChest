@@ -5,7 +5,7 @@ import java.io.File
 
 data class CreateRecipeDto(
     @SerializedName("RecipeImage", alternate = ["recipeImage"])
-    val recipeImage: File,
+    val recipeImage: File?,
     @SerializedName("Title", alternate = ["title"])
     val title: String,
     @SerializedName("Ingredients", alternate = ["ingredients"])

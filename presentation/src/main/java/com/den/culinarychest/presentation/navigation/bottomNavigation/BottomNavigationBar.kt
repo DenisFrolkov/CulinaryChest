@@ -127,6 +127,7 @@ fun BottomNavigationBar(
                     navController = navController,
                     applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
                     recipeViewModel = recipeViewModel,
+                    applicationUserRecipeViewModel = applicationUserRecipeViewModel,
                     tokenManager = tokenManager
                 )
             }

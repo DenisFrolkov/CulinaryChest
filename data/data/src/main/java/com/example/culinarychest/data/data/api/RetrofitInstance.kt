@@ -11,7 +11,7 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
-const val BASE_URL = "https:/10.0.2.2:7286"
+const val BASE_URL = "https://10.0.2.2:7286"
 
 class RetrofitInstance(private var tokenManager: TokenManager) {
 

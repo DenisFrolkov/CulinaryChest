@@ -31,6 +31,7 @@ import com.den.culinarychest.R
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.view_models.ApplicationUserFavoriteRecipeViewModel
+import com.den.culinarychest.presentation.view_models.RecipeViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 
@@ -40,7 +41,8 @@ fun RecipeItem(
     textRouteNavigation: String,
     recipe: Recipe,
     tokenManager: TokenManager,
-    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel
+    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
+    recipeViewModel: RecipeViewModel
 ) {
     Column(
         modifier = Modifier
@@ -54,6 +56,7 @@ fun RecipeItem(
                             it,
                             recipe.recipeId
                         )
+                        recipeViewModel.getRecipeById(token = it, recipeId = recipe.recipeId)
                     }
                 controller.navigate("${textRouteNavigation}/${recipe.recipeId}")
             }
@@ -86,7 +89,7 @@ fun RecipeItem(
                     )
                 )
                 Text(
-                    text = recipe.ingredients,
+                    text = if (recipe.ingredients.length > 160) recipe.ingredients.take(160) + "..." else recipe.ingredients,
                     style = TextStyle(
                         fontSize = 12.sp,
                         color = SoftGray

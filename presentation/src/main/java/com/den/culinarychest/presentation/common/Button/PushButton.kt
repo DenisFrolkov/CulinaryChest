@@ -17,12 +17,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import com.den.culinarychest.presentation.route.AppNavigationRoute
-import com.den.culinarychest.presentation.ui.theme.LightGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
-import com.den.culinarychest.presentation.view_models.ApplicationUserViewModel
-import com.example.culinarychest.data.data.repository.TokenManager
 
 @Composable
 fun PushButton(
@@ -44,7 +39,7 @@ fun PushButton(
             text = "Войти",
             style = TextStyle(
                 fontSize = 20.sp,
-                color = LightGray,
+                color = Color.DarkGray,
                 textAlign = TextAlign.Center
             ),
             modifier = Modifier.padding(horizontal = 64.dp, vertical = 12.dp)

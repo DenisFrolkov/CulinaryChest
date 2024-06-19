@@ -26,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -51,6 +52,7 @@ import com.den.culinarychest.presentation.common.TextInput.NumberTextInput
 import com.den.culinarychest.presentation.common.TextInput.RecipeDetailsTextInput
 import com.den.culinarychest.presentation.common.TextInput.SmallTextInput
 import com.den.culinarychest.presentation.route.AppNavigationRoute
+import com.den.culinarychest.presentation.ui.theme.LightGray
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
@@ -89,24 +91,48 @@ fun CreatingRecipe(
     var textRecipeStep by remember { mutableStateOf("") }
     var numberTextRecipeStep by remember { mutableStateOf("") }
     var textPreparationTime by remember { mutableStateOf("") }
-    val steps = remember { mutableStateListOf<String>() }
     var countRecipeSteps by remember { mutableIntStateOf(1) }
+
+    val steps = remember { mutableStateListOf<String>() }
 
     fun addStep(textRecipeStep: String, numberTextRecipeStep: String) {
         val newStep = "{\"Description\": \"$textRecipeStep\", \"Order\": \"$numberTextRecipeStep\"}"
         steps.add(newStep)
     }
 
-    val createRecipe = imageFile?.let {
-        CreateRecipe(
-            recipeImage = it,
-            title = textTitle,
-            ingredients = textIngredient,
-                    steps = steps.toList(),
-            creationDate = LocalDateTime.now().toString(),
-            preparationTime = textPreparationTime
-        )
+    val titleValidation by remember {
+        derivedStateOf { !textTitle.matches(Regex("^[а-яА-Я]+$")) }
     }
+
+    val imageValidation by remember {
+        derivedStateOf { imageFile != null }
+    }
+    val ingredientsValidation by remember {
+        derivedStateOf { !textIngredient.matches(Regex("^[а-яА-Я]+$")) }
+    }
+
+    val preparationTimeValidation by remember {
+        derivedStateOf { !textIngredient.matches(Regex("^[0-9]+$")) }
+    }
+
+    val stepsValidation by remember {
+        derivedStateOf {
+            textRecipeStep.matches(Regex("[а-яА-Я0-9]+"))
+        }
+    }
+
+    var clickButton by remember {
+        mutableStateOf(false)
+    }
+
+    val createRecipe = CreateRecipe(
+        recipeImage = imageFile,
+        title = textTitle,
+        ingredients = textIngredient,
+        steps = steps.toList(),
+        creationDate = LocalDateTime.now().toString(),
+        preparationTime = textPreparationTime
+    )
     Column {
         TopBar(navController = navController)
         LazyColumn(
@@ -122,7 +148,10 @@ fun CreatingRecipe(
                 RecipeInputs(
                     onTitleTextChanged = { textTitle = it },
                     onIngredientsTextChanged = { textIngredient = it },
-                    onTimeTextChanged = { textPreparationTime = it }
+                    onTimeTextChanged = { textPreparationTime = it },
+                    clickButton = clickButton,
+                    titleValidation = titleValidation,
+                    ingredientsValidation = ingredientsValidation,
                 )
                 DescribeStepsRecipe(
                     count = countRecipeSteps,
@@ -152,7 +181,7 @@ fun CreatingRecipe(
                         .padding(top = 24.dp, bottom = 16.dp)
                         .padding(horizontal = 80.dp)
                 ) {
-                    createRecipe?.let { createRecipe ->
+                    if (createRecipe.title.isNotBlank() && createRecipe.recipeImage != null && createRecipe.ingredients.isNotBlank()  && createRecipe.steps != null && createRecipe.preparationTime.isNotBlank() ) {
                         CreatingRecipeSaveButton(
                             controller = navController,
                             navigationRoute = AppNavigationRoute.BottomAppNavigationBar.route,
@@ -163,12 +192,14 @@ fun CreatingRecipe(
                             colorButtonText = SoftGray,
                             buttonColor = SoftOrange,
                             onClick = {
+                                clickButton = true
+
                                 tokenManager
                                     .getToken()
                                     ?.let {
                                         applicationUserRecipeViewModel.createApplicationUserRecipe(
                                             it,
-                                            recipeImage = createRecipe.recipeImage,
+                                            recipeImage = createRecipe.recipeImage!!,
                                             title = createRecipe.title,
                                             ingredients = createRecipe.ingredients,
                                             steps = createRecipe.steps.toString(),
@@ -176,7 +207,7 @@ fun CreatingRecipe(
                                             preparationTime = createRecipe.preparationTime
                                         )
                                     }
-                                // navController.popBackStack()
+                                navController.navigate(AppNavigationRoute.BottomAppNavigationBar.route)
                             }
                         )
                     }
@@ -227,7 +258,8 @@ fun AddRecipePhoto(
                 val bitmap = BitmapFactory.decodeStream(inputStream)
                 selectedImageBitmap = bitmap
                 // Сохранение изображения в файл
-                val file = File(context.cacheDir, uri.path.toString().substringAfter("document/")+".png")
+                val file =
+                    File(context.cacheDir, uri.path.toString().substringAfter("document/"))
                 file.outputStream().use { out ->
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
                 }
@@ -241,9 +273,9 @@ fun AddRecipePhoto(
             contentDescription = null,
             contentScale = ContentScale.FillWidth,
             modifier = Modifier
+                .clip(shape = RoundedCornerShape(15.dp))
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp, vertical = 6.dp)
-                .clip(shape = RoundedCornerShape(14.dp))
                 .clickable { imagePickerLauncher.launch("image/*") }
         )
     } else {
@@ -255,8 +287,8 @@ fun AddRecipePhoto(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp, vertical = 6.dp)
-                    .clip(shape = RoundedCornerShape(14.dp))
                     .clickable { imagePickerLauncher.launch("image/*") }
+                    .clip(shape = RoundedCornerShape(15.dp))
             )
         }
     }
@@ -267,23 +299,32 @@ fun AddRecipePhoto(
 fun RecipeInputs(
     onTitleTextChanged: (String) -> Unit,
     onIngredientsTextChanged: (String) -> Unit,
-    onTimeTextChanged: (String) -> Unit
+    onTimeTextChanged: (String) -> Unit,
+    clickButton: Boolean,
+    titleValidation: Boolean,
+    ingredientsValidation: Boolean,
 ) {
+
+    var preparationTimeText by remember { mutableStateOf("") }
+    onTimeTextChanged(preparationTimeText)
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 10.dp)
     ) {
         RecipeDetailsTextInput(
-            outputTextHint = stringResource(R.string.enter_title_recipe),
-            onTextChanged = onTitleTextChanged,
-            onTextValidation = { it.matches(Regex("[а-яА-Я0-9]+")) }
+            hintOutput = stringResource(R.string.enter_title_recipe),
+            errorText = "Проверьте правильность введенного названия рецепта",
+            validationEnteredText = if (clickButton) titleValidation else false,
+            enteredText = onTitleTextChanged,
         )
         Spacer(modifier = Modifier.height(10.dp))
         RecipeDetailsTextInput(
-            outputTextHint = stringResource(R.string.enter_ingredients_recipe),
-            onTextChanged = onIngredientsTextChanged,
-            onTextValidation = { it.matches(Regex("[а-яА-Я0-9]+")) }
+            hintOutput = stringResource(R.string.enter_ingredients_recipe),
+            errorText = "Проверьте правильность введенных ингредиентов рецепта",
+            validationEnteredText = if (clickButton) ingredientsValidation else false,
+            enteredText = onIngredientsTextChanged,
         )
         Spacer(modifier = Modifier.height(10.dp))
         Row(
@@ -291,15 +332,15 @@ fun RecipeInputs(
         ) {
             Text(
                 text = stringResource(R.string.enter_time_recipe),
-                style = TextStyle(fontSize = 14.sp, color = SoftGray),
+                style = TextStyle(fontSize = 14.sp, color = if (clickButton && preparationTimeText.isEmpty()) Color.Red else LightGray),
                 modifier = Modifier
                     .padding(vertical = 10.dp)
                     .padding(end = 4.dp)
             )
             SmallTextInput(
-                outputTextHint = stringResource(R.string.in_minutes_recipe),
-                onTextChanged = onTimeTextChanged,
-                onTextValidation = { it.matches(Regex("[0-9]+")) }
+                hintOutput = stringResource(R.string.in_minutes_recipe),
+                validationEnteredText = { it.matches(Regex("[0-9]+")) },
+                enteredText = { text -> preparationTimeText = text }
             )
         }
     }

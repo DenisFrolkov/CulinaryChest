@@ -36,20 +36,20 @@ import com.den.culinarychest.presentation.ui.theme.SoftOrange
 
 @Composable
 fun SmallTextInput(
-    outputTextHint: String,
-    onTextChanged: (String) -> Unit,
-    onTextValidation: (String) -> Boolean,
+    hintOutput: String,
+    validationEnteredText: (String) -> Boolean,
+    enteredText: (String) -> Unit,
 ) {
-    var enteredText by remember { mutableStateOf(TextFieldValue()) }
+    var textFieldValue by remember { mutableStateOf(TextFieldValue()) }
     var isHintVisible by remember { mutableStateOf(true) }
     var isErrorVisible by remember { mutableStateOf(false) }
 
-    LaunchedEffect(enteredText) {
-        isErrorVisible = !onTextValidation(enteredText.text)
-        onTextChanged(enteredText.text)
+    LaunchedEffect(textFieldValue) {
+        enteredText(textFieldValue.text)
+        isErrorVisible = !validationEnteredText(textFieldValue.text)
     }
 
-    if (enteredText.text.isEmpty()) isErrorVisible = false
+    if (textFieldValue.text.isEmpty()) isErrorVisible = false
 
     Box(
         contentAlignment = Alignment.CenterStart,
@@ -60,9 +60,9 @@ fun SmallTextInput(
             .padding(start = 12.dp, top = 15.dp, end = 12.dp, bottom = 16.dp)
     ) {
         BasicTextField(
-            value = enteredText,
+            value = textFieldValue,
             onValueChange = {
-                enteredText = it
+                textFieldValue = it
                 isHintVisible = it.text.isEmpty()
             },
             textStyle = TextStyle(
@@ -79,7 +79,7 @@ fun SmallTextInput(
         )
         if (isHintVisible) {
             Text(
-                text = outputTextHint,
+                text = hintOutput,
                 style = TextStyle(
                     fontSize = 14.sp,
                     color = LightGray
