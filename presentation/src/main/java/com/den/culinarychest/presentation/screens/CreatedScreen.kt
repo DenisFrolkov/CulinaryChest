@@ -90,7 +90,7 @@ private fun ListRecipeCreatedUser(
         item {
             Spacer(modifier = Modifier.height(72.dp))
         }
-        if (listRecipeCreatedUser == null) {
+        if (listRecipeCreatedUser.isEmpty()) {
             item {
                 Box(
                     modifier = Modifier
@@ -104,7 +104,7 @@ private fun ListRecipeCreatedUser(
                             fontSize = 16.sp
                         ),
                         modifier = Modifier
-                            .padding(start = 16.dp, top = 82.dp)
+                            .padding(start = 10.dp, top = 10.dp)
                     )
                 }
             }
