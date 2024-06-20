@@ -96,14 +96,5 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    override fun onStop() {
-        super.onStop()
-        applicationUserViewModel.clear()
-        recipeViewModel.clear()
-        applicationUserFavoriteRecipeViewModel.clear()
-//        applicationUserRecipeViewModel.clear()
-        recipeStepsViewModel.clear()
-    }
 }
 

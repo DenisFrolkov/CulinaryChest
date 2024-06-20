@@ -39,10 +39,6 @@ fun CreatedScreen(
     tokenManager: TokenManager
 ) {
 
-    tokenManager.getToken()?.let {
-        applicationUserRecipeViewModel.getApplicationUserRecipes(it)
-    }
-
     val listRecipeCreatedUser =
         applicationUserRecipeViewModel.applicationUserRecipes.collectAsState().value
 

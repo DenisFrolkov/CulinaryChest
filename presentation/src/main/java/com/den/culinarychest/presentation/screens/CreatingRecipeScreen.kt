@@ -100,6 +100,7 @@ fun CreatingRecipe(
         steps.add(newStep)
     }
 
+
     val titleValidation by remember {
         derivedStateOf { !textTitle.matches(Regex("^[а-яА-Я]+$")) }
     }
@@ -115,12 +116,6 @@ fun CreatingRecipe(
         derivedStateOf { !textIngredient.matches(Regex("^[0-9]+$")) }
     }
 
-    val stepsValidation by remember {
-        derivedStateOf {
-            textRecipeStep.matches(Regex("[а-яА-Я0-9]+"))
-        }
-    }
-
     var clickButton by remember {
         mutableStateOf(false)
     }
@@ -133,6 +128,7 @@ fun CreatingRecipe(
         creationDate = LocalDateTime.now().toString(),
         preparationTime = textPreparationTime
     )
+
     Column {
         TopBar(navController = navController)
         LazyColumn(
@@ -181,7 +177,7 @@ fun CreatingRecipe(
                         .padding(top = 24.dp, bottom = 16.dp)
                         .padding(horizontal = 80.dp)
                 ) {
-                    if (createRecipe.title.isNotBlank() && createRecipe.recipeImage != null && createRecipe.ingredients.isNotBlank()  && createRecipe.steps != null && createRecipe.preparationTime.isNotBlank() ) {
+                    if (createRecipe.title.isNotBlank() && createRecipe.recipeImage != null && createRecipe.ingredients.isNotBlank() && createRecipe.steps != null && createRecipe.preparationTime.isNotBlank()) {
                         CreatingRecipeSaveButton(
                             controller = navController,
                             navigationRoute = AppNavigationRoute.BottomAppNavigationBar.route,
@@ -193,10 +189,9 @@ fun CreatingRecipe(
                             buttonColor = SoftOrange,
                             onClick = {
                                 clickButton = true
-
-                                tokenManager
-                                    .getToken()
-                                    ?.let {
+                                if (titleValidation == false && ingredientsValidation == false && imageValidation == true && preparationTimeValidation == true && createRecipe.steps.isNotEmpty()) {
+                                    val token = tokenManager.getToken()
+                                    token?.let {
                                         applicationUserRecipeViewModel.createApplicationUserRecipe(
                                             it,
                                             recipeImage = createRecipe.recipeImage!!,
@@ -207,7 +202,8 @@ fun CreatingRecipe(
                                             preparationTime = createRecipe.preparationTime
                                         )
                                     }
-                                navController.navigate(AppNavigationRoute.BottomAppNavigationBar.route)
+                                    navController.popBackStack()
+                                }
                             }
                         )
                     }
@@ -332,7 +328,10 @@ fun RecipeInputs(
         ) {
             Text(
                 text = stringResource(R.string.enter_time_recipe),
-                style = TextStyle(fontSize = 14.sp, color = if (clickButton && preparationTimeText.isEmpty()) Color.Red else LightGray),
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    color = if (clickButton && preparationTimeText.isEmpty()) Color.Red else LightGray
+                ),
                 modifier = Modifier
                     .padding(vertical = 10.dp)
                     .padding(end = 4.dp)

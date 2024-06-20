@@ -99,6 +99,7 @@ fun HorizontalPager(
                     recipeViewModel = recipeViewModel,
                     tokenManager = tokenManager
                 )
+
                 1 -> FavoriteScreen(
                     controller = controller,
                     applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,

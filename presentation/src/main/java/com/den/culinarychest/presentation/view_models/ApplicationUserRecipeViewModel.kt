@@ -8,6 +8,7 @@ import com.example.culinarychest.domain.domain.model.recipe.CreateRecipe
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.domain.repository.ApplicationUserRecipeRepository
 import com.example.culinarychest.domain.domain.repository.ProcessingResult
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -104,5 +105,14 @@ class ApplicationUserRecipeViewModel(
 
             }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.cancel()
+    }
+
+    fun clear() {
+        onCleared()
     }
 }
