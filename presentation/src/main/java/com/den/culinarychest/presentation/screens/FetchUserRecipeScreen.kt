@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -210,10 +209,10 @@ fun FetchUserRecipeImage(
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .padding(start = 10.dp, top = 10.dp, end = 10.dp)
+                .size(400.dp)
+                .padding(horizontal = 10.dp, vertical = 6.dp)
+                .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp))
                 .clip(shape = RoundedCornerShape(15.dp))
-                .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(15.dp))
-                .height(400.dp)
         )
     }
 }

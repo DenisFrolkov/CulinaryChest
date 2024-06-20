@@ -32,7 +32,7 @@
     <string name="сreated_text">Созданное</string>
     <string name="profile_text">Профиль</string>
     <string name="nothing"> </string>
-    <string name="click_change_image">Нажмите что бы изменить изображение</string>
+    <string name="click_change_image">Нажмите, что бы изменить изображение</string>
     <string name="enter_new_cooking_time">Введите новое время приготовления:</string>
     <string name="click_to_change_ingredients">Нажмите, чтобы изменить ингредиенты</string>
     <string name="save_recipe_changes">Сохранить изменения</string>

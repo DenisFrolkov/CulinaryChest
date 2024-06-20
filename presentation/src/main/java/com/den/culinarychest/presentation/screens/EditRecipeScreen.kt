@@ -428,7 +428,7 @@ fun EditRecipeImage(
 ) {
     Box(
         modifier = Modifier
-            .padding(top = 10.dp)
+            .padding(top = 6.dp)
     ) {
         val desiredPath = recipeImageUrl.substringAfter("/wwwroot/")
         val imageUrl = "https://10.0.2.2:7286/${desiredPath}"
@@ -465,8 +465,8 @@ fun EditRecipeImage(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(400.dp)
-                    .clip(shape = RoundedCornerShape(12.dp))
-                    .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp))
+                    .clip(shape = RoundedCornerShape(15.dp))
+                    .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(15.dp))
                     .alpha(.7f)
             )
             addImage(null)
@@ -475,13 +475,13 @@ fun EditRecipeImage(
                 Image(
                     bitmap = bitmap.asImageBitmap(),
                     contentDescription = null,
-                    contentScale = ContentScale.FillWidth,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp, vertical = 6.dp)
-                        .clip(shape = RoundedCornerShape(14.dp))
+                        .size(400.dp)
+                        .clip(shape = RoundedCornerShape(15.dp))
+                        .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(15.dp))
+                        .alpha(.7f)
                         .clickable { imagePickerLauncher.launch("image/*") }
-
                 )
             }
         }

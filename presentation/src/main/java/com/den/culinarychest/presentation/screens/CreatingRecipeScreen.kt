@@ -279,10 +279,12 @@ fun AddRecipePhoto(
             Image(
                 bitmap = bitmap.asImageBitmap(),
                 contentDescription = null,
-                contentScale = ContentScale.FillWidth,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .size(400.dp)
                     .padding(horizontal = 10.dp, vertical = 6.dp)
+                    .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp))
+                    .alpha(.7f)
                     .clickable { imagePickerLauncher.launch("image/*") }
                     .clip(shape = RoundedCornerShape(15.dp))
             )
