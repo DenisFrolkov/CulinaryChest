@@ -3,7 +3,7 @@ package com.example.culinarychest.data.data.repository
 import com.example.culinarychest.data.data.api.CulinaryChestAPI
 import com.example.culinarychest.data.data.model.Mappers.toDomain
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
-import com.example.culinarychest.domain.domain.repository.ProcessingResult
+import com.example.culinarychest.domain.domain.model.ProcessingResult
 import com.example.culinarychest.domain.domain.repository.RecipeRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

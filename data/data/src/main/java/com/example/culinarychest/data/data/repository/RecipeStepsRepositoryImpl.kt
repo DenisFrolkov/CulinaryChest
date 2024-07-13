@@ -5,7 +5,7 @@ import com.example.culinarychest.data.data.model.Mappers.toDomain
 import com.example.culinarychest.data.data.model.Mappers.toDto
 import com.example.culinarychest.domain.domain.model.step.CreateStep
 import com.example.culinarychest.domain.domain.model.step.Step
-import com.example.culinarychest.domain.domain.repository.ProcessingResult
+import com.example.culinarychest.domain.domain.model.ProcessingResult
 import com.example.culinarychest.domain.domain.repository.RecipeStepsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

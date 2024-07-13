@@ -10,7 +10,7 @@ import com.example.culinarychest.domain.domain.model.application_user.Duplicatio
 import com.example.culinarychest.domain.domain.model.application_user.Login
 import com.example.culinarychest.domain.domain.model.application_user.Token
 import com.example.culinarychest.domain.domain.repository.ApplicationUserRepository
-import com.example.culinarychest.domain.domain.repository.ProcessingResult
+import com.example.culinarychest.domain.domain.model.ProcessingResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.Response

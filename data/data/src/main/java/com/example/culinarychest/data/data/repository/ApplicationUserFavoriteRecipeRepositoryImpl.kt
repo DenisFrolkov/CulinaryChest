@@ -6,7 +6,7 @@ import com.example.culinarychest.data.data.model.Mappers.toDto
 import com.example.culinarychest.domain.domain.model.favorite_recipe.CreateFavoriteRecipe
 import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.domain.repository.ApplicationUserFavoriteRecipeRepository
-import com.example.culinarychest.domain.domain.repository.ProcessingResult
+import com.example.culinarychest.domain.domain.model.ProcessingResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

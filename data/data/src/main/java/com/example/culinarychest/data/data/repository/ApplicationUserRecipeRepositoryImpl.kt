@@ -4,7 +4,7 @@ import com.example.culinarychest.data.data.api.CulinaryChestAPI
 import com.example.culinarychest.data.data.model.Mappers.toDomain
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.domain.repository.ApplicationUserRecipeRepository
-import com.example.culinarychest.domain.domain.repository.ProcessingResult
+import com.example.culinarychest.domain.domain.model.ProcessingResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

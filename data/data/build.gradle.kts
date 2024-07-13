@@ -47,4 +47,6 @@ dependencies {
 
     //Coroutines
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.androidx.monitor)
+    implementation(libs.androidx.junit.ktx)
 }

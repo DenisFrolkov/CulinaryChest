@@ -13,16 +13,16 @@ import javax.net.ssl.X509TrustManager
 
 const val BASE_URL = "https://zany-meme-jp7rjw5xjwpfpv47-7286.app.github.dev/"
 
-class RetrofitInstance(private var tokenManager: TokenManager) {
+class RetrofitInstance(private val tokenManager: TokenManager) {
 
-    val okHttpClient = OkHttpClient.Builder()
+    val okHttpClient: OkHttpClient = OkHttpClient.Builder()
         .apply {
             try {
                 val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
-                    @SuppressLint("TrustAllX509TrustManager")
+                    @SuppressLint("CustomX509TrustManager")
                     override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
 
-                    @SuppressLint("TrustAllX509TrustManager")
+                    @SuppressLint("CustomX509TrustManager")
                     override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
 
                     override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
@@ -60,6 +60,6 @@ class RetrofitInstance(private var tokenManager: TokenManager) {
         .client(okHttpClient)
         .build()
         .create(CulinaryChestAPI::class.java)
-
 }
+
 
