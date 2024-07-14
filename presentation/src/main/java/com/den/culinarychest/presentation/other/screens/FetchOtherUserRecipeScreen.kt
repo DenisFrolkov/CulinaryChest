@@ -214,7 +214,7 @@ fun FetchOtherUserRecipeImage(
     recipeImageUrl: String
     ) {
         val desiredPath = recipeImageUrl.substringAfter("/wwwroot/")
-        val imageUrl = "https://zany-meme-jp7rjw5xjwpfpv47-7286.app.github.dev/${desiredPath}"
+        val imageUrl = "https://zany-meme-jp7rjw5xjwpfpv47-7286.app.github.dev/images/${desiredPath}"
         val imageLoader = createImageLoader(context)
 
         val painter = rememberAsyncImagePainter(
@@ -225,7 +225,6 @@ fun FetchOtherUserRecipeImage(
             contentAlignment = Alignment.Center,
             modifier = Modifier.fillMaxSize().border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(15.dp))
         ) {
-            Text(text = imageUrl)
             Image(
                 painter = painter,
                 contentDescription = null,

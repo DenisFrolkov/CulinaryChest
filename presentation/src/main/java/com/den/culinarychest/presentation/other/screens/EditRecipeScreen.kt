@@ -431,7 +431,7 @@ fun EditRecipeImage(
             .padding(top = 6.dp)
     ) {
         val desiredPath = recipeImageUrl.substringAfter("/wwwroot/")
-        val imageUrl = "https://zany-meme-jp7rjw5xjwpfpv47-7286.app.github.dev/${desiredPath}"
+        val imageUrl = "https://zany-meme-jp7rjw5xjwpfpv47-7286.app.github.dev/images/${desiredPath}"
         val imageLoader = createImageLoader(context)
 
         val painter = rememberAsyncImagePainter(
