@@ -7,40 +7,54 @@ import com.example.culinarychest.domain.domain.model.ProcessingResult
 import com.example.culinarychest.domain.domain.repository.RecipeRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
+import java.io.IOException
 
 class RecipeRepositoryImpl(
     private val culinaryChestAPI: CulinaryChestAPI
 ) : RecipeRepository {
 
-    override suspend fun getRecipes(token: String, searchTerm: String?): Flow<ProcessingResult<List<Recipe>>> {
-        return flow {
+    override suspend fun getRecipes(
+        token: String,
+        searchTerm: String?
+    ): Flow<ProcessingResult<List<Recipe>>> =
+        flow {
             try {
-                val recipes = culinaryChestAPI.getRecipes(token, searchTerm).map { it.toDomain() }
-                emit(ProcessingResult.Success(recipes))
-            } catch (e: Exception) {
-                emit(ProcessingResult.Error(e.message ?: "An error occurred"))
+                val response = culinaryChestAPI.getRecipes(token, searchTerm).map { it.toDomain() }
+                emit(ProcessingResult.Success(response))
+            } catch (e: HttpException) {
+                emit(ProcessingResult.Error(e.localizedMessage ?: "An unexpected error occurred"))
+            } catch (e: IOException) {
+                emit(ProcessingResult.Error("Couldn't reach server. Check your internet connection."))
             }
         }
-    }
-    override suspend fun getRecipesByIds(token: String, recipeIds: List<String>): Flow<ProcessingResult<List<Recipe>>> {
-        return flow {
-            try {
-                val recipes = culinaryChestAPI.getRecipeByIds(token, recipeIds).map { it.toDomain() }
-                emit(ProcessingResult.Success(recipes))
-            } catch (e: Exception) {
-                emit(ProcessingResult.Error(e.message ?: "An error occurred"))
-            }
-        }
-    }
-    override suspend fun getRecipeById(token: String, recipeId: String): Flow<ProcessingResult<List<Recipe>>> {
-        return flow {
-            try {
-                val recipes = culinaryChestAPI.getRecipeById(token, recipeId).map { it.toDomain() }
-                emit(ProcessingResult.Success(recipes))
-            } catch (e: Exception) {
-                emit(ProcessingResult.Error(e.message ?: "An error occurred"))
-            }
+
+    override suspend fun getRecipesByIds(
+        token: String,
+        recipeIds: List<String>
+    ): Flow<ProcessingResult<List<Recipe>>> = flow {
+        try {
+            val response = culinaryChestAPI.getRecipeByIds(token, recipeIds).map { it.toDomain() }
+            emit(ProcessingResult.Success(response))
+        } catch (e: HttpException) {
+            emit(ProcessingResult.Error(e.localizedMessage ?: "An unexpected error occurred"))
+        } catch (e: IOException) {
+            emit(ProcessingResult.Error("Couldn't reach server. Check your internet connection."))
         }
     }
 
+    override suspend fun getRecipeById(
+        token: String,
+        recipeId: String
+    ): Flow<ProcessingResult<List<Recipe>>> =
+        flow {
+            try {
+                val response = culinaryChestAPI.getRecipeById(token, recipeId).map { it.toDomain() }
+                emit(ProcessingResult.Success(response))
+            } catch (e: HttpException) {
+                emit(ProcessingResult.Error(e.localizedMessage ?: "An unexpected error occurred"))
+            } catch (e: IOException) {
+                emit(ProcessingResult.Error("Couldn't reach server. Check your internet connection."))
+            }
+        }
 }

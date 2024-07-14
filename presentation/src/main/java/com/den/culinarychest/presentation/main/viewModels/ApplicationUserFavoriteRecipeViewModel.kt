@@ -7,6 +7,11 @@ import com.example.culinarychest.domain.domain.model.favorite_recipe.CreateFavor
 import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.domain.repository.ApplicationUserFavoriteRecipeRepository
 import com.example.culinarychest.domain.domain.model.ProcessingResult
+import com.example.culinarychest.domain.domain.usecase.applicationUserFavoriteRecipeUseCases.CreateApplicationUserFavoriteRecipesUseCase
+import com.example.culinarychest.domain.domain.usecase.applicationUserFavoriteRecipeUseCases.DeleteApplicationUserFavoriteRecipeUseCase
+import com.example.culinarychest.domain.domain.usecase.applicationUserFavoriteRecipeUseCases.GetApplicationUserFavoriteRecipesUseCase
+import com.example.culinarychest.domain.domain.usecase.applicationUserFavoriteRecipeUseCases.GetFavoriteRecipeByRecipeIdUseCase
+import com.example.culinarychest.domain.domain.usecase.applicationUserRecipeUseCases.CreateApplicationUserRecipeUseCase
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +22,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ApplicationUserFavoriteRecipeViewModel(
-    private val favoriteRecipeRepository: ApplicationUserFavoriteRecipeRepository,
+    private val getApplicationUserFavoriteRecipesUseCase: GetApplicationUserFavoriteRecipesUseCase,
+    private val getFavoriteRecipeByRecipeIdUseCase: GetFavoriteRecipeByRecipeIdUseCase,
+    private val createApplicationUserFavoriteRecipesUseCase: CreateApplicationUserFavoriteRecipesUseCase,
+    private val deleteApplicationUserFavoriteRecipeUseCase: DeleteApplicationUserFavoriteRecipeUseCase
 ) : ViewModel() {
 
     private val _userDtoFavoriteRecipes = MutableStateFlow<List<FavoriteRecipe>>(emptyList())
@@ -31,7 +39,7 @@ class ApplicationUserFavoriteRecipeViewModel(
 
     fun getApplicationUserFavoriteRecipes(token: String) {
         viewModelScope.launch {
-            favoriteRecipeRepository.getApplicationUserFavoriteRecipes(token)
+            getApplicationUserFavoriteRecipesUseCase(token)
                 .collectLatest { result ->
                     when (result) {
                         is ProcessingResult.Error -> {
@@ -49,7 +57,7 @@ class ApplicationUserFavoriteRecipeViewModel(
 
     fun getFavoriteRecipeByRecipeId(token: String, recipeId: String) {
         viewModelScope.launch {
-            favoriteRecipeRepository.getFavoriteRecipeByRecipeId(token, recipeId)
+            getFavoriteRecipeByRecipeIdUseCase(token, recipeId)
                 .collectLatest { result ->
                     when (result) {
                         is ProcessingResult.Error -> {
@@ -72,7 +80,7 @@ class ApplicationUserFavoriteRecipeViewModel(
     ) {
         viewModelScope.launch {
             try {
-                favoriteRecipeRepository.createApplicationUserFavoriteRecipes(
+                createApplicationUserFavoriteRecipesUseCase(
                     token,
                     recipeId,
                     addedDate
@@ -83,15 +91,15 @@ class ApplicationUserFavoriteRecipeViewModel(
         }
     }
 
-    fun deleteApplicationUserFavoriteRecipe(token: String, favoriteRecipeId: String) {
+    fun deleteApplicationUserFavoriteRecipe(token: String, recipeId: String) {
         viewModelScope.launch {
             try {
-                favoriteRecipeRepository.deleteApplicationUserFavoriteRecipe(
+                deleteApplicationUserFavoriteRecipeUseCase(
                     token,
-                    favoriteRecipeId
+                    recipeId
                 )
             } catch (e: Exception) {
-                // Обработка ошибки
+
             }
         }
     }

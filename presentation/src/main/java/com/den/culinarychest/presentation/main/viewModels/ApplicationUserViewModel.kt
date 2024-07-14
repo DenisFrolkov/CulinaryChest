@@ -11,6 +11,9 @@ import com.example.culinarychest.domain.domain.model.application_user.Duplicatio
 import com.example.culinarychest.domain.domain.model.application_user.Login
 import com.example.culinarychest.domain.domain.repository.ApplicationUserRepository
 import com.example.culinarychest.domain.domain.model.ProcessingResult
+import com.example.culinarychest.domain.domain.usecase.applicationUserUseCases.AuthorizationApplicationUserUseCase
+import com.example.culinarychest.domain.domain.usecase.applicationUserUseCases.GetApplicationUserInfoUseCase
+import com.example.culinarychest.domain.domain.usecase.applicationUserUseCases.RegistrationApplicationUserUseCase
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +26,9 @@ import org.json.JSONObject
 
 class ApplicationUserViewModel(
     private val tokenManager: TokenManager,
-    private val applicationUserRepository: ApplicationUserRepository
+    private val registrationApplicationUserUseCase: RegistrationApplicationUserUseCase,
+    private val authorizationApplicationUserUseCase: AuthorizationApplicationUserUseCase,
+    private val getApplicationUserInfoUseCase: GetApplicationUserInfoUseCase
 ) : ViewModel() {
 
     private val _duplicationUserInfo = MutableStateFlow<DuplicationUserInfo?>(null)
@@ -40,7 +45,7 @@ class ApplicationUserViewModel(
 
     fun registerApplicationUser(user: ApplicationUser) {
         viewModelScope.launch {
-            applicationUserRepository.registrationApplicationUser(user)
+            registrationApplicationUserUseCase(user)
                 .collectLatest { result ->
                     when (result) {
                         is ProcessingResult.Error -> {
@@ -72,7 +77,7 @@ class ApplicationUserViewModel(
 
     fun authorizeUser(login: Login) {
         viewModelScope.launch {
-            applicationUserRepository.authorizationApplicationUser(login)
+            authorizationApplicationUserUseCase(login)
                 .collectLatest { result ->
                     when (result) {
                         is ProcessingResult.Error -> {
@@ -90,7 +95,7 @@ class ApplicationUserViewModel(
 
     fun getApplicationUserInfo(token: String) {
         viewModelScope.launch {
-            applicationUserRepository.getApplicationUserInfo(token)
+            getApplicationUserInfoUseCase(token)
                 .collectLatest { result ->
                     when (result) {
                         is ProcessingResult.Error -> {

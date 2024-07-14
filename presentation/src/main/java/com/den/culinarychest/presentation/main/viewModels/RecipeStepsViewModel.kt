@@ -7,6 +7,12 @@ import com.example.culinarychest.domain.domain.model.step.CreateStep
 import com.example.culinarychest.domain.domain.model.step.Step
 import com.example.culinarychest.domain.domain.model.ProcessingResult
 import com.example.culinarychest.domain.domain.repository.RecipeStepsRepository
+import com.example.culinarychest.domain.domain.usecase.recipeRepositoryUseCases.GetRecipeByIdUseCase
+import com.example.culinarychest.domain.domain.usecase.recipeRepositoryUseCases.GetRecipesByIdsUseCase
+import com.example.culinarychest.domain.domain.usecase.recipeStepsUseCases.CreateRecipeStepUseCase
+import com.example.culinarychest.domain.domain.usecase.recipeStepsUseCases.DeleteRecipeStepUseCase
+import com.example.culinarychest.domain.domain.usecase.recipeStepsUseCases.GetRecipeStepsUseCases
+import com.example.culinarychest.domain.domain.usecase.recipeStepsUseCases.UpdateRecipeStepUseCase
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +23,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class RecipeStepsViewModel(
-    private val recipeStepsRepository: RecipeStepsRepository
+    private val createRecipeStepUseCase: CreateRecipeStepUseCase,
+    private val deleteRecipeStepUseCase: DeleteRecipeStepUseCase,
+    private val getRecipeStepsUseCases: GetRecipeStepsUseCases,
+    private val updateRecipeStepUseCase: UpdateRecipeStepUseCase
 ) : ViewModel() {
 
     private val _recipeSteps = MutableStateFlow<List<Step>>(emptyList())
@@ -28,7 +37,7 @@ class RecipeStepsViewModel(
 
     fun getRecipeSteps(token: String, recipeId: String) {
         viewModelScope.launch {
-            recipeStepsRepository.getRecipeSteps(token, recipeId).collectLatest { result ->
+            getRecipeStepsUseCases(token, recipeId).collectLatest { result ->
                 when (result) {
                     is ProcessingResult.Error -> {
                         _showErrorToastChannel.send(true)
@@ -47,7 +56,7 @@ class RecipeStepsViewModel(
     fun createRecipeSteps(token: String, recipeId: String, step: CreateStep) {
         viewModelScope.launch {
             try {
-                recipeStepsRepository.createRecipeStep(token, recipeId, step)
+                createRecipeStepUseCase(token, recipeId, step)
             } catch (e: Exception) {
                 TODO("Not yet implemented")
             }
@@ -57,7 +66,7 @@ class RecipeStepsViewModel(
     fun updateRecipeStep(token: String, recipeId: String, stepId: String, updateStep: CreateStep) {
         viewModelScope.launch {
             try {
-                recipeStepsRepository.updateRecipeStep(token, recipeId, stepId, updateStep)
+                updateRecipeStepUseCase(token, recipeId, stepId, updateStep)
             } catch (e: Exception) {
                 TODO("Not yet implemented")
             }
@@ -66,7 +75,7 @@ class RecipeStepsViewModel(
     fun deleteRecipeStep(token: String, recipeId: String, stepId: String) {
         viewModelScope.launch {
             try {
-                recipeStepsRepository.deleteRecipeStep(token, recipeId, stepId)
+                deleteRecipeStepUseCase(token, recipeId, stepId)
             } catch (e: Exception) {
                 TODO("Not yet implemented")
             }

@@ -134,7 +134,7 @@ fun RecipeItem(
 fun LoadImage(context: Context, recipeImageUrl: String) {
 
     val desiredPath = recipeImageUrl.substringAfter("/wwwroot/")
-    val imageUrl = "https://zany-meme-jp7rjw5xjwpfpv47-7286.app.github.dev//${desiredPath}"
+    val imageUrl = "https://zany-meme-jp7rjw5xjwpfpv47-7286.app.github.dev/${desiredPath}"
     val imageLoader = createImageLoader(context)
 
     val painter = rememberAsyncImagePainter(

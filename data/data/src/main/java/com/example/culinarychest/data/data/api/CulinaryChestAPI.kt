@@ -51,10 +51,10 @@ interface CulinaryChestAPI {
         @Body addedDate: CreateFavoriteRecipeDto
     )
 
-    @DELETE("/api/applicationUser/favoriteRecipe/{favoriteRecipeId}")
+    @DELETE("/api/applicationUser/favoriteRecipe/{recipeId}")
     suspend fun deleteApplicationUserFavoriteRecipe(
         @Header("Authorization") token: String,
-        @Path("favoriteRecipeId") recipeId: String
+        @Path("recipeId") recipeId: String
     )
 
     @GET("/api/recipe/listRecipe")

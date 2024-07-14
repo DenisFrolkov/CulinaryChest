@@ -8,6 +8,11 @@ import com.example.culinarychest.domain.domain.model.recipe.CreateRecipe
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.domain.repository.ApplicationUserRecipeRepository
 import com.example.culinarychest.domain.domain.model.ProcessingResult
+import com.example.culinarychest.domain.domain.usecase.applicationUserFavoriteRecipeUseCases.DeleteApplicationUserFavoriteRecipeUseCase
+import com.example.culinarychest.domain.domain.usecase.applicationUserRecipeUseCases.CreateApplicationUserRecipeUseCase
+import com.example.culinarychest.domain.domain.usecase.applicationUserRecipeUseCases.DeleteApplicationUserRecipeUseCase
+import com.example.culinarychest.domain.domain.usecase.applicationUserRecipeUseCases.GetApplicationUserRecipesUseCase
+import com.example.culinarychest.domain.domain.usecase.applicationUserRecipeUseCases.UpdateApplicationUserRecipeUseCase
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +24,10 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class ApplicationUserRecipeViewModel(
-    private val applicationUserRecipeRepository: ApplicationUserRecipeRepository
+    private val getApplicationUserRecipesUseCase: GetApplicationUserRecipesUseCase,
+    private val createApplicationUserRecipeUseCase: CreateApplicationUserRecipeUseCase,
+    private val deleteApplicationUserRecipeUseCase: DeleteApplicationUserRecipeUseCase,
+    private val updateApplicationUserRecipeUseCase: UpdateApplicationUserRecipeUseCase,
 ) : ViewModel() {
 
     private val _applicationUserRecipes = MutableStateFlow<List<Recipe>>(emptyList())
@@ -33,7 +41,7 @@ class ApplicationUserRecipeViewModel(
 
     fun getApplicationUserRecipes(token: String) {
         viewModelScope.launch {
-            applicationUserRecipeRepository.getApplicationUserRecipes(token)
+            getApplicationUserRecipesUseCase(token)
                 .collectLatest { result ->
                     when (result) {
                         is ProcessingResult.Error -> {
@@ -61,7 +69,7 @@ class ApplicationUserRecipeViewModel(
     ) {
         viewModelScope.launch {
             try {
-                applicationUserRecipeRepository.createApplicationUserRecipe(
+                createApplicationUserRecipeUseCase(
                     token, title, recipeImage, ingredients, steps, creationDate, preparationTime
                 )
                 _createdRecipeResult.value = ProcessingResult.Success(null)
@@ -85,7 +93,7 @@ class ApplicationUserRecipeViewModel(
     ) {
         viewModelScope.launch {
             try {
-                applicationUserRecipeRepository.updateApplicationUserRecipe(
+                updateApplicationUserRecipeUseCase(
                     token, recipeId, title, recipeImage, ingredients, creationDate, preparationTime
                 )
             } catch (e: Exception) {
@@ -97,7 +105,7 @@ class ApplicationUserRecipeViewModel(
     fun deleteApplicationUserRecipe(token: String, recipeId: String) {
         viewModelScope.launch {
             try {
-                applicationUserRecipeRepository.deleteApplicationUserRecipe(
+                deleteApplicationUserRecipeUseCase(
                     token,
                     recipeId
                 )

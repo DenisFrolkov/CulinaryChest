@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.domain.model.ProcessingResult
-import com.example.culinarychest.domain.domain.repository.RecipeRepository
+import com.example.culinarychest.domain.domain.usecase.recipeRepositoryUseCases.GetRecipeByIdUseCase
+import com.example.culinarychest.domain.domain.usecase.recipeRepositoryUseCases.GetRecipesByIdsUseCase
+import com.example.culinarychest.domain.domain.usecase.recipeRepositoryUseCases.GetRecipesUseCase
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +18,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class RecipeViewModel(
-    private val recipeRepository: RecipeRepository,
+    private val getRecipeByIdUseCase: GetRecipeByIdUseCase,
+    private val getRecipesByIdsUseCase: GetRecipesByIdsUseCase,
+    private val getRecipesUseCase: GetRecipesUseCase
 ) : ViewModel() {
 
     private val _listRecipes = MutableStateFlow<List<Recipe>>(emptyList())
@@ -34,7 +38,7 @@ class RecipeViewModel(
 
     fun getRecipes(token: String, searchTerm: String?) {
         viewModelScope.launch {
-            recipeRepository.getRecipes(token, searchTerm)
+            getRecipesUseCase(token, searchTerm)
                 .collectLatest { result ->
                     when (result) {
                         is ProcessingResult.Error -> {
@@ -52,7 +56,7 @@ class RecipeViewModel(
 
     fun getRecipesByIds(token: String, recipeIds: List<String>) {
         viewModelScope.launch {
-            recipeRepository.getRecipesByIds(token, recipeIds).collectLatest { result ->
+            getRecipesByIdsUseCase(token, recipeIds).collectLatest { result ->
                 when (result) {
                     is ProcessingResult.Error -> {
                         _showErrorToastChannel.send(true)
@@ -71,7 +75,7 @@ class RecipeViewModel(
 
     fun getRecipeById(token: String, recipeId: String) {
         viewModelScope.launch {
-            recipeRepository.getRecipeById(token, recipeId).collectLatest { result ->
+            getRecipeByIdUseCase(token, recipeId).collectLatest { result ->
                 when (result) {
                     is ProcessingResult.Error -> {
                         _showErrorToastChannel.send(true)

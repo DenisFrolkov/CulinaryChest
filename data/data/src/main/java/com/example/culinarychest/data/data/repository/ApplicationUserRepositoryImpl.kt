@@ -13,7 +13,9 @@ import com.example.culinarychest.domain.domain.repository.ApplicationUserReposit
 import com.example.culinarychest.domain.domain.model.ProcessingResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import retrofit2.Response
+import java.io.IOException
 
 class ApplicationUserRepositoryImpl(
     private val culinaryChestAPI: CulinaryChestAPI
@@ -21,7 +23,8 @@ class ApplicationUserRepositoryImpl(
     override suspend fun registrationApplicationUser(user: ApplicationUser): Flow<ProcessingResult<DuplicationUserInfo>> {
         return flow {
             try {
-                val response: Response<DuplicationUserInfoDto> = culinaryChestAPI.registrationApplicationUser(user.toDto())
+                val response: Response<DuplicationUserInfoDto> =
+                    culinaryChestAPI.registrationApplicationUser(user.toDto())
                 if (response.isSuccessful) {
                     val body = response.body()
                     if (body != null) {
@@ -60,15 +63,16 @@ class ApplicationUserRepositoryImpl(
     }
 
 
-    override suspend fun getApplicationUserInfo(token: String): Flow<ProcessingResult<ApplicationUserInfo>> {
-        return flow {
+    override suspend fun getApplicationUserInfo(token: String): Flow<ProcessingResult<ApplicationUserInfo>> =
+        flow {
             try {
-                val recipe = culinaryChestAPI.getApplicationUserInfo(token).toDomain()
-                emit(ProcessingResult.Success(recipe))
-            } catch (e: Exception) {
-                emit(ProcessingResult.Error(e.message ?: "An error occurred"))
+                val response = culinaryChestAPI.getApplicationUserInfo(token).toDomain()
+                emit(ProcessingResult.Success(response))
+            } catch (e: HttpException) {
+                emit(ProcessingResult.Error(e.localizedMessage ?: "An unexpected error occurred"))
+            } catch (e: IOException) {
+                emit(ProcessingResult.Error("Couldn't reach server. Check your internet connection."))
             }
         }
-    }
 }
 
