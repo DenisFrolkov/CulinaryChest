@@ -34,7 +34,8 @@ import com.den.culinarychest.presentation.other.common.TextInput.AccountTextInpu
 import com.den.culinarychest.presentation.other.route.AppNavigationRoute
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftPink
-import com.den.culinarychest.presentation.main.viewModels.ApplicationUserViewModel
+import com.den.culinarychest.presentation.main.viewmodel.AuthorizationViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RegistrationViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.application_user.ApplicationUser
 import com.example.culinarychest.domain.domain.model.application_user.Login
@@ -44,12 +45,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun RegistrationScreen(
     navController: NavController,
-    applicationUserViewModel: ApplicationUserViewModel,
+    registrationApplicationUser: RegistrationViewModel,
+    authorizationViewModel: AuthorizationViewModel,
     tokenManager: TokenManager
 ) {
     Registration(
         controller = navController,
-        applicationUserViewModel = applicationUserViewModel,
+        registrationApplicationUser = registrationApplicationUser,
+        authorizationViewModel = authorizationViewModel,
         tokenManager = tokenManager
     )
 }
@@ -58,7 +61,8 @@ fun RegistrationScreen(
 @Composable
 fun Registration(
     controller: NavController,
-    applicationUserViewModel: ApplicationUserViewModel,
+    registrationApplicationUser: RegistrationViewModel,
+    authorizationViewModel: AuthorizationViewModel,
     tokenManager: TokenManager
 ) {
 
@@ -88,7 +92,7 @@ fun Registration(
 
     val focusManager = LocalFocusManager.current
 
-    val duplicationUserInfo by applicationUserViewModel.duplicationUserInfo.collectAsState()
+    val duplicationUserInfo by registrationApplicationUser.duplicationUserInfo.collectAsState()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -146,7 +150,7 @@ fun Registration(
         } else {
             PushButton(
                 onClick = {
-                    applicationUserViewModel.registerApplicationUser(
+                    registrationApplicationUser.registrationApplicationUser(
                         user = ApplicationUser(
                             userName = login,
                             email = email,
@@ -160,7 +164,7 @@ fun Registration(
                         if (duplicationUserInfo?.duplicateUserName != null || duplicationUserInfo?.duplicateEmail != null || password != verificationPassword) {
                             isLoading = false
                         } else {
-                            applicationUserViewModel.authorizeUser(
+                            authorizationViewModel.authorizationApplicationUser(
                                 Login(userName = login, password = password)
                             )
                             delay(1000)

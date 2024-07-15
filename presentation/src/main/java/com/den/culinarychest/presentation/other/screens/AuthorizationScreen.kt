@@ -32,7 +32,7 @@ import com.den.culinarychest.presentation.other.common.TextInput.AccountTextInpu
 import com.den.culinarychest.presentation.other.route.AppNavigationRoute
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftPink
-import com.den.culinarychest.presentation.main.viewModels.ApplicationUserViewModel
+import com.den.culinarychest.presentation.main.viewmodel.AuthorizationViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.application_user.Login
 import kotlinx.coroutines.delay
@@ -41,13 +41,13 @@ import kotlinx.coroutines.launch
 @Composable
 fun AuthorizationScreen(
     navController: NavController,
-    applicationUserViewModel: ApplicationUserViewModel,
+    authorizationViewModel: AuthorizationViewModel,
     tokenManager: TokenManager
 ) {
 
     Authorization(
         controller = navController,
-        applicationUserViewModel = applicationUserViewModel,
+        authorizationViewModel = authorizationViewModel,
         tokenManager = tokenManager
     )
 }
@@ -56,7 +56,7 @@ fun AuthorizationScreen(
 @Composable
 fun Authorization(
     controller: NavController,
-    applicationUserViewModel: ApplicationUserViewModel,
+    authorizationViewModel: AuthorizationViewModel,
     tokenManager: TokenManager
 ) {
 
@@ -126,7 +126,7 @@ fun Authorization(
         } else {
             PushButton(
                 onClick = {
-                    applicationUserViewModel.authorizeUser(
+                    authorizationViewModel.authorizationApplicationUser(
                         Login(userName = login, password = password)
                     )
                     coroutineScope.launch {

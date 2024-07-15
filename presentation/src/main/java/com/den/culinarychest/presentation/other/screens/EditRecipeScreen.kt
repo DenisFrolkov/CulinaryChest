@@ -68,8 +68,8 @@ import com.den.culinarychest.presentation.other.ui.theme.LightRed
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.other.ui.theme.SoftPink
-import com.den.culinarychest.presentation.main.viewModels.ApplicationUserRecipeViewModel
-import com.den.culinarychest.presentation.main.viewModels.RecipeStepsViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeStepsViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe

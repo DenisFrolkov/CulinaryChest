@@ -33,7 +33,7 @@ import com.den.culinarychest.R
 import com.den.culinarychest.presentation.other.ui.theme.LightGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
-import com.den.culinarychest.presentation.main.viewModels.RecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 
 @Composable

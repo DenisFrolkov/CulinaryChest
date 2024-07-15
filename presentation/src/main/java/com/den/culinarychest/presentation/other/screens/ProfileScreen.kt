@@ -27,16 +27,16 @@ import com.den.culinarychest.presentation.other.route.AppNavigationRoute
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.other.ui.theme.SoftPink
-import com.den.culinarychest.presentation.main.viewModels.ApplicationUserFavoriteRecipeViewModel
-import com.den.culinarychest.presentation.main.viewModels.ApplicationUserRecipeViewModel
-import com.den.culinarychest.presentation.main.viewModels.ApplicationUserViewModel
-import com.den.culinarychest.presentation.main.viewModels.RecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserFavoriteRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserInfoViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 
 @Composable
 fun ProfileScreen(
     navController: NavController,
-    applicationUserViewModel: ApplicationUserViewModel,
+    applicationUserInfoViewModel: ApplicationUserInfoViewModel,
     recipeViewModel: RecipeViewModel,
     applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
     applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
@@ -44,12 +44,12 @@ fun ProfileScreen(
 ) {
 
     tokenManager.getToken()?.let {
-        applicationUserViewModel.getApplicationUserInfo(it)
+        applicationUserInfoViewModel.getApplicationUserInfo(it)
         applicationUserFavoriteRecipeViewModel.getApplicationUserFavoriteRecipes(it)
         applicationUserRecipeViewModel.getApplicationUserRecipes(it)
     }
 
-    val userInfo = applicationUserViewModel.userInfoResult.collectAsState().value
+    val userInfo = applicationUserInfoViewModel.userInfoResult.collectAsState().value
 
     val applicationUserRecipeSize = applicationUserRecipeViewModel.applicationUserRecipes.collectAsState().value.size
     val favoriteRecipeSize = applicationUserFavoriteRecipeViewModel.userFavoriteRecipes.collectAsState().value.size

@@ -34,17 +34,17 @@ import com.den.culinarychest.presentation.other.screens.ProfileScreen
 import com.den.culinarychest.presentation.other.screens.SearchScreen
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
-import com.den.culinarychest.presentation.main.viewModels.ApplicationUserFavoriteRecipeViewModel
-import com.den.culinarychest.presentation.main.viewModels.ApplicationUserRecipeViewModel
-import com.den.culinarychest.presentation.main.viewModels.ApplicationUserViewModel
-import com.den.culinarychest.presentation.main.viewModels.RecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserFavoriteRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserInfoViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun BottomNavigationBar(
     navController: NavController,
-    applicationUserViewModel: ApplicationUserViewModel,
+    applicationUserInfoViewModel: ApplicationUserInfoViewModel,
     recipeViewModel: RecipeViewModel,
     applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
     applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
@@ -142,7 +142,7 @@ fun BottomNavigationBar(
             composable(BottomNavigationRoute.ProfileScreen.route) {
                 ProfileScreen(
                     navController = navController,
-                    applicationUserViewModel = applicationUserViewModel,
+                    applicationUserInfoViewModel = applicationUserInfoViewModel,
                     recipeViewModel = recipeViewModel,
                     applicationUserRecipeViewModel = applicationUserRecipeViewModel,
                     applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,

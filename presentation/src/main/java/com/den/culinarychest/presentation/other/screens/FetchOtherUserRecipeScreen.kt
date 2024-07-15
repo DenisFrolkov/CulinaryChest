@@ -53,7 +53,7 @@ import com.den.culinarychest.presentation.other.common.Item.createImageLoader
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.other.ui.theme.SoftPink
-import com.den.culinarychest.presentation.main.viewModels.ApplicationUserFavoriteRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserFavoriteRecipeViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.favorite_recipe.CreateFavoriteRecipe
 import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe

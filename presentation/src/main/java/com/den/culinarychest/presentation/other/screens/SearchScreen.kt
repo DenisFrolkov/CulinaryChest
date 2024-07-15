@@ -26,9 +26,9 @@ import com.den.culinarychest.presentation.other.common.Item.SearchBarItem
 import com.den.culinarychest.presentation.other.route.AppNavigationRoute
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftPink
-import com.den.culinarychest.presentation.main.viewModels.ApplicationUserFavoriteRecipeViewModel
-import com.den.culinarychest.presentation.main.viewModels.ApplicationUserRecipeViewModel
-import com.den.culinarychest.presentation.main.viewModels.RecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserFavoriteRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 
 @Composable

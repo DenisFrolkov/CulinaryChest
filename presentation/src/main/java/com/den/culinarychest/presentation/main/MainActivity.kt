@@ -8,11 +8,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.den.culinarychest.presentation.other.navigation.appNavigation.AppNavigation
 import com.den.culinarychest.presentation.other.ui.theme.CulinaryChestTheme
-import com.den.culinarychest.presentation.main.viewModels.ApplicationUserFavoriteRecipeViewModel
-import com.den.culinarychest.presentation.main.viewModels.ApplicationUserRecipeViewModel
-import com.den.culinarychest.presentation.main.viewModels.ApplicationUserViewModel
-import com.den.culinarychest.presentation.main.viewModels.RecipeStepsViewModel
-import com.den.culinarychest.presentation.main.viewModels.RecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserFavoriteRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserInfoViewModel
+import com.den.culinarychest.presentation.main.viewmodel.AuthorizationViewModel
+import com.den.culinarychest.presentation.main.viewmodel.GenericViewModelFactory
+import com.den.culinarychest.presentation.main.viewmodel.RecipeStepsViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RegistrationViewModel
 import com.example.culinarychest.data.data.api.RetrofitInstance
 import com.example.culinarychest.data.data.repository.ApplicationUserFavoriteRecipeRepositoryImpl
 import com.example.culinarychest.data.data.repository.ApplicationUserRecipeRepositoryImpl
@@ -43,24 +46,37 @@ class MainActivity : ComponentActivity() {
 
     val tokenManager = TokenManager(this)
 
-    private val applicationUserViewModel by viewModels<ApplicationUserViewModel>(factoryProducer = {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return ApplicationUserViewModel(
-                    TokenManager(this@MainActivity),
-                    RegistrationApplicationUserUseCase(
-                        ApplicationUserRepositoryImpl(RetrofitInstance(tokenManager).culinaryChestApi)
-                    ),
-                    AuthorizationApplicationUserUseCase(
-                        ApplicationUserRepositoryImpl(RetrofitInstance(tokenManager).culinaryChestApi)
-                    ),
-                    GetApplicationUserInfoUseCase(
-                        ApplicationUserRepositoryImpl(RetrofitInstance(tokenManager).culinaryChestApi)
-                    ),
-                ) as T
-            }
+    private val registrationApplicationUserViewModel by viewModels<RegistrationViewModel> {
+        GenericViewModelFactory {
+            RegistrationViewModel(
+                RegistrationApplicationUserUseCase(
+                    ApplicationUserRepositoryImpl(RetrofitInstance(tokenManager).culinaryChestApi)
+                )
+            )
         }
-    })
+    }
+
+
+    private val authorizationApplicationUserViewModel by viewModels<AuthorizationViewModel> {
+        GenericViewModelFactory {
+            AuthorizationViewModel(
+                tokenManager,
+                AuthorizationApplicationUserUseCase(
+                    ApplicationUserRepositoryImpl(RetrofitInstance(tokenManager).culinaryChestApi)
+                )
+            )
+        }
+    }
+
+    private val applicationUserInfoViewModel by viewModels<ApplicationUserInfoViewModel> {
+        GenericViewModelFactory {
+            ApplicationUserInfoViewModel(
+                GetApplicationUserInfoUseCase(
+                    ApplicationUserRepositoryImpl(RetrofitInstance(tokenManager).culinaryChestApi)
+                ),
+            )
+        }
+    }
 
     private val recipeViewModel by viewModels<RecipeViewModel>(factoryProducer = {
         object : ViewModelProvider.Factory {
@@ -192,7 +208,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             CulinaryChestTheme {
                 AppNavigation(
-                    applicationUserViewModel,
+                    applicationUserInfoViewModel,
+                    registrationApplicationUserViewModel,
+                    authorizationApplicationUserViewModel,
                     recipeViewModel,
                     applicationUserFavoriteRecipeViewModel,
                     applicationUserRecipeViewModel,

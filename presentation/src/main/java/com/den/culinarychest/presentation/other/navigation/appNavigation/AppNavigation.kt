@@ -1,5 +1,4 @@
-@file:Suppress("DEPRECATION")
-
+//@file:Suppress("DEPRECATION")
 package com.den.culinarychest.presentation.other.navigation.appNavigation
 
 import androidx.compose.runtime.Composable
@@ -18,17 +17,21 @@ import com.den.culinarychest.presentation.other.screens.EditRecipeScreen
 import com.den.culinarychest.presentation.other.screens.FetchOtherUserRecipeScreen
 import com.den.culinarychest.presentation.other.screens.FetchUserRecipeScreen
 import com.den.culinarychest.presentation.other.screens.RegistrationScreen
-import com.den.culinarychest.presentation.main.viewModels.ApplicationUserFavoriteRecipeViewModel
-import com.den.culinarychest.presentation.main.viewModels.ApplicationUserRecipeViewModel
-import com.den.culinarychest.presentation.main.viewModels.ApplicationUserViewModel
-import com.den.culinarychest.presentation.main.viewModels.RecipeStepsViewModel
-import com.den.culinarychest.presentation.main.viewModels.RecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserFavoriteRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserInfoViewModel
+import com.den.culinarychest.presentation.main.viewmodel.AuthorizationViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeStepsViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RegistrationViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 
 
 @Composable
 fun AppNavigation(
-    applicationUserViewModel: ApplicationUserViewModel,
+    applicationUserInfoViewModel: ApplicationUserInfoViewModel,
+    registrationViewModel: RegistrationViewModel,
+    authorizationViewModel: AuthorizationViewModel,
     recipeViewModel: RecipeViewModel,
     applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
     applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
@@ -55,7 +58,7 @@ fun AppNavigation(
         composable(AppNavigationRoute.AuthorizationScreen.route) {
             AuthorizationScreen(
                 navController = appNavigationController,
-                applicationUserViewModel = applicationUserViewModel,
+                authorizationViewModel = authorizationViewModel,
                 tokenManager = tokenManager
             )
 
@@ -63,14 +66,15 @@ fun AppNavigation(
         composable(AppNavigationRoute.RegistrationScreen.route) {
             RegistrationScreen(
                 navController = appNavigationController,
-                applicationUserViewModel = applicationUserViewModel,
+                registrationApplicationUser = registrationViewModel,
+                authorizationViewModel = authorizationViewModel,
                 tokenManager = tokenManager
             )
         }
         composable(AppNavigationRoute.BottomAppNavigationBar.route) {
             BottomNavigationBar(
                 navController = appNavigationController,
-                applicationUserViewModel = applicationUserViewModel,
+                applicationUserInfoViewModel = applicationUserInfoViewModel,
                 recipeViewModel = recipeViewModel,
                 applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
                 tokenManager = tokenManager,

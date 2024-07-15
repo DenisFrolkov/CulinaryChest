@@ -1,4 +1,4 @@
-package com.den.culinarychest.presentation.main.viewModels
+package com.den.culinarychest.presentation.main.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

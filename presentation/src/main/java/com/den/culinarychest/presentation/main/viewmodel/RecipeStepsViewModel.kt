@@ -1,4 +1,4 @@
-package com.den.culinarychest.presentation.main.viewModels
+package com.den.culinarychest.presentation.main.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -6,9 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.domain.model.step.CreateStep
 import com.example.culinarychest.domain.domain.model.step.Step
 import com.example.culinarychest.domain.domain.model.ProcessingResult
-import com.example.culinarychest.domain.domain.repository.RecipeStepsRepository
-import com.example.culinarychest.domain.domain.usecase.recipeRepositoryUseCases.GetRecipeByIdUseCase
-import com.example.culinarychest.domain.domain.usecase.recipeRepositoryUseCases.GetRecipesByIdsUseCase
 import com.example.culinarychest.domain.domain.usecase.recipeStepsUseCases.CreateRecipeStepUseCase
 import com.example.culinarychest.domain.domain.usecase.recipeStepsUseCases.DeleteRecipeStepUseCase
 import com.example.culinarychest.domain.domain.usecase.recipeStepsUseCases.GetRecipeStepsUseCases
