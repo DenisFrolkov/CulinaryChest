@@ -24,23 +24,21 @@ import com.den.culinarychest.presentation.other.common.Item.RecipeItem
 import com.den.culinarychest.presentation.other.route.AppNavigationRoute
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftPink
-import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserFavoriteRecipeViewModel
-import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserRecipeViewModel
-import com.den.culinarychest.presentation.main.viewmodel.RecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.HorizontalPagerViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeOwnershipViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 
 @Composable
 fun CreatedScreen(
     controller: NavController,
-    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
-    recipeViewModel: RecipeViewModel,
-    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
+    horizontalPagerViewModel: HorizontalPagerViewModel,
+    recipeOwnershipViewModel: RecipeOwnershipViewModel,
     tokenManager: TokenManager
 ) {
 
     val listRecipeCreatedUser =
-        applicationUserRecipeViewModel.applicationUserRecipes.collectAsState().value
+        horizontalPagerViewModel.applicationUserRecipes.collectAsState().value
 
     Box(
         modifier = Modifier
@@ -50,9 +48,8 @@ fun CreatedScreen(
         ListRecipeCreatedUser(
             controller,
             listRecipeCreatedUser,
-            tokenManager = tokenManager,
-            applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
-            recipeViewModel = recipeViewModel
+            tokenManager,
+            recipeOwnershipViewModel = recipeOwnershipViewModel
         )
         FABButton(controller)
     }
@@ -77,8 +74,7 @@ private fun ListRecipeCreatedUser(
     controller: NavController,
     listRecipeCreatedUser: List<Recipe>,
     tokenManager: TokenManager,
-    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
-    recipeViewModel: RecipeViewModel
+    recipeOwnershipViewModel: RecipeOwnershipViewModel
 ) {
     LazyColumn(
         modifier = Modifier
@@ -115,8 +111,7 @@ private fun ListRecipeCreatedUser(
                     textRouteNavigation = AppNavigationRoute.FetchUserRecipeScreen.route,
                     recipe = recipeCreatedUser,
                     tokenManager = tokenManager,
-                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
-                    recipeViewModel = recipeViewModel
+                    recipeOwnershipViewModel = recipeOwnershipViewModel
                 )
             }
         }

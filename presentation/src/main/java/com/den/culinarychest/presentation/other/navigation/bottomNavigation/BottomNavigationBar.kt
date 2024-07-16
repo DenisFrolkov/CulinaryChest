@@ -34,22 +34,23 @@ import com.den.culinarychest.presentation.other.screens.ProfileScreen
 import com.den.culinarychest.presentation.other.screens.SearchScreen
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
-import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserFavoriteRecipeViewModel
-import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserRecipeViewModel
-import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserInfoViewModel
-import com.den.culinarychest.presentation.main.viewmodel.RecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.HorizontalPagerViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ProfileViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeOwnershipViewModel
+import com.den.culinarychest.presentation.main.viewmodel.SearchViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun BottomNavigationBar(
     navController: NavController,
-    applicationUserInfoViewModel: ApplicationUserInfoViewModel,
-    recipeViewModel: RecipeViewModel,
-    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
-    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
+    searchViewModel: SearchViewModel,
+    recipeOwnershipViewModel: RecipeOwnershipViewModel,
+    horizontalPagerViewModel: HorizontalPagerViewModel,
+    profileViewModel: ProfileViewModel,
     tokenManager: TokenManager
 ) {
+
     val bottomController = rememberNavController()
 
     val bottomNavigationItems = listOf(
@@ -124,28 +125,23 @@ fun BottomNavigationBar(
             composable(BottomNavigationRoute.SearchScreen.route) {
                 SearchScreen(
                     navController = navController,
-                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
-                    recipeViewModel = recipeViewModel,
-                    applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+                    recipeOwnershipViewModel = recipeOwnershipViewModel,
+                    searchViewModel = searchViewModel,
                     tokenManager = tokenManager
                 )
             }
             composable(BottomNavigationRoute.TopNavigationBar.route) {
                 HorizontalPagerScreen(
                     navController = navController,
-                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
-                    applicationUserRecipeViewModel = applicationUserRecipeViewModel,
-                    recipeViewModel = recipeViewModel,
+                    horizontalPagerViewModel = horizontalPagerViewModel,
+                    recipeOwnershipViewModel = recipeOwnershipViewModel,
                     tokenManager = tokenManager
                 )
             }
             composable(BottomNavigationRoute.ProfileScreen.route) {
                 ProfileScreen(
                     navController = navController,
-                    applicationUserInfoViewModel = applicationUserInfoViewModel,
-                    recipeViewModel = recipeViewModel,
-                    applicationUserRecipeViewModel = applicationUserRecipeViewModel,
-                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
+                    profileViewModel = profileViewModel,
                     tokenManager = tokenManager)
             }
         }

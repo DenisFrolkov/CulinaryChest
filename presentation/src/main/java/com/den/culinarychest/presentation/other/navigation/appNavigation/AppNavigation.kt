@@ -17,25 +17,35 @@ import com.den.culinarychest.presentation.other.screens.EditRecipeScreen
 import com.den.culinarychest.presentation.other.screens.FetchOtherUserRecipeScreen
 import com.den.culinarychest.presentation.other.screens.FetchUserRecipeScreen
 import com.den.culinarychest.presentation.other.screens.RegistrationScreen
-import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserFavoriteRecipeViewModel
-import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserRecipeViewModel
-import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserInfoViewModel
 import com.den.culinarychest.presentation.main.viewmodel.AuthorizationViewModel
-import com.den.culinarychest.presentation.main.viewmodel.RecipeStepsViewModel
-import com.den.culinarychest.presentation.main.viewmodel.RecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ManageFavoriteRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.CreateRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.FavoriteRecipeByRecipeIdViewModel
+import com.den.culinarychest.presentation.main.viewmodel.HorizontalPagerViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ManageRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ProfileViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeByIdViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeOwnershipViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ManageStepsViewModel
 import com.den.culinarychest.presentation.main.viewmodel.RegistrationViewModel
+import com.den.culinarychest.presentation.main.viewmodel.SearchViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 
 
 @Composable
 fun AppNavigation(
-    applicationUserInfoViewModel: ApplicationUserInfoViewModel,
     registrationViewModel: RegistrationViewModel,
     authorizationViewModel: AuthorizationViewModel,
-    recipeViewModel: RecipeViewModel,
-    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
-    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
-    recipeStepsViewModel: RecipeStepsViewModel,
+    searchViewModel: SearchViewModel,
+    recipeOwnershipViewModel: RecipeOwnershipViewModel,
+    horizontalPagerViewModel: HorizontalPagerViewModel,
+    profileViewModel: ProfileViewModel,
+    recipeByIdViewModel: RecipeByIdViewModel,
+    createRecipeViewModel: CreateRecipeViewModel,
+    manageRecipeViewModel: ManageRecipeViewModel,
+    manageFavoriteRecipeViewModel: ManageFavoriteRecipeViewModel,
+    favoriteRecipeByRecipeIdViewModel: FavoriteRecipeByRecipeIdViewModel,
+    manageStepsViewModel: ManageStepsViewModel,
     tokenManager: TokenManager
 ) {
 
@@ -74,11 +84,11 @@ fun AppNavigation(
         composable(AppNavigationRoute.BottomAppNavigationBar.route) {
             BottomNavigationBar(
                 navController = appNavigationController,
-                applicationUserInfoViewModel = applicationUserInfoViewModel,
-                recipeViewModel = recipeViewModel,
-                applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
+                searchViewModel = searchViewModel,
+                recipeOwnershipViewModel = recipeOwnershipViewModel,
+                horizontalPagerViewModel = horizontalPagerViewModel,
+                profileViewModel = profileViewModel,
                 tokenManager = tokenManager,
-                applicationUserRecipeViewModel = applicationUserRecipeViewModel
             )
         }
         composable(
@@ -89,19 +99,21 @@ fun AppNavigation(
                 ?: "Надо придумать реализацию, если такого рецепта не существует"
             recipeId.let { recipe ->
                 tokenManager.getToken()?.let { token ->
-                    recipeViewModel.getRecipeById(
+                    recipeByIdViewModel.getRecipeById(
                         token,
                         recipe
                     )
+                    favoriteRecipeByRecipeIdViewModel.getFavoriteRecipeByRecipeId(token, recipe)
                 }
             }
 
-            val recipeInfo = recipeViewModel.recipe.collectAsState().value
+            val recipeInfo = recipeByIdViewModel.recipe.collectAsState().value
             recipeInfo.forEach { recipe ->
                 FetchOtherUserRecipeScreen(
                     navController = appNavigationController,
                     recipe = recipe,
-                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
+                    favoriteRecipeByRecipeIdViewModel = favoriteRecipeByRecipeIdViewModel,
+                    manageFavoriteRecipeViewModel = manageFavoriteRecipeViewModel,
                     tokenManager = tokenManager
                 )
             }
@@ -115,18 +127,18 @@ fun AppNavigation(
 
             recipeId.let { recipe ->
                 tokenManager.getToken()?.let { token ->
-                    recipeViewModel.getRecipeById(
+                    recipeByIdViewModel.getRecipeById(
                         token,
                         recipe
                     )
                 }
             }
 
-            val recipeInfo = recipeViewModel.recipe.collectAsState().value
+            val recipeInfo = recipeByIdViewModel.recipe.collectAsState().value
             recipeInfo.forEach { recipe ->
                 FetchUserRecipeScreen(
                     navController = appNavigationController,
-                    applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+                    manageRecipeViewModel = manageRecipeViewModel,
                     recipe = recipe,
                     tokenManager = tokenManager
                 )
@@ -141,19 +153,19 @@ fun AppNavigation(
 
             recipeId.let { recipe ->
                 tokenManager.getToken()?.let { token ->
-                    recipeViewModel.getRecipeById(
+                    recipeByIdViewModel.getRecipeById(
                         token,
                         recipe
                     )
                 }
             }
 
-            val recipeInfo = recipeViewModel.recipe.collectAsState().value
+            val recipeInfo = recipeByIdViewModel.recipe.collectAsState().value
             recipeInfo.forEach { recipe ->
                 EditRecipeScreen(
                     navController = appNavigationController,
-                    applicationUserRecipeViewModel = applicationUserRecipeViewModel,
-                    recipeStepsViewModel = recipeStepsViewModel,
+                    manageRecipeViewModel = manageRecipeViewModel,
+                    manageStepsViewModel = manageStepsViewModel,
                     recipe = recipe,
                     tokenManager = tokenManager
                 )
@@ -162,7 +174,7 @@ fun AppNavigation(
         composable(AppNavigationRoute.CreatingRecipeScreen.route) {
             CreatingRecipeScreen(
                 navController = appNavigationController,
-                applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+                createRecipeViewModel = createRecipeViewModel,
                 tokenManager = tokenManager
             )
         }

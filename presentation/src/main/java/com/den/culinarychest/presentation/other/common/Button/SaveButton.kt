@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
-import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserRecipeViewModel
-import com.den.culinarychest.presentation.main.viewmodel.RecipeStepsViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ManageRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ManageStepsViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
 import com.example.culinarychest.domain.domain.model.step.CreateStep
@@ -39,8 +39,8 @@ fun SaveButton(
     updateInfoRecipe: UpdateRecipe,
     updateStepDto: List<UpdateStep>,
     createStepDto: List<CreateStep>,
-    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
-    recipeStepsViewModel: RecipeStepsViewModel,
+    manageRecipeViewModel: ManageRecipeViewModel,
+    manageStepsViewModel: ManageStepsViewModel,
     tokenManager: TokenManager,
     buttonColor: Color,
 ) {
@@ -56,18 +56,18 @@ fun SaveButton(
                 indication = null
             ) {
                 tokenManager.getToken()?.let {
-                    applicationUserRecipeViewModel.updateApplicationUserRecipe(
+                    manageRecipeViewModel.updateApplicationUserRecipe(
                         it, recipeId, updateInfoRecipe.title, updateInfoRecipe.recipeImage, updateInfoRecipe.ingredients, updateInfoRecipe.creationDate, updateInfoRecipe.preparationTime)
                 }
                 updateStepDto.forEach { updateStep ->
                     tokenManager.getToken()?.let {
-                        recipeStepsViewModel.updateRecipeStep(it, recipeId, stepId = updateStep.stepId, updateStep = CreateStep(updateStep.description, updateStep.order))
+                        manageStepsViewModel.updateRecipeStep(it, recipeId, stepId = updateStep.stepId, updateStep = CreateStep(updateStep.description, updateStep.order))
                     }
                 }
 
                 createStepDto.forEach { createStep ->
                     tokenManager.getToken()?.let {
-                        recipeStepsViewModel.createRecipeSteps(it, recipeId, step = CreateStep(createStep.description, createStep.order))
+                        manageStepsViewModel.createRecipeSteps(it, recipeId, step = CreateStep(createStep.description, createStep.order))
                     }
                 }
 

@@ -17,9 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.other.common.Item.TopBarButtonItem
-import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserFavoriteRecipeViewModel
-import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserRecipeViewModel
-import com.den.culinarychest.presentation.main.viewmodel.RecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.HorizontalPagerViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeOwnershipViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import kotlinx.coroutines.launch
 
@@ -27,16 +26,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun HorizontalPagerScreen(
     navController: NavController,
-    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
-    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
-    recipeViewModel: RecipeViewModel,
+    horizontalPagerViewModel: HorizontalPagerViewModel,
+    recipeOwnershipViewModel: RecipeOwnershipViewModel,
     tokenManager: TokenManager
 ) {
     HorizontalPager(
         controller = navController,
-        applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
-        applicationUserRecipeViewModel = applicationUserRecipeViewModel,
-        recipeViewModel = recipeViewModel,
+        horizontalPagerViewModel = horizontalPagerViewModel,
+        recipeOwnershipViewModel = recipeOwnershipViewModel,
         tokenManager = tokenManager
     )
 }
@@ -46,15 +43,14 @@ fun HorizontalPagerScreen(
 @Composable
 fun HorizontalPager(
     controller: NavController,
-    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
-    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
-    recipeViewModel: RecipeViewModel,
+    horizontalPagerViewModel: HorizontalPagerViewModel,
+    recipeOwnershipViewModel: RecipeOwnershipViewModel,
     tokenManager: TokenManager
 ) {
 
     tokenManager.getToken()?.let {
-        applicationUserFavoriteRecipeViewModel.getApplicationUserFavoriteRecipes(it)
-        applicationUserRecipeViewModel.getApplicationUserRecipes(it)
+        horizontalPagerViewModel.getApplicationUserFavoriteRecipes(it)
+        horizontalPagerViewModel.getApplicationUserRecipes(it)
     }
 
     val pagerState = rememberPagerState(pageCount = { 2 })
@@ -94,17 +90,15 @@ fun HorizontalPager(
             when (page) {
                 0 -> CreatedScreen(
                     controller = controller,
-                    applicationUserRecipeViewModel = applicationUserRecipeViewModel,
-                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
-                    recipeViewModel = recipeViewModel,
+                    horizontalPagerViewModel = horizontalPagerViewModel,
+                    recipeOwnershipViewModel = recipeOwnershipViewModel,
                     tokenManager = tokenManager
                 )
 
                 1 -> FavoriteScreen(
                     controller = controller,
-                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
-                    applicationUserRecipeViewModel = applicationUserRecipeViewModel,
-                    recipeViewModel = recipeViewModel,
+                    horizontalPagerViewModel = horizontalPagerViewModel,
+                    recipeOwnershipViewModel = recipeOwnershipViewModel,
                     tokenManager = tokenManager
                 )
             }

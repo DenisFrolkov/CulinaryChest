@@ -27,32 +27,26 @@ import com.den.culinarychest.presentation.other.route.AppNavigationRoute
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.other.ui.theme.SoftPink
-import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserFavoriteRecipeViewModel
-import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserRecipeViewModel
-import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserInfoViewModel
-import com.den.culinarychest.presentation.main.viewmodel.RecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ProfileViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 
 @Composable
 fun ProfileScreen(
     navController: NavController,
-    applicationUserInfoViewModel: ApplicationUserInfoViewModel,
-    recipeViewModel: RecipeViewModel,
-    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
-    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
+    profileViewModel: ProfileViewModel,
     tokenManager: TokenManager
 ) {
 
     tokenManager.getToken()?.let {
-        applicationUserInfoViewModel.getApplicationUserInfo(it)
-        applicationUserFavoriteRecipeViewModel.getApplicationUserFavoriteRecipes(it)
-        applicationUserRecipeViewModel.getApplicationUserRecipes(it)
+        profileViewModel.getApplicationUserInfo(it)
+        profileViewModel.getApplicationUserFavoriteRecipes(it)
+        profileViewModel.getApplicationUserRecipes(it)
     }
 
-    val userInfo = applicationUserInfoViewModel.userInfoResult.collectAsState().value
+    val userInfo = profileViewModel.userInfoResult.collectAsState().value
 
-    val applicationUserRecipeSize = applicationUserRecipeViewModel.applicationUserRecipes.collectAsState().value.size
-    val favoriteRecipeSize = applicationUserFavoriteRecipeViewModel.userFavoriteRecipes.collectAsState().value.size
+    val applicationUserRecipeSize = profileViewModel.applicationUserRecipes.collectAsState().value.size
+    val favoriteRecipeSize = profileViewModel.userFavoriteRecipes.collectAsState().value.size
 
     Column {
         Column(

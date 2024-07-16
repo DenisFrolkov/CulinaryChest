@@ -51,12 +51,11 @@ import com.den.culinarychest.R
 import com.den.culinarychest.presentation.other.common.TextInput.NumberTextInput
 import com.den.culinarychest.presentation.other.common.TextInput.RecipeDetailsTextInput
 import com.den.culinarychest.presentation.other.common.TextInput.SmallTextInput
-import com.den.culinarychest.presentation.other.route.AppNavigationRoute
 import com.den.culinarychest.presentation.other.ui.theme.LightGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.other.ui.theme.SoftPink
-import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.CreateRecipeViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.CreateRecipe
 import java.io.File
@@ -66,12 +65,12 @@ import java.time.LocalDateTime
 @Composable
 fun CreatingRecipeScreen(
     navController: NavController,
-    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
+    createRecipeViewModel: CreateRecipeViewModel,
     tokenManager: TokenManager
 ) {
     CreatingRecipe(
         navController = navController,
-        applicationUserRecipeViewModel = applicationUserRecipeViewModel,
+        createRecipeViewModel = createRecipeViewModel,
         tokenManager = tokenManager
     )
 }
@@ -81,7 +80,7 @@ fun CreatingRecipeScreen(
 @Composable
 fun CreatingRecipe(
     navController: NavController,
-    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
+    createRecipeViewModel: CreateRecipeViewModel,
     tokenManager: TokenManager
 ) {
 
@@ -179,11 +178,6 @@ fun CreatingRecipe(
                 ) {
                     if (createRecipe.title.isNotBlank() && createRecipe.recipeImage != null && createRecipe.ingredients.isNotBlank() && createRecipe.steps != null && createRecipe.preparationTime.isNotBlank()) {
                         CreatingRecipeSaveButton(
-                            controller = navController,
-                            navigationRoute = AppNavigationRoute.BottomAppNavigationBar.route,
-                            applicationUserRecipeViewModel = applicationUserRecipeViewModel,
-                            tokenManager = tokenManager,
-                            recipeInfo = createRecipe,
                             buttonText = stringResource(id = R.string.save_recipe_text),
                             colorButtonText = SoftGray,
                             buttonColor = SoftOrange,
@@ -192,7 +186,7 @@ fun CreatingRecipe(
                                 if (titleValidation == false && ingredientsValidation == false && imageValidation == true && preparationTimeValidation == true && createRecipe.steps.isNotEmpty()) {
                                     val token = tokenManager.getToken()
                                     token?.let {
-                                        applicationUserRecipeViewModel.createApplicationUserRecipe(
+                                        createRecipeViewModel.createApplicationUserRecipe(
                                             it,
                                             recipeImage = createRecipe.recipeImage!!,
                                             title = createRecipe.title,
@@ -384,11 +378,6 @@ fun DescribeStepsRecipe(
 
 @Composable
 private fun CreatingRecipeSaveButton(
-    controller: NavController,
-    navigationRoute: String,
-    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
-    tokenManager: TokenManager,
-    recipeInfo: CreateRecipe,
     buttonText: String,
     colorButtonText: Color,
     buttonColor: Color,

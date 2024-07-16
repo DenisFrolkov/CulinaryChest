@@ -25,9 +25,8 @@ import com.den.culinarychest.presentation.other.route.AppNavigationRoute
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.other.ui.theme.SoftPink
-import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserFavoriteRecipeViewModel
-import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserRecipeViewModel
-import com.den.culinarychest.presentation.main.viewmodel.RecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.HorizontalPagerViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeOwnershipViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 
@@ -35,26 +34,25 @@ import com.example.culinarychest.domain.domain.model.recipe.Recipe
 @Composable
 fun FavoriteScreen(
     controller: NavController,
-    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
-    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
-    recipeViewModel: RecipeViewModel,
+    horizontalPagerViewModel: HorizontalPagerViewModel,
+    recipeOwnershipViewModel: RecipeOwnershipViewModel,
     tokenManager: TokenManager
 ) {
 
-    val favoriteRecipeList = applicationUserFavoriteRecipeViewModel.userFavoriteRecipes.collectAsState().value
+    val favoriteRecipeList = horizontalPagerViewModel.userFavoriteRecipes.collectAsState().value
     tokenManager.getToken()?.let { token ->
         val recipeIds = favoriteRecipeList.map { it.recipeId.toString() }
-        recipeViewModel.getRecipesByIds(token, recipeIds)
+        horizontalPagerViewModel.getRecipesByIds(token, recipeIds)
     }
 
     val recipe =
-        recipeViewModel.recipesById.collectAsState().value
+        horizontalPagerViewModel.recipesById.collectAsState().value
 
 
     if (recipe.isEmpty()) {
         EmptyScreenText()
     } else {
-        ListRecipes(controller, recipe, recipeViewModel, applicationUserFavoriteRecipeViewModel, applicationUserRecipeViewModel, tokenManager)
+        ListRecipes(controller, recipe, recipeOwnershipViewModel, tokenManager)
     }
 }
 
@@ -62,9 +60,7 @@ fun FavoriteScreen(
 private fun ListRecipes(
     controller: NavController,
     recipeDtoList: List<Recipe>,
-    recipeViewModel: RecipeViewModel,
-    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
-    applicationUserRecipeViewModel: ApplicationUserRecipeViewModel,
+    recipeOwnershipViewModel: RecipeOwnershipViewModel,
     tokenManager: TokenManager
 ) {
     LazyColumn(
@@ -85,8 +81,7 @@ private fun ListRecipes(
                     textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
                     recipe = recipe,
                     tokenManager = tokenManager,
-                    applicationUserFavoriteRecipeViewModel = applicationUserFavoriteRecipeViewModel,
-                    recipeViewModel = recipeViewModel
+                    recipeOwnershipViewModel = recipeOwnershipViewModel
                 )
             }
         } else {

@@ -30,8 +30,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
-import com.den.culinarychest.presentation.main.viewmodel.ApplicationUserFavoriteRecipeViewModel
-import com.den.culinarychest.presentation.main.viewmodel.RecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeOwnershipViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 
@@ -41,8 +40,7 @@ fun RecipeItem(
     textRouteNavigation: String,
     recipe: Recipe,
     tokenManager: TokenManager,
-    applicationUserFavoriteRecipeViewModel: ApplicationUserFavoriteRecipeViewModel,
-    recipeViewModel: RecipeViewModel
+    recipeOwnershipViewModel: RecipeOwnershipViewModel
 ) {
     Column(
         modifier = Modifier
@@ -52,11 +50,11 @@ fun RecipeItem(
                 tokenManager
                     .getToken()
                     ?.let {
-                        applicationUserFavoriteRecipeViewModel.getFavoriteRecipeByRecipeId(
+                        recipeOwnershipViewModel.getFavoriteRecipeByRecipeId(
                             it,
                             recipe.recipeId
                         )
-                        recipeViewModel.getRecipeById(token = it, recipeId = recipe.recipeId)
+                        recipeOwnershipViewModel.getRecipeById(token = it, recipeId = recipe.recipeId)
                     }
                 controller.navigate("${textRouteNavigation}/${recipe.recipeId}")
             }

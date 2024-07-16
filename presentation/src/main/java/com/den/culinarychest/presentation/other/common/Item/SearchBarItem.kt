@@ -33,12 +33,12 @@ import com.den.culinarychest.R
 import com.den.culinarychest.presentation.other.ui.theme.LightGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
-import com.den.culinarychest.presentation.main.viewmodel.RecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.SearchViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 
 @Composable
 fun SearchBarItem(
-    recipeViewModel: RecipeViewModel,
+    searchViewModel: SearchViewModel,
     tokenManager: TokenManager,
     onTextChanged: (String) -> Unit,
 ) {
@@ -85,7 +85,7 @@ fun SearchBarItem(
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        tokenManager.getToken()?.let { token -> recipeViewModel.getRecipes(token, enteredSearchText.text) }
+                        tokenManager.getToken()?.let { token -> searchViewModel.getRecipes(token, enteredSearchText.text) }
                         keyboardController?.hide()
                     }
                 ),
