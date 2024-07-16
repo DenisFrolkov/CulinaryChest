@@ -28,13 +28,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.den.culinarychest.R
+import com.den.culinarychest.presentation.main.viewmodel.CreatedViewModel
+import com.den.culinarychest.presentation.main.viewmodel.FavoriteViewModel
 import com.den.culinarychest.presentation.other.route.BottomNavigationRoute
 import com.den.culinarychest.presentation.other.screens.HorizontalPagerScreen
 import com.den.culinarychest.presentation.other.screens.ProfileScreen
 import com.den.culinarychest.presentation.other.screens.SearchScreen
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
-import com.den.culinarychest.presentation.main.viewmodel.HorizontalPagerViewModel
 import com.den.culinarychest.presentation.main.viewmodel.ProfileViewModel
 import com.den.culinarychest.presentation.main.viewmodel.RecipeOwnershipViewModel
 import com.den.culinarychest.presentation.main.viewmodel.SearchViewModel
@@ -46,7 +47,8 @@ fun BottomNavigationBar(
     navController: NavController,
     searchViewModel: SearchViewModel,
     recipeOwnershipViewModel: RecipeOwnershipViewModel,
-    horizontalPagerViewModel: HorizontalPagerViewModel,
+    createdViewModel: CreatedViewModel,
+    favoriteViewModel: FavoriteViewModel,
     profileViewModel: ProfileViewModel,
     tokenManager: TokenManager
 ) {
@@ -133,7 +135,8 @@ fun BottomNavigationBar(
             composable(BottomNavigationRoute.TopNavigationBar.route) {
                 HorizontalPagerScreen(
                     navController = navController,
-                    horizontalPagerViewModel = horizontalPagerViewModel,
+                    createdViewModel = createdViewModel,
+                    favoriteViewModel = favoriteViewModel,
                     recipeOwnershipViewModel = recipeOwnershipViewModel,
                     tokenManager = tokenManager
                 )

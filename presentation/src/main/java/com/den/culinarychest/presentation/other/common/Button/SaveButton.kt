@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
-import com.den.culinarychest.presentation.main.viewmodel.ManageRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.FetchUserRecipeViewModel
 import com.den.culinarychest.presentation.main.viewmodel.ManageStepsViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
@@ -39,7 +39,7 @@ fun SaveButton(
     updateInfoRecipe: UpdateRecipe,
     updateStepDto: List<UpdateStep>,
     createStepDto: List<CreateStep>,
-    manageRecipeViewModel: ManageRecipeViewModel,
+    fetchUserRecipeViewModel: FetchUserRecipeViewModel,
     manageStepsViewModel: ManageStepsViewModel,
     tokenManager: TokenManager,
     buttonColor: Color,
@@ -56,7 +56,7 @@ fun SaveButton(
                 indication = null
             ) {
                 tokenManager.getToken()?.let {
-                    manageRecipeViewModel.updateApplicationUserRecipe(
+                    fetchUserRecipeViewModel.updateApplicationUserRecipe(
                         it, recipeId, updateInfoRecipe.title, updateInfoRecipe.recipeImage, updateInfoRecipe.ingredients, updateInfoRecipe.creationDate, updateInfoRecipe.preparationTime)
                 }
                 updateStepDto.forEach { updateStep ->

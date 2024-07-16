@@ -19,12 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
+import com.den.culinarychest.presentation.main.viewmodel.CreatedViewModel
 import com.den.culinarychest.presentation.other.common.Item.FAB
 import com.den.culinarychest.presentation.other.common.Item.RecipeItem
 import com.den.culinarychest.presentation.other.route.AppNavigationRoute
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftPink
-import com.den.culinarychest.presentation.main.viewmodel.HorizontalPagerViewModel
 import com.den.culinarychest.presentation.main.viewmodel.RecipeOwnershipViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
@@ -32,13 +32,13 @@ import com.example.culinarychest.domain.domain.model.recipe.Recipe
 @Composable
 fun CreatedScreen(
     controller: NavController,
-    horizontalPagerViewModel: HorizontalPagerViewModel,
+    createdViewModel: CreatedViewModel,
     recipeOwnershipViewModel: RecipeOwnershipViewModel,
     tokenManager: TokenManager
 ) {
 
     val listRecipeCreatedUser =
-        horizontalPagerViewModel.applicationUserRecipes.collectAsState().value
+        createdViewModel.applicationUserRecipes.collectAsState().value
 
     Box(
         modifier = Modifier

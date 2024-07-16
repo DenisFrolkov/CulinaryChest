@@ -16,8 +16,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
+import com.den.culinarychest.presentation.main.viewmodel.CreatedViewModel
+import com.den.culinarychest.presentation.main.viewmodel.FavoriteViewModel
 import com.den.culinarychest.presentation.other.common.Item.TopBarButtonItem
-import com.den.culinarychest.presentation.main.viewmodel.HorizontalPagerViewModel
 import com.den.culinarychest.presentation.main.viewmodel.RecipeOwnershipViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import kotlinx.coroutines.launch
@@ -26,13 +27,15 @@ import kotlinx.coroutines.launch
 @Composable
 fun HorizontalPagerScreen(
     navController: NavController,
-    horizontalPagerViewModel: HorizontalPagerViewModel,
+    createdViewModel: CreatedViewModel,
+    favoriteViewModel: FavoriteViewModel,
     recipeOwnershipViewModel: RecipeOwnershipViewModel,
     tokenManager: TokenManager
 ) {
     HorizontalPager(
         controller = navController,
-        horizontalPagerViewModel = horizontalPagerViewModel,
+        createdViewModel = createdViewModel,
+        favoriteViewModel = favoriteViewModel,
         recipeOwnershipViewModel = recipeOwnershipViewModel,
         tokenManager = tokenManager
     )
@@ -43,14 +46,15 @@ fun HorizontalPagerScreen(
 @Composable
 fun HorizontalPager(
     controller: NavController,
-    horizontalPagerViewModel: HorizontalPagerViewModel,
+    createdViewModel: CreatedViewModel,
+    favoriteViewModel: FavoriteViewModel,
     recipeOwnershipViewModel: RecipeOwnershipViewModel,
     tokenManager: TokenManager
 ) {
 
     tokenManager.getToken()?.let {
-        horizontalPagerViewModel.getApplicationUserFavoriteRecipes(it)
-        horizontalPagerViewModel.getApplicationUserRecipes(it)
+        favoriteViewModel.getApplicationUserFavoriteRecipes(it)
+        createdViewModel.getApplicationUserRecipes(it)
     }
 
     val pagerState = rememberPagerState(pageCount = { 2 })
@@ -90,14 +94,14 @@ fun HorizontalPager(
             when (page) {
                 0 -> CreatedScreen(
                     controller = controller,
-                    horizontalPagerViewModel = horizontalPagerViewModel,
+                    createdViewModel = createdViewModel,
                     recipeOwnershipViewModel = recipeOwnershipViewModel,
                     tokenManager = tokenManager
                 )
 
                 1 -> FavoriteScreen(
                     controller = controller,
-                    horizontalPagerViewModel = horizontalPagerViewModel,
+                    favoriteViewModel = favoriteViewModel,
                     recipeOwnershipViewModel = recipeOwnershipViewModel,
                     tokenManager = tokenManager
                 )

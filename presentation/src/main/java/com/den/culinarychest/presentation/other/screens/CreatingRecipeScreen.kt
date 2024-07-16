@@ -55,7 +55,7 @@ import com.den.culinarychest.presentation.other.ui.theme.LightGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.other.ui.theme.SoftPink
-import com.den.culinarychest.presentation.main.viewmodel.CreateRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.CreatingRecipeViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.CreateRecipe
 import java.io.File
@@ -65,12 +65,12 @@ import java.time.LocalDateTime
 @Composable
 fun CreatingRecipeScreen(
     navController: NavController,
-    createRecipeViewModel: CreateRecipeViewModel,
+    creatingRecipeViewModel: CreatingRecipeViewModel,
     tokenManager: TokenManager
 ) {
     CreatingRecipe(
         navController = navController,
-        createRecipeViewModel = createRecipeViewModel,
+        creatingRecipeViewModel = creatingRecipeViewModel,
         tokenManager = tokenManager
     )
 }
@@ -80,7 +80,7 @@ fun CreatingRecipeScreen(
 @Composable
 fun CreatingRecipe(
     navController: NavController,
-    createRecipeViewModel: CreateRecipeViewModel,
+    creatingRecipeViewModel: CreatingRecipeViewModel,
     tokenManager: TokenManager
 ) {
 
@@ -186,7 +186,7 @@ fun CreatingRecipe(
                                 if (titleValidation == false && ingredientsValidation == false && imageValidation == true && preparationTimeValidation == true && createRecipe.steps.isNotEmpty()) {
                                     val token = tokenManager.getToken()
                                     token?.let {
-                                        createRecipeViewModel.createApplicationUserRecipe(
+                                        creatingRecipeViewModel.createApplicationUserRecipe(
                                             it,
                                             recipeImage = createRecipe.recipeImage!!,
                                             title = createRecipe.title,

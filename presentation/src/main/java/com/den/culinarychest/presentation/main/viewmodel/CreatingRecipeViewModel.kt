@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.io.File
 
-class CreateRecipeViewModel(
+class CreatingRecipeViewModel(
     private val createApplicationUserRecipeUseCase: CreateApplicationUserRecipeUseCase,
 ) : ViewModel() {
 

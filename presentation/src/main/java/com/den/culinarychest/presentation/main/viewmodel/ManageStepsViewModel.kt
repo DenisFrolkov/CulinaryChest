@@ -53,14 +53,4 @@ class ManageStepsViewModel(
 
         }
     }
-
-    override fun onCleared() {
-        Log.d("AAA", "onCleared")
-        super.onCleared()
-        viewModelScope.cancel()
-    }
-
-    fun clear(){
-        onCleared()
-    }
 }

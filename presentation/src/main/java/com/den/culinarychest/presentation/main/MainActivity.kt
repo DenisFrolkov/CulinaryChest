@@ -9,14 +9,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.den.culinarychest.presentation.other.navigation.appNavigation.AppNavigation
 import com.den.culinarychest.presentation.other.ui.theme.CulinaryChestTheme
 import com.den.culinarychest.presentation.main.viewmodel.AuthorizationViewModel
-import com.den.culinarychest.presentation.main.viewmodel.ManageFavoriteRecipeViewModel
-import com.den.culinarychest.presentation.main.viewmodel.CreateRecipeViewModel
-import com.den.culinarychest.presentation.main.viewmodel.FavoriteRecipeByRecipeIdViewModel
+import com.den.culinarychest.presentation.main.viewmodel.FetchOtherUserRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.CreatingRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.CreatedViewModel
+import com.den.culinarychest.presentation.main.viewmodel.FavoriteViewModel
 import com.den.culinarychest.presentation.main.viewmodel.GenericViewModelFactory
-import com.den.culinarychest.presentation.main.viewmodel.HorizontalPagerViewModel
-import com.den.culinarychest.presentation.main.viewmodel.ManageRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.FetchUserRecipeViewModel
 import com.den.culinarychest.presentation.main.viewmodel.ProfileViewModel
-import com.den.culinarychest.presentation.main.viewmodel.RecipeByIdViewModel
 import com.den.culinarychest.presentation.main.viewmodel.RecipeOwnershipViewModel
 import com.den.culinarychest.presentation.main.viewmodel.ManageStepsViewModel
 import com.den.culinarychest.presentation.main.viewmodel.RegistrationViewModel
@@ -44,7 +43,6 @@ import com.example.culinarychest.domain.domain.usecase.recipeRepositoryUseCases.
 import com.example.culinarychest.domain.domain.usecase.recipeRepositoryUseCases.GetRecipesUseCase
 import com.example.culinarychest.domain.domain.usecase.recipeStepsUseCases.CreateStepUseCase
 import com.example.culinarychest.domain.domain.usecase.recipeStepsUseCases.DeleteStepUseCase
-import com.example.culinarychest.domain.domain.usecase.recipeStepsUseCases.GetRecipeStepsUseCases
 import com.example.culinarychest.domain.domain.usecase.recipeStepsUseCases.UpdateStepUseCase
 
 class MainActivity : ComponentActivity() {
@@ -103,17 +101,23 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private val horizontalPagerViewModel by viewModels<HorizontalPagerViewModel> {
+    private val createdViewModel by viewModels<CreatedViewModel> {
         GenericViewModelFactory {
-            HorizontalPagerViewModel(
-                GetApplicationUserFavoriteRecipesUseCase(
-                    ApplicationUserFavoriteRecipeRepositoryImpl(
+            CreatedViewModel(
+                GetApplicationUserRecipesUseCase(
+                    ApplicationUserRecipeRepositoryImpl(
                         RetrofitInstance(tokenManager)
                             .culinaryChestApi
                     )
-                ),
-                GetApplicationUserRecipesUseCase(
-                    ApplicationUserRecipeRepositoryImpl(
+                )
+            )
+        }
+    }
+    private val favoriteViewModel by viewModels<FavoriteViewModel> {
+        GenericViewModelFactory {
+            FavoriteViewModel(
+                GetApplicationUserFavoriteRecipesUseCase(
+                    ApplicationUserFavoriteRecipeRepositoryImpl(
                         RetrofitInstance(tokenManager)
                             .culinaryChestApi
                     )
@@ -149,21 +153,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private val recipeByIdViewModel by viewModels<RecipeByIdViewModel> {
+    private val creatingRecipeViewModel by viewModels<CreatingRecipeViewModel> {
         GenericViewModelFactory {
-            RecipeByIdViewModel(
-                GetRecipeByIdUseCase(
-                    RecipeRepositoryImpl(
-                        RetrofitInstance(tokenManager).culinaryChestApi
-                    )
-                )
-            )
-        }
-    }
-
-    private val createRecipeViewModel by viewModels<CreateRecipeViewModel> {
-        GenericViewModelFactory {
-            CreateRecipeViewModel(
+            CreatingRecipeViewModel(
                 CreateApplicationUserRecipeUseCase(
                     ApplicationUserRecipeRepositoryImpl(
                         RetrofitInstance(tokenManager).culinaryChestApi
@@ -173,9 +165,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private val manageRecipeViewModel by viewModels<ManageRecipeViewModel> {
+    private val fetchUserRecipeViewModel by viewModels<FetchUserRecipeViewModel> {
         GenericViewModelFactory {
-            ManageRecipeViewModel(
+            FetchUserRecipeViewModel(
                 UpdateApplicationUserRecipeUseCase(
                     ApplicationUserRecipeRepositoryImpl(
                         RetrofitInstance(tokenManager)
@@ -192,21 +184,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private val favoriteRecipeByRecipeIdViewModel by viewModels<FavoriteRecipeByRecipeIdViewModel> {
+    private val fetchOtherUserRecipeViewModel by viewModels<FetchOtherUserRecipeViewModel> {
         GenericViewModelFactory {
-            FavoriteRecipeByRecipeIdViewModel(
-                GetFavoriteRecipeByRecipeIdUseCase(
-                    ApplicationUserFavoriteRecipeRepositoryImpl(RetrofitInstance(tokenManager)
-                        .culinaryChestApi
-                    )
-                )
-            )
-        }
-    }
-
-    private val manageFavoriteRecipeViewModel by viewModels<ManageFavoriteRecipeViewModel> {
-        GenericViewModelFactory {
-            ManageFavoriteRecipeViewModel(
+            FetchOtherUserRecipeViewModel(
                 CreateApplicationUserFavoriteRecipesUseCase(
                     ApplicationUserFavoriteRecipeRepositoryImpl(
                         RetrofitInstance(tokenManager)
@@ -257,13 +237,12 @@ class MainActivity : ComponentActivity() {
                     authorizationApplicationUserViewModel,
                     searchViewModel,
                     recipeOwnershipViewModel,
-                    horizontalPagerViewModel,
+                    createdViewModel,
+                    favoriteViewModel,
                     profileViewModel,
-                    recipeByIdViewModel,
-                    createRecipeViewModel,
-                    manageRecipeViewModel,
-                    manageFavoriteRecipeViewModel,
-                    favoriteRecipeByRecipeIdViewModel,
+                    creatingRecipeViewModel,
+                    fetchUserRecipeViewModel,
+                    fetchOtherUserRecipeViewModel,
                     manageStepsViewModel,
                     tokenManager
                 )

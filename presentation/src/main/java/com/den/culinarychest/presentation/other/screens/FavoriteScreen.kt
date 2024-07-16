@@ -20,12 +20,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
+import com.den.culinarychest.presentation.main.viewmodel.FavoriteViewModel
 import com.den.culinarychest.presentation.other.common.Item.RecipeItem
 import com.den.culinarychest.presentation.other.route.AppNavigationRoute
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.other.ui.theme.SoftPink
-import com.den.culinarychest.presentation.main.viewmodel.HorizontalPagerViewModel
 import com.den.culinarychest.presentation.main.viewmodel.RecipeOwnershipViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
@@ -34,19 +34,19 @@ import com.example.culinarychest.domain.domain.model.recipe.Recipe
 @Composable
 fun FavoriteScreen(
     controller: NavController,
-    horizontalPagerViewModel: HorizontalPagerViewModel,
+    favoriteViewModel: FavoriteViewModel,
     recipeOwnershipViewModel: RecipeOwnershipViewModel,
     tokenManager: TokenManager
 ) {
 
-    val favoriteRecipeList = horizontalPagerViewModel.userFavoriteRecipes.collectAsState().value
+    val favoriteRecipeList = favoriteViewModel.userFavoriteRecipes.collectAsState().value
     tokenManager.getToken()?.let { token ->
         val recipeIds = favoriteRecipeList.map { it.recipeId.toString() }
-        horizontalPagerViewModel.getRecipesByIds(token, recipeIds)
+        favoriteViewModel.getRecipesByIds(token, recipeIds)
     }
 
     val recipe =
-        horizontalPagerViewModel.recipesById.collectAsState().value
+        favoriteViewModel.recipesById.collectAsState().value
 
 
     if (recipe.isEmpty()) {
