@@ -19,7 +19,7 @@ import com.den.culinarychest.R
 import com.den.culinarychest.presentation.main.viewmodel.CreatedViewModel
 import com.den.culinarychest.presentation.main.viewmodel.FavoriteViewModel
 import com.den.culinarychest.presentation.other.common.Item.TopBarButtonItem
-import com.den.culinarychest.presentation.main.viewmodel.RecipeOwnershipViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeDetailsViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import kotlinx.coroutines.launch
 
@@ -29,14 +29,14 @@ fun HorizontalPagerScreen(
     navController: NavController,
     createdViewModel: CreatedViewModel,
     favoriteViewModel: FavoriteViewModel,
-    recipeOwnershipViewModel: RecipeOwnershipViewModel,
+    recipeDetailsViewModel: RecipeDetailsViewModel,
     tokenManager: TokenManager
 ) {
     HorizontalPager(
         controller = navController,
         createdViewModel = createdViewModel,
         favoriteViewModel = favoriteViewModel,
-        recipeOwnershipViewModel = recipeOwnershipViewModel,
+        recipeDetailsViewModel = recipeDetailsViewModel,
         tokenManager = tokenManager
     )
 }
@@ -48,13 +48,13 @@ fun HorizontalPager(
     controller: NavController,
     createdViewModel: CreatedViewModel,
     favoriteViewModel: FavoriteViewModel,
-    recipeOwnershipViewModel: RecipeOwnershipViewModel,
+    recipeDetailsViewModel: RecipeDetailsViewModel,
     tokenManager: TokenManager
 ) {
 
     tokenManager.getToken()?.let {
-        favoriteViewModel.getApplicationUserFavoriteRecipes(it)
-        createdViewModel.getApplicationUserRecipes(it)
+        favoriteViewModel.getListFavoriteRecipesUser(it)
+        createdViewModel.getListRecipesUser(it)
     }
 
     val pagerState = rememberPagerState(pageCount = { 2 })
@@ -95,14 +95,14 @@ fun HorizontalPager(
                 0 -> CreatedScreen(
                     controller = controller,
                     createdViewModel = createdViewModel,
-                    recipeOwnershipViewModel = recipeOwnershipViewModel,
+                    recipeDetailsViewModel = recipeDetailsViewModel,
                     tokenManager = tokenManager
                 )
 
                 1 -> FavoriteScreen(
                     controller = controller,
                     favoriteViewModel = favoriteViewModel,
-                    recipeOwnershipViewModel = recipeOwnershipViewModel,
+                    recipeDetailsViewModel = recipeDetailsViewModel,
                     tokenManager = tokenManager
                 )
             }

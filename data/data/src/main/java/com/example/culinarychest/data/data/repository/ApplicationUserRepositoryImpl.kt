@@ -24,7 +24,7 @@ class ApplicationUserRepositoryImpl(
         return flow {
             try {
                 val response: Response<DuplicationUserInfoDto> =
-                    culinaryChestAPI.registrationApplicationUser(user.toDto())
+                    culinaryChestAPI.registrationUser(user.toDto())
                 if (response.isSuccessful) {
                     val body = response.body()
                     if (body != null) {
@@ -45,7 +45,7 @@ class ApplicationUserRepositoryImpl(
     override suspend fun authorizationApplicationUser(login: Login): Flow<ProcessingResult<Token>> {
         return flow {
             try {
-                val response = culinaryChestAPI.authorizationApplicationUser(login.toDto())
+                val response = culinaryChestAPI.authorizationUser(login.toDto())
                 if (response.isSuccessful) {
                     val body = response.body()
                     if (body != null) {
@@ -66,7 +66,7 @@ class ApplicationUserRepositoryImpl(
     override suspend fun getApplicationUserInfo(token: String): Flow<ProcessingResult<ApplicationUserInfo>> =
         flow {
             try {
-                val response = culinaryChestAPI.getApplicationUserInfo(token).toDomain()
+                val response = culinaryChestAPI.getUserInfo(token).toDomain()
                 emit(ProcessingResult.Success(response))
             } catch (e: HttpException) {
                 emit(ProcessingResult.Error(e.localizedMessage ?: "An unexpected error occurred"))

@@ -85,7 +85,7 @@ fun SearchBarItem(
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        tokenManager.getToken()?.let { token -> searchViewModel.getRecipes(token, enteredSearchText.text) }
+                        tokenManager.getToken()?.let { token -> searchViewModel.getListRecipes(token, enteredSearchText.text) }
                         keyboardController?.hide()
                     }
                 ),

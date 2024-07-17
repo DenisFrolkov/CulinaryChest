@@ -22,7 +22,7 @@ class CreatingRecipeViewModel(
     private val _showErrorToastChannel = Channel<Boolean>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
 
-    fun createApplicationUserRecipe(
+    fun createRecipeUser(
         token: String,
         title: String,
         recipeImage: File,

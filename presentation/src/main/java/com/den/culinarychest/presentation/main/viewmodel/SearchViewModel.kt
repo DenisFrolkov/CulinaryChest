@@ -18,7 +18,7 @@ class SearchViewModel(
     private val _listRecipes = MutableStateFlow<List<Recipe>>(emptyList())
     val listRecipes = _listRecipes.asStateFlow()
 
-    fun getRecipes(token: String, searchTerm: String?) {
+    fun getListRecipes(token: String, searchTerm: String?) {
         viewModelScope.launch {
             getRecipesUseCase(token, searchTerm)
                 .collectLatest { result ->

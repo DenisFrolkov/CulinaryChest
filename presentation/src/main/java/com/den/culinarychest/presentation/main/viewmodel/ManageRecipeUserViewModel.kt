@@ -7,12 +7,12 @@ import com.example.culinarychest.domain.domain.usecase.applicationUserRecipeUseC
 import kotlinx.coroutines.launch
 import java.io.File
 
-class FetchUserRecipeViewModel(
+class ManageRecipeUserViewModel(
     private val updateApplicationUserRecipeUseCase: UpdateApplicationUserRecipeUseCase,
     private val deleteApplicationUserRecipeUseCase: DeleteApplicationUserRecipeUseCase
 ) : ViewModel() {
 
-    fun updateApplicationUserRecipe(
+    fun updateRecipeUser(
         token: String,
         recipeId: String,
         title: String,
@@ -32,7 +32,7 @@ class FetchUserRecipeViewModel(
         }
     }
 
-    fun deleteApplicationUserRecipe(token: String, recipeId: String) {
+    fun deleteRecipeUser(token: String, recipeId: String) {
         viewModelScope.launch {
             try {
                 deleteApplicationUserRecipeUseCase(

@@ -126,7 +126,7 @@ fun Authorization(
         } else {
             PushButton(
                 onClick = {
-                    authorizationViewModel.authorizationApplicationUser(
+                    authorizationViewModel.authorizationUser(
                         Login(userName = login, password = password)
                     )
                     coroutineScope.launch {

@@ -2,7 +2,6 @@ package com.example.culinarychest.data.data.repository
 
 import com.example.culinarychest.data.data.api.CulinaryChestAPI
 import com.example.culinarychest.data.data.model.Mappers.toDomain
-import com.example.culinarychest.data.data.model.Mappers.toDto
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.domain.repository.ApplicationUserRecipeRepository
 import com.example.culinarychest.domain.domain.model.ProcessingResult
@@ -24,7 +23,7 @@ class ApplicationUserRecipeRepositoryImpl(
         flow {
             try {
                 val response =
-                    culinaryChestAPI.getApplicationUserRecipes(token).map { it.toDomain() }
+                    culinaryChestAPI.getListRecipesUser(token).map { it.toDomain() }
                 emit(ProcessingResult.Success(response))
             } catch (e: HttpException) {
                 emit(ProcessingResult.Error(e.localizedMessage ?: "An unexpected error occurred"))
@@ -54,7 +53,7 @@ class ApplicationUserRecipeRepositoryImpl(
         val preparationTimePart = preparationTime.toRequestBody("text/plain".toMediaTypeOrNull())
 
         try {
-            culinaryChestAPI.createApplicationUserRecipe(
+            culinaryChestAPI.createRecipeUser(
                 token,
                 titlePart,
                 recipeImagePart,
@@ -94,7 +93,7 @@ class ApplicationUserRecipeRepositoryImpl(
         val creationDatePart = creationDate.toRequestBody("text/plain".toMediaTypeOrNull())
 
         try {
-            culinaryChestAPI.updateApplicationUserRecipe(
+            culinaryChestAPI.updateRecipeUser(
                 token,
                 recipeId,
                 titlePart,
@@ -114,7 +113,7 @@ class ApplicationUserRecipeRepositoryImpl(
 
     override suspend fun deleteApplicationUserRecipe(token: String, recipeId: String) {
         try {
-            culinaryChestAPI.deleteApplicationUserRecipe(
+            culinaryChestAPI.deleteRecipeUser(
                 token,
                 recipeId
             )

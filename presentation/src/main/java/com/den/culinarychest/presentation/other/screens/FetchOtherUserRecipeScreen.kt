@@ -53,8 +53,8 @@ import com.den.culinarychest.presentation.other.common.Item.createImageLoader
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.other.ui.theme.SoftPink
-import com.den.culinarychest.presentation.main.viewmodel.FetchOtherUserRecipeViewModel
-import com.den.culinarychest.presentation.main.viewmodel.RecipeOwnershipViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ManageOtherRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeDetailsViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.favorite_recipe.CreateFavoriteRecipe
 import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe
@@ -65,15 +65,15 @@ import java.time.LocalDateTime
 fun FetchOtherUserRecipeScreen(
     navController: NavController,
     recipe: Recipe,
-    recipeOwnershipViewModel: RecipeOwnershipViewModel,
-    fetchOtherUserRecipeViewModel: FetchOtherUserRecipeViewModel,
+    recipeDetailsViewModel: RecipeDetailsViewModel,
+    manageOtherRecipeViewModel: ManageOtherRecipeViewModel,
     tokenManager: TokenManager
 ) {
     FetchOtherUserRecipe(
         controller = navController,
         recipe = recipe,
-        recipeOwnershipViewModel = recipeOwnershipViewModel,
-        fetchOtherUserRecipeViewModel = fetchOtherUserRecipeViewModel,
+        recipeDetailsViewModel = recipeDetailsViewModel,
+        manageOtherRecipeViewModel = manageOtherRecipeViewModel,
         tokenManager = tokenManager
     )
 }
@@ -82,15 +82,15 @@ fun FetchOtherUserRecipeScreen(
 fun FetchOtherUserRecipe(
     controller: NavController,
     recipe: Recipe,
-    recipeOwnershipViewModel: RecipeOwnershipViewModel,
-    fetchOtherUserRecipeViewModel: FetchOtherUserRecipeViewModel,
+    recipeDetailsViewModel: RecipeDetailsViewModel,
+    manageOtherRecipeViewModel: ManageOtherRecipeViewModel,
     tokenManager: TokenManager
 ) {
     var clickElementLike by remember {
         mutableStateOf(false)
     }
 
-    val favoriteRecipeByRecipeId by recipeOwnershipViewModel.favoriteRecipeByRecipeId.collectAsState()
+    val favoriteRecipeByRecipeId by recipeDetailsViewModel.favoriteRecipeByRecipeId.collectAsState()
 
     Column {
         FetchOtherUserRecipeTopBar(
@@ -98,7 +98,7 @@ fun FetchOtherUserRecipe(
             recipeId = recipe.recipeId,
             favoriteRecipeByRecipeId = favoriteRecipeByRecipeId,
             clickElement = clickElementLike,
-            fetchOtherUserRecipeViewModel = fetchOtherUserRecipeViewModel,
+            manageOtherRecipeViewModel = manageOtherRecipeViewModel,
             tokenManager = tokenManager,
             passClickElement = { clickElementLike = it }
         )
@@ -127,7 +127,7 @@ fun FetchOtherUserRecipeTopBar(
     controller: NavController,
     recipeId: String,
     favoriteRecipeByRecipeId: FavoriteRecipe?,
-    fetchOtherUserRecipeViewModel: FetchOtherUserRecipeViewModel,
+    manageOtherRecipeViewModel: ManageOtherRecipeViewModel,
     tokenManager: TokenManager,
     clickElement: Boolean,
     passClickElement: (Boolean) -> Unit
@@ -168,7 +168,7 @@ fun FetchOtherUserRecipeTopBar(
                         tokenManager
                             .getToken()
                             ?.let {
-                                fetchOtherUserRecipeViewModel.createApplicationUserFavoriteRecipes(
+                                manageOtherRecipeViewModel.createFavoriteRecipesUser(
                                     it,
                                     recipeId.toInt(),
                                     CreateFavoriteRecipe(
@@ -198,7 +198,7 @@ fun FetchOtherUserRecipeTopBar(
                         tokenManager
                             .getToken()
                             ?.let {
-                                fetchOtherUserRecipeViewModel.deleteApplicationUserFavoriteRecipe(
+                                manageOtherRecipeViewModel.deleteFavoriteRecipeUser(
                                     it, recipeId
                                 )
                             }

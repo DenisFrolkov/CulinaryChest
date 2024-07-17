@@ -26,26 +26,26 @@ import com.den.culinarychest.presentation.other.common.Item.SearchBarItem
 import com.den.culinarychest.presentation.other.route.AppNavigationRoute
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftPink
-import com.den.culinarychest.presentation.main.viewmodel.RecipeOwnershipViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeDetailsViewModel
 import com.den.culinarychest.presentation.main.viewmodel.SearchViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 
 @Composable
 fun SearchScreen(
     navController: NavController,
-    recipeOwnershipViewModel: RecipeOwnershipViewModel,
+    recipeDetailsViewModel: RecipeDetailsViewModel,
     searchViewModel: SearchViewModel,
     tokenManager: TokenManager
 ) {
 
     tokenManager.getToken()?.let {
-        searchViewModel.getRecipes(it, null)
+        searchViewModel.getListRecipes(it, null)
     }
 
     Search(
         controller = navController,
         searchViewModel = searchViewModel,
-        recipeOwnershipViewModel = recipeOwnershipViewModel,
+        recipeDetailsViewModel = recipeDetailsViewModel,
         tokenManager = tokenManager
     )
 }
@@ -55,7 +55,7 @@ fun SearchScreen(
 fun Search(
     controller: NavController,
     searchViewModel: SearchViewModel,
-    recipeOwnershipViewModel: RecipeOwnershipViewModel,
+    recipeDetailsViewModel: RecipeDetailsViewModel,
     tokenManager: TokenManager
 ) {
     var searchText by remember { mutableStateOf("") }
@@ -105,7 +105,7 @@ fun Search(
                         textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
                         recipe = recipe,
                         tokenManager = tokenManager,
-                        recipeOwnershipViewModel = recipeOwnershipViewModel
+                        recipeDetailsViewModel = recipeDetailsViewModel
                     )
                 }
             }

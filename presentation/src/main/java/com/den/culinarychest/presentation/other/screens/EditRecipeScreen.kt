@@ -68,7 +68,7 @@ import com.den.culinarychest.presentation.other.ui.theme.LightRed
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.other.ui.theme.SoftPink
-import com.den.culinarychest.presentation.main.viewmodel.FetchUserRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ManageRecipeUserViewModel
 import com.den.culinarychest.presentation.main.viewmodel.ManageStepsViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
@@ -81,14 +81,14 @@ import java.io.InputStream
 @Composable
 fun EditRecipeScreen(
     navController: NavController,
-    fetchUserRecipeViewModel: FetchUserRecipeViewModel,
+    manageRecipeUserViewModel: ManageRecipeUserViewModel,
     manageStepsViewModel: ManageStepsViewModel,
     recipe: Recipe,
     tokenManager: TokenManager
 ) {
     EditRecipe(
         controller = navController,
-        fetchUserRecipeViewModel = fetchUserRecipeViewModel,
+        manageRecipeUserViewModel = manageRecipeUserViewModel,
         manageStepsViewModel = manageStepsViewModel,
         recipe = recipe,
         tokenManager = tokenManager
@@ -98,7 +98,7 @@ fun EditRecipeScreen(
 @Composable
 fun EditRecipe(
     controller: NavController,
-    fetchUserRecipeViewModel: FetchUserRecipeViewModel,
+    manageRecipeUserViewModel: ManageRecipeUserViewModel,
     manageStepsViewModel: ManageStepsViewModel,
     recipe: Recipe,
     tokenManager: TokenManager
@@ -355,7 +355,7 @@ fun EditRecipe(
                         updateInfoRecipe = updateInfoRecipe,
                         updateStepDto = stepsFromServer.toList(),
                         createStepDto = stepsCreateApp.toList(),
-                        fetchUserRecipeViewModel = fetchUserRecipeViewModel,
+                        manageRecipeUserViewModel = manageRecipeUserViewModel,
                         manageStepsViewModel = manageStepsViewModel,
                         tokenManager = tokenManager,
                         buttonColor = EditRecipeColor

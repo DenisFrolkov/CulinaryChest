@@ -50,7 +50,7 @@ import com.den.culinarychest.presentation.other.route.AppNavigationRoute
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.other.ui.theme.SoftPink
-import com.den.culinarychest.presentation.main.viewmodel.FetchUserRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ManageRecipeUserViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.domain.model.step.Step
@@ -58,13 +58,13 @@ import com.example.culinarychest.domain.domain.model.step.Step
 @Composable
 fun FetchUserRecipeScreen(
     navController: NavController,
-    fetchUserRecipeViewModel: FetchUserRecipeViewModel,
+    manageRecipeUserViewModel: ManageRecipeUserViewModel,
     recipe: Recipe,
     tokenManager: TokenManager
 ) {
     FetchUserRecipe(
         controller = navController,
-        fetchUserRecipeViewModel = fetchUserRecipeViewModel,
+        manageRecipeUserViewModel = manageRecipeUserViewModel,
         recipe = recipe,
         tokenManager = tokenManager
     )
@@ -73,7 +73,7 @@ fun FetchUserRecipeScreen(
 @Composable
 fun FetchUserRecipe(
     controller: NavController,
-    fetchUserRecipeViewModel: FetchUserRecipeViewModel,
+    manageRecipeUserViewModel: ManageRecipeUserViewModel,
     recipe: Recipe,
     tokenManager: TokenManager
 ) {
@@ -132,7 +132,7 @@ fun FetchUserRecipe(
                         "Удалить" -> {
                             controller.popBackStack()
                             tokenManager.getToken()?.let {
-                                fetchUserRecipeViewModel.deleteApplicationUserRecipe(
+                                manageRecipeUserViewModel.deleteRecipeUser(
                                     it,
                                     recipe.recipeId
                                 )

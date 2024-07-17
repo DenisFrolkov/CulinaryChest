@@ -9,14 +9,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.den.culinarychest.presentation.other.navigation.appNavigation.AppNavigation
 import com.den.culinarychest.presentation.other.ui.theme.CulinaryChestTheme
 import com.den.culinarychest.presentation.main.viewmodel.AuthorizationViewModel
-import com.den.culinarychest.presentation.main.viewmodel.FetchOtherUserRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ManageOtherRecipeViewModel
 import com.den.culinarychest.presentation.main.viewmodel.CreatingRecipeViewModel
 import com.den.culinarychest.presentation.main.viewmodel.CreatedViewModel
 import com.den.culinarychest.presentation.main.viewmodel.FavoriteViewModel
 import com.den.culinarychest.presentation.main.viewmodel.GenericViewModelFactory
-import com.den.culinarychest.presentation.main.viewmodel.FetchUserRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ManageRecipeUserViewModel
 import com.den.culinarychest.presentation.main.viewmodel.ProfileViewModel
-import com.den.culinarychest.presentation.main.viewmodel.RecipeOwnershipViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeDetailsViewModel
 import com.den.culinarychest.presentation.main.viewmodel.ManageStepsViewModel
 import com.den.culinarychest.presentation.main.viewmodel.RegistrationViewModel
 import com.den.culinarychest.presentation.main.viewmodel.SearchViewModel
@@ -83,9 +83,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private val recipeOwnershipViewModel by viewModels<RecipeOwnershipViewModel> {
+    private val recipeDetailsViewModel by viewModels<RecipeDetailsViewModel> {
         GenericViewModelFactory {
-            RecipeOwnershipViewModel(
+            RecipeDetailsViewModel(
                 GetFavoriteRecipeByRecipeIdUseCase(
                     ApplicationUserFavoriteRecipeRepositoryImpl(
                         RetrofitInstance(tokenManager)
@@ -165,9 +165,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private val fetchUserRecipeViewModel by viewModels<FetchUserRecipeViewModel> {
+    private val manageRecipeUserViewModel by viewModels<ManageRecipeUserViewModel> {
         GenericViewModelFactory {
-            FetchUserRecipeViewModel(
+            ManageRecipeUserViewModel(
                 UpdateApplicationUserRecipeUseCase(
                     ApplicationUserRecipeRepositoryImpl(
                         RetrofitInstance(tokenManager)
@@ -184,9 +184,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private val fetchOtherUserRecipeViewModel by viewModels<FetchOtherUserRecipeViewModel> {
+    private val manageOtherRecipeViewModel by viewModels<ManageOtherRecipeViewModel> {
         GenericViewModelFactory {
-            FetchOtherUserRecipeViewModel(
+            ManageOtherRecipeViewModel(
                 CreateApplicationUserFavoriteRecipesUseCase(
                     ApplicationUserFavoriteRecipeRepositoryImpl(
                         RetrofitInstance(tokenManager)
@@ -236,13 +236,13 @@ class MainActivity : ComponentActivity() {
                     registrationApplicationUserViewModel,
                     authorizationApplicationUserViewModel,
                     searchViewModel,
-                    recipeOwnershipViewModel,
+                    recipeDetailsViewModel,
                     createdViewModel,
                     favoriteViewModel,
                     profileViewModel,
                     creatingRecipeViewModel,
-                    fetchUserRecipeViewModel,
-                    fetchOtherUserRecipeViewModel,
+                    manageRecipeUserViewModel,
+                    manageOtherRecipeViewModel,
                     manageStepsViewModel,
                     tokenManager
                 )

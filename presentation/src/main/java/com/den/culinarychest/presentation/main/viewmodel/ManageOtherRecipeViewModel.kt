@@ -7,11 +7,12 @@ import com.example.culinarychest.domain.domain.usecase.applicationUserFavoriteRe
 import com.example.culinarychest.domain.domain.usecase.applicationUserFavoriteRecipeUseCases.DeleteApplicationUserFavoriteRecipeUseCase
 import kotlinx.coroutines.launch
 
-class FetchOtherUserRecipeViewModel(
+class ManageOtherRecipeViewModel(
     private val createApplicationUserFavoriteRecipesUseCase: CreateApplicationUserFavoriteRecipesUseCase,
     private val deleteApplicationUserFavoriteRecipeUseCase: DeleteApplicationUserFavoriteRecipeUseCase
     ) : ViewModel() {
-    fun createApplicationUserFavoriteRecipes(
+
+    fun createFavoriteRecipesUser(
         token: String,
         recipeId: Int,
         addedDate: CreateFavoriteRecipe
@@ -29,7 +30,7 @@ class FetchOtherUserRecipeViewModel(
         }
     }
 
-    fun deleteApplicationUserFavoriteRecipe(token: String, recipeId: String) {
+    fun deleteFavoriteRecipeUser(token: String, recipeId: String) {
         viewModelScope.launch {
             try {
                 deleteApplicationUserFavoriteRecipeUseCase(

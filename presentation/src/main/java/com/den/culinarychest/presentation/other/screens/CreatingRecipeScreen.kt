@@ -186,7 +186,7 @@ fun CreatingRecipe(
                                 if (titleValidation == false && ingredientsValidation == false && imageValidation == true && preparationTimeValidation == true && createRecipe.steps.isNotEmpty()) {
                                     val token = tokenManager.getToken()
                                     token?.let {
-                                        creatingRecipeViewModel.createApplicationUserRecipe(
+                                        creatingRecipeViewModel.createRecipeUser(
                                             it,
                                             recipeImage = createRecipe.recipeImage!!,
                                             title = createRecipe.title,

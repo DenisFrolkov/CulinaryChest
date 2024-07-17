@@ -23,7 +23,7 @@ class RecipeStepsRepositoryImpl(
         flow {
             try {
                 val response =
-                    culinaryChestAPI.getRecipeSteps(token, recipeId).map { it.toDomain() }
+                    culinaryChestAPI.getListStepsRecipe(token, recipeId).map { it.toDomain() }
                 emit(ProcessingResult.Success(response))
             } catch (e: HttpException) {
                 emit(ProcessingResult.Error(e.localizedMessage ?: "An unexpected error occurred"))
@@ -34,7 +34,7 @@ class RecipeStepsRepositoryImpl(
 
     override suspend fun createRecipeStep(token: String, recipeId: String, step: CreateStep) {
         try {
-            culinaryChestAPI.createRecipeStep(token, recipeId, step.toDto())
+            culinaryChestAPI.createStepRecipe(token, recipeId, step.toDto())
         } catch (e: HttpException) {
             val errorMessage = "Unexpected error occurred: ${e.localizedMessage}"
             println(errorMessage)
@@ -51,7 +51,7 @@ class RecipeStepsRepositoryImpl(
         updateStep: CreateStep
     ) {
         try {
-            culinaryChestAPI.updateRecipeStep(token, recipeId, stepId, updateStep.toDto())
+            culinaryChestAPI.updateStepRecipe(token, recipeId, stepId, updateStep.toDto())
         } catch (e: HttpException) {
             val errorMessage = "Unexpected error occurred: ${e.localizedMessage}"
             println(errorMessage)
@@ -63,7 +63,7 @@ class RecipeStepsRepositoryImpl(
 
     override suspend fun deleteRecipeStep(token: String, recipeId: String, stepId: String) {
         try {
-            culinaryChestAPI.deleteRecipeStep(token, recipeId, stepId)
+            culinaryChestAPI.deleteStepRecipe(token, recipeId, stepId)
         } catch (e: HttpException) {
             val errorMessage = "Unexpected error occurred: ${e.localizedMessage}"
             println(errorMessage)

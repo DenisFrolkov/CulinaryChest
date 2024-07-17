@@ -17,13 +17,13 @@ class CreatedViewModel(
     private val getApplicationUserRecipesUseCase: GetApplicationUserRecipesUseCase,
 ) : ViewModel() {
 
-    private val _applicationUserRecipes = MutableStateFlow<List<Recipe>>(emptyList())
-    val applicationUserRecipes = _applicationUserRecipes.asStateFlow()
+    private val _listRecipesUser = MutableStateFlow<List<Recipe>>(emptyList())
+    val listRecipesUser = _listRecipesUser.asStateFlow()
 
     private val _showErrorToastChannel = Channel<Boolean>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
 
-    fun getApplicationUserRecipes(token: String) {
+    fun getListRecipesUser(token: String) {
         viewModelScope.launch {
             getApplicationUserRecipesUseCase(token)
                 .collectLatest { result ->
@@ -34,7 +34,7 @@ class CreatedViewModel(
 
                         is ProcessingResult.Success -> {
                             result.data?.let { applicationUserRecipes ->
-                                _applicationUserRecipes.update { applicationUserRecipes }
+                                _listRecipesUser.update { applicationUserRecipes }
                             }
                         }
                     }

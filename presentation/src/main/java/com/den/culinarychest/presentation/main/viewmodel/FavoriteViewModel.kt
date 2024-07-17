@@ -20,13 +20,14 @@ class FavoriteViewModel(
     private val getRecipesByIdsUseCase: GetRecipesByIdsUseCase
 ) : ViewModel() {
 
-    private val _userDtoFavoriteRecipes = MutableStateFlow<List<FavoriteRecipe>>(emptyList())
-    val userFavoriteRecipes = _userDtoFavoriteRecipes.asStateFlow()
-    private val _recipesById = MutableStateFlow<List<Recipe>>(emptyList())
-    val recipesById = _recipesById.asStateFlow()
+    private val _listFavoriteRecipesUser = MutableStateFlow<List<FavoriteRecipe>>(emptyList())
+    val listFavoriteRecipesUser = _listFavoriteRecipesUser.asStateFlow()
+    private val _listRecipesById = MutableStateFlow<List<Recipe>>(emptyList())
+    val listRecipesById = _listRecipesById.asStateFlow()
     private val _showErrorToastChannel = Channel<Boolean>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
-    fun getApplicationUserFavoriteRecipes(token: String) {
+
+    fun getListFavoriteRecipesUser(token: String) {
         viewModelScope.launch {
             getApplicationUserFavoriteRecipesUseCase(token)
                 .collectLatest { result ->
@@ -36,7 +37,7 @@ class FavoriteViewModel(
                         }
                         is ProcessingResult.Success -> {
                             result.data?.let { favoriteRecipe ->
-                                _userDtoFavoriteRecipes.update { favoriteRecipe }
+                                _listFavoriteRecipesUser.update { favoriteRecipe }
                             }
                         }
                     }
@@ -44,7 +45,7 @@ class FavoriteViewModel(
         }
     }
 
-    fun getRecipesByIds(token: String, recipeIds: List<String>) {
+    fun getListRecipesByIds(token: String, recipeIds: List<String>) {
         viewModelScope.launch {
             getRecipesByIdsUseCase(token, recipeIds).collectLatest { result ->
                 when (result) {
@@ -53,7 +54,7 @@ class FavoriteViewModel(
                     }
                     is ProcessingResult.Success -> {
                         result.data?.let { recipes ->
-                            _recipesById.update { recipes }
+                            _listRecipesById.update { recipes }
                         }
                     }
 

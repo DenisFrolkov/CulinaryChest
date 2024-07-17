@@ -150,7 +150,7 @@ fun Registration(
         } else {
             PushButton(
                 onClick = {
-                    registrationApplicationUser.registrationApplicationUser(
+                    registrationApplicationUser.registrationUser(
                         user = ApplicationUser(
                             userName = login,
                             email = email,
@@ -164,7 +164,7 @@ fun Registration(
                         if (duplicationUserInfo?.duplicateUserName != null || duplicationUserInfo?.duplicateEmail != null || password != verificationPassword) {
                             isLoading = false
                         } else {
-                            authorizationViewModel.authorizationApplicationUser(
+                            authorizationViewModel.authorizationUser(
                                 Login(userName = login, password = password)
                             )
                             delay(1000)

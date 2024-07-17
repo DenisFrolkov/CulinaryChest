@@ -27,16 +27,16 @@ import retrofit2.http.Query
 interface CulinaryChestAPI {
 
     @POST("/api/authentication/register")
-    suspend fun registrationApplicationUser(@Body applicationUserDto: ApplicationUserDto): Response<DuplicationUserInfoDto>
+    suspend fun registrationUser(@Body applicationUserDto: ApplicationUserDto): Response<DuplicationUserInfoDto>
 
     @POST("/api/authentication/login")
-    suspend fun authorizationApplicationUser(@Body loginDto: LoginDto): Response<TokenDto>
+    suspend fun authorizationUser(@Body loginDto: LoginDto): Response<TokenDto>
 
     @GET("/api/authentication/user")
-    suspend fun getApplicationUserInfo(@Header("Authorization") token: String): ApplicationUserInfoDto
+    suspend fun getUserInfo(@Header("Authorization") token: String): ApplicationUserInfoDto
 
     @GET("/api/applicationUser/favoriteRecipe")
-    suspend fun getApplicationUserFavoriteRecipes(@Header("Authorization") token: String): List<FavoriteRecipeDto>
+    suspend fun getListFavoriteRecipesUser(@Header("Authorization") token: String): List<FavoriteRecipeDto>
 
     @GET("/api/applicationUser/favoriteRecipe/{recipeId}")
     suspend fun getFavoriteRecipeByRecipeId(
@@ -45,26 +45,26 @@ interface CulinaryChestAPI {
     ): FavoriteRecipeDto
 
     @POST("/api/applicationUser/favoriteRecipe/{recipeId}")
-    suspend fun createApplicationUserFavoriteRecipes(
+    suspend fun createFavoriteRecipesUser(
         @Header("Authorization") token: String,
         @Path("recipeId") recipeId: Int,
         @Body addedDate: CreateFavoriteRecipeDto
     )
 
     @DELETE("/api/applicationUser/favoriteRecipe/{recipeId}")
-    suspend fun deleteApplicationUserFavoriteRecipe(
+    suspend fun deleteFavoriteRecipeUser(
         @Header("Authorization") token: String,
         @Path("recipeId") recipeId: String
     )
 
     @GET("/api/recipe/listRecipe")
-    suspend fun getRecipes(
+    suspend fun getListRecipes(
         @Header("Authorization") token: String,
         @Query("SearchTerm") searchTerm: String?
     ): List<RecipeDto>
 
     @GET("/api/recipe/listRecipeByIds")
-    suspend fun getRecipeByIds(
+    suspend fun getListRecipeByIds(
         @Header("Authorization") token: String,
         @Query("recipeIds") recipeIds: List<String>
     ): List<RecipeDto>
@@ -77,11 +77,11 @@ interface CulinaryChestAPI {
 
 
     @GET("/api/applicationUser/recipe")
-    suspend fun getApplicationUserRecipes(@Header("Authorization") token: String): List<RecipeDto>
+    suspend fun getListRecipesUser(@Header("Authorization") token: String): List<RecipeDto>
 
     @Multipart
     @POST("/api/applicationUser/recipe")
-    suspend fun createApplicationUserRecipe(
+    suspend fun createRecipeUser(
         @Header("Authorization") token: String,
         @Part("title") title: RequestBody,
         @Part recipeImage: MultipartBody.Part,
@@ -93,7 +93,7 @@ interface CulinaryChestAPI {
 
     @Multipart
     @PUT("/api/applicationUser/Recipe/{recipeId}")
-    suspend fun updateApplicationUserRecipe(
+    suspend fun updateRecipeUser(
         @Header("Authorization") token: String,
         @Path("recipeId") recipeId: String,
         @Part("Title") title: RequestBody,
@@ -104,26 +104,26 @@ interface CulinaryChestAPI {
     )
 
     @DELETE("/api/applicationUser/Recipe/{recipeId}")
-    suspend fun deleteApplicationUserRecipe(
+    suspend fun deleteRecipeUser(
         @Header("Authorization") token: String,
         @Path("recipeId") recipeId: String
     )
 
     @GET("/api/recipe/{recipeId}/steps")
-    suspend fun getRecipeSteps(
+    suspend fun getListStepsRecipe(
         @Header("Authorization") token: String,
         @Path("recipeId") recipeId: String
     ): List<StepDto>
 
     @POST("/api/recipe/{recipeId}/steps")
-    suspend fun createRecipeStep(
+    suspend fun createStepRecipe(
         @Header("Authorization") token: String,
         @Path("recipeId") recipeId: String,
         @Body step: CreateStepDto
     )
 
     @PUT("/api/recipe/{recipeId}/steps/{stepId}")
-    suspend fun updateRecipeStep(
+    suspend fun updateStepRecipe(
         @Header("Authorization") token: String,
         @Path("recipeId") recipeId: String,
         @Path("stepId") stepId: String,
@@ -131,7 +131,7 @@ interface CulinaryChestAPI {
     )
 
     @DELETE("/api/recipe/{recipeId}/steps/{stepId}")
-    suspend fun deleteRecipeStep(
+    suspend fun deleteStepRecipe(
         @Header("Authorization") token: String,
         recipeId: String,
         stepId: String

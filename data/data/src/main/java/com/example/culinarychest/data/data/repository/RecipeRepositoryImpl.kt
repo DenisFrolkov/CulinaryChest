@@ -20,7 +20,7 @@ class RecipeRepositoryImpl(
     ): Flow<ProcessingResult<List<Recipe>>> =
         flow {
             try {
-                val response = culinaryChestAPI.getRecipes(token, searchTerm).map { it.toDomain() }
+                val response = culinaryChestAPI.getListRecipes(token, searchTerm).map { it.toDomain() }
                 emit(ProcessingResult.Success(response))
             } catch (e: HttpException) {
                 emit(ProcessingResult.Error(e.localizedMessage ?: "An unexpected error occurred"))
@@ -34,7 +34,7 @@ class RecipeRepositoryImpl(
         recipeIds: List<String>
     ): Flow<ProcessingResult<List<Recipe>>> = flow {
         try {
-            val response = culinaryChestAPI.getRecipeByIds(token, recipeIds).map { it.toDomain() }
+            val response = culinaryChestAPI.getListRecipeByIds(token, recipeIds).map { it.toDomain() }
             emit(ProcessingResult.Success(response))
         } catch (e: HttpException) {
             emit(ProcessingResult.Error(e.localizedMessage ?: "An unexpected error occurred"))

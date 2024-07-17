@@ -37,7 +37,7 @@ import com.den.culinarychest.presentation.other.screens.SearchScreen
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.main.viewmodel.ProfileViewModel
-import com.den.culinarychest.presentation.main.viewmodel.RecipeOwnershipViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeDetailsViewModel
 import com.den.culinarychest.presentation.main.viewmodel.SearchViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 
@@ -46,7 +46,7 @@ import com.example.culinarychest.data.data.repository.TokenManager
 fun BottomNavigationBar(
     navController: NavController,
     searchViewModel: SearchViewModel,
-    recipeOwnershipViewModel: RecipeOwnershipViewModel,
+    recipeDetailsViewModel: RecipeDetailsViewModel,
     createdViewModel: CreatedViewModel,
     favoriteViewModel: FavoriteViewModel,
     profileViewModel: ProfileViewModel,
@@ -127,7 +127,7 @@ fun BottomNavigationBar(
             composable(BottomNavigationRoute.SearchScreen.route) {
                 SearchScreen(
                     navController = navController,
-                    recipeOwnershipViewModel = recipeOwnershipViewModel,
+                    recipeDetailsViewModel = recipeDetailsViewModel,
                     searchViewModel = searchViewModel,
                     tokenManager = tokenManager
                 )
@@ -137,7 +137,7 @@ fun BottomNavigationBar(
                     navController = navController,
                     createdViewModel = createdViewModel,
                     favoriteViewModel = favoriteViewModel,
-                    recipeOwnershipViewModel = recipeOwnershipViewModel,
+                    recipeDetailsViewModel = recipeDetailsViewModel,
                     tokenManager = tokenManager
                 )
             }

@@ -38,15 +38,15 @@ fun ProfileScreen(
 ) {
 
     tokenManager.getToken()?.let {
-        profileViewModel.getApplicationUserInfo(it)
-        profileViewModel.getApplicationUserFavoriteRecipes(it)
-        profileViewModel.getApplicationUserRecipes(it)
+        profileViewModel.getUserInfo(it)
+        profileViewModel.getUserFavoriteRecipesCount(it)
+        profileViewModel.getUserRecipesCount(it)
     }
 
     val userInfo = profileViewModel.userInfoResult.collectAsState().value
 
-    val applicationUserRecipeSize = profileViewModel.applicationUserRecipes.collectAsState().value.size
-    val favoriteRecipeSize = profileViewModel.userFavoriteRecipes.collectAsState().value.size
+    val applicationUserRecipeSize = profileViewModel.numberRecipesApplicationUser.collectAsState().value
+    val favoriteRecipeSize = profileViewModel.numberFavoriteRecipesApplicationUser.collectAsState().value
 
     Column {
         Column(

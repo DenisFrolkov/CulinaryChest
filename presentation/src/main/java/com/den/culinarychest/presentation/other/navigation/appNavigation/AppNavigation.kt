@@ -18,13 +18,13 @@ import com.den.culinarychest.presentation.other.screens.FetchOtherUserRecipeScre
 import com.den.culinarychest.presentation.other.screens.FetchUserRecipeScreen
 import com.den.culinarychest.presentation.other.screens.RegistrationScreen
 import com.den.culinarychest.presentation.main.viewmodel.AuthorizationViewModel
-import com.den.culinarychest.presentation.main.viewmodel.FetchOtherUserRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ManageOtherRecipeViewModel
 import com.den.culinarychest.presentation.main.viewmodel.CreatingRecipeViewModel
 import com.den.culinarychest.presentation.main.viewmodel.CreatedViewModel
 import com.den.culinarychest.presentation.main.viewmodel.FavoriteViewModel
-import com.den.culinarychest.presentation.main.viewmodel.FetchUserRecipeViewModel
+import com.den.culinarychest.presentation.main.viewmodel.ManageRecipeUserViewModel
 import com.den.culinarychest.presentation.main.viewmodel.ProfileViewModel
-import com.den.culinarychest.presentation.main.viewmodel.RecipeOwnershipViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeDetailsViewModel
 import com.den.culinarychest.presentation.main.viewmodel.ManageStepsViewModel
 import com.den.culinarychest.presentation.main.viewmodel.RegistrationViewModel
 import com.den.culinarychest.presentation.main.viewmodel.SearchViewModel
@@ -36,13 +36,13 @@ fun AppNavigation(
     registrationViewModel: RegistrationViewModel,
     authorizationViewModel: AuthorizationViewModel,
     searchViewModel: SearchViewModel,
-    recipeOwnershipViewModel: RecipeOwnershipViewModel,
+    recipeDetailsViewModel: RecipeDetailsViewModel,
     createdViewModel: CreatedViewModel,
     favoriteViewModel: FavoriteViewModel,
     profileViewModel: ProfileViewModel,
     creatingRecipeViewModel: CreatingRecipeViewModel,
-    fetchUserRecipeViewModel: FetchUserRecipeViewModel,
-    fetchOtherUserRecipeViewModel: FetchOtherUserRecipeViewModel,
+    manageRecipeUserViewModel: ManageRecipeUserViewModel,
+    manageOtherRecipeViewModel: ManageOtherRecipeViewModel,
     manageStepsViewModel: ManageStepsViewModel,
     tokenManager: TokenManager
 ) {
@@ -83,7 +83,7 @@ fun AppNavigation(
             BottomNavigationBar(
                 navController = appNavigationController,
                 searchViewModel = searchViewModel,
-                recipeOwnershipViewModel = recipeOwnershipViewModel,
+                recipeDetailsViewModel = recipeDetailsViewModel,
                 createdViewModel = createdViewModel,
                 favoriteViewModel = favoriteViewModel,
                 profileViewModel = profileViewModel,
@@ -98,21 +98,21 @@ fun AppNavigation(
                 ?: "Надо придумать реализацию, если такого рецепта не существует"
             recipeId.let { recipe ->
                 tokenManager.getToken()?.let { token ->
-                    recipeOwnershipViewModel.getRecipeById(
+                    recipeDetailsViewModel.getRecipeById(
                         token,
                         recipe
                     )
-                    recipeOwnershipViewModel.getFavoriteRecipeByRecipeId(token, recipe)
+                    recipeDetailsViewModel.getFavoriteRecipeByRecipeId(token, recipe)
                 }
             }
 
-            val recipeInfo = recipeOwnershipViewModel.recipe.collectAsState().value
+            val recipeInfo = recipeDetailsViewModel.recipe.collectAsState().value
             recipeInfo.forEach { recipe ->
                 FetchOtherUserRecipeScreen(
                     navController = appNavigationController,
                     recipe = recipe,
-                    recipeOwnershipViewModel = recipeOwnershipViewModel,
-                    fetchOtherUserRecipeViewModel = fetchOtherUserRecipeViewModel,
+                    recipeDetailsViewModel = recipeDetailsViewModel,
+                    manageOtherRecipeViewModel = manageOtherRecipeViewModel,
                     tokenManager = tokenManager
                 )
             }
@@ -126,18 +126,18 @@ fun AppNavigation(
 
             recipeId.let { recipe ->
                 tokenManager.getToken()?.let { token ->
-                    recipeOwnershipViewModel.getRecipeById(
+                    recipeDetailsViewModel.getRecipeById(
                         token,
                         recipe
                     )
                 }
             }
 
-            val recipeInfo = recipeOwnershipViewModel.recipe.collectAsState().value
+            val recipeInfo = recipeDetailsViewModel.recipe.collectAsState().value
             recipeInfo.forEach { recipe ->
                 FetchUserRecipeScreen(
                     navController = appNavigationController,
-                    fetchUserRecipeViewModel = fetchUserRecipeViewModel,
+                    manageRecipeUserViewModel = manageRecipeUserViewModel,
                     recipe = recipe,
                     tokenManager = tokenManager
                 )
@@ -152,18 +152,18 @@ fun AppNavigation(
 
             recipeId.let { recipe ->
                 tokenManager.getToken()?.let { token ->
-                    recipeOwnershipViewModel.getRecipeById(
+                    recipeDetailsViewModel.getRecipeById(
                         token,
                         recipe
                     )
                 }
             }
 
-            val recipeInfo = recipeOwnershipViewModel.recipe.collectAsState().value
+            val recipeInfo = recipeDetailsViewModel.recipe.collectAsState().value
             recipeInfo.forEach { recipe ->
                 EditRecipeScreen(
                     navController = appNavigationController,
-                    fetchUserRecipeViewModel = fetchUserRecipeViewModel,
+                    manageRecipeUserViewModel = manageRecipeUserViewModel,
                     manageStepsViewModel = manageStepsViewModel,
                     recipe = recipe,
                     tokenManager = tokenManager

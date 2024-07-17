@@ -19,7 +19,7 @@ class RegistrationViewModel(
     private val _duplicationUserInfo = MutableStateFlow<DuplicationUserInfo?>(null)
     val duplicationUserInfo = _duplicationUserInfo.asStateFlow()
 
-    fun registrationApplicationUser(user: ApplicationUser) {
+    fun registrationUser(user: ApplicationUser) {
         viewModelScope.launch {
             registrationApplicationUserUseCase(user)
                 .collectLatest { result ->

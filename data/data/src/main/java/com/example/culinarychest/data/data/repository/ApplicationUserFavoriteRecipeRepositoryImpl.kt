@@ -19,7 +19,7 @@ class ApplicationUserFavoriteRecipeRepositoryImpl(
     override suspend fun getApplicationUserFavoriteRecipes(token: String): Flow<ProcessingResult<List<FavoriteRecipe>>> =
         flow {
             try {
-                val response = culinaryChestAPI.getApplicationUserFavoriteRecipes(token).map { it.toDomain() }
+                val response = culinaryChestAPI.getListFavoriteRecipesUser(token).map { it.toDomain() }
                 emit(ProcessingResult.Success(response))
             } catch (e: HttpException) {
                 emit(ProcessingResult.Error(e.localizedMessage ?: "An unexpected error occurred"))
@@ -45,7 +45,7 @@ class ApplicationUserFavoriteRecipeRepositoryImpl(
         token: String, recipeId: Int, addedDate: CreateFavoriteRecipe
     ) {
         try {
-            culinaryChestAPI.createApplicationUserFavoriteRecipes(token, recipeId, addedDate.toDto())
+            culinaryChestAPI.createFavoriteRecipesUser(token, recipeId, addedDate.toDto())
         } catch (e: HttpException) {
             val errorMessage = "Unexpected error occurred: ${e.localizedMessage}"
             println(errorMessage)
@@ -60,7 +60,7 @@ class ApplicationUserFavoriteRecipeRepositoryImpl(
         token: String, recipeId: String
     ) {
         try {
-            culinaryChestAPI.deleteApplicationUserFavoriteRecipe(token, recipeId)
+            culinaryChestAPI.deleteFavoriteRecipeUser(token, recipeId)
         } catch (e: HttpException) {
             val errorMessage = "Unexpected error occurred: ${e.localizedMessage}"
             println(errorMessage)

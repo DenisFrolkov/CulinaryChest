@@ -26,7 +26,7 @@ import com.den.culinarychest.presentation.other.route.AppNavigationRoute
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.other.ui.theme.SoftPink
-import com.den.culinarychest.presentation.main.viewmodel.RecipeOwnershipViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeDetailsViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 
@@ -35,24 +35,24 @@ import com.example.culinarychest.domain.domain.model.recipe.Recipe
 fun FavoriteScreen(
     controller: NavController,
     favoriteViewModel: FavoriteViewModel,
-    recipeOwnershipViewModel: RecipeOwnershipViewModel,
+    recipeDetailsViewModel: RecipeDetailsViewModel,
     tokenManager: TokenManager
 ) {
 
-    val favoriteRecipeList = favoriteViewModel.userFavoriteRecipes.collectAsState().value
+    val favoriteRecipeList = favoriteViewModel.listFavoriteRecipesUser.collectAsState().value
     tokenManager.getToken()?.let { token ->
         val recipeIds = favoriteRecipeList.map { it.recipeId.toString() }
-        favoriteViewModel.getRecipesByIds(token, recipeIds)
+        favoriteViewModel.getListRecipesByIds(token, recipeIds)
     }
 
     val recipe =
-        favoriteViewModel.recipesById.collectAsState().value
+        favoriteViewModel.listRecipesById.collectAsState().value
 
 
     if (recipe.isEmpty()) {
         EmptyScreenText()
     } else {
-        ListRecipes(controller, recipe, recipeOwnershipViewModel, tokenManager)
+        ListRecipes(controller, recipe, recipeDetailsViewModel, tokenManager)
     }
 }
 
@@ -60,7 +60,7 @@ fun FavoriteScreen(
 private fun ListRecipes(
     controller: NavController,
     recipeDtoList: List<Recipe>,
-    recipeOwnershipViewModel: RecipeOwnershipViewModel,
+    recipeDetailsViewModel: RecipeDetailsViewModel,
     tokenManager: TokenManager
 ) {
     LazyColumn(
@@ -81,7 +81,7 @@ private fun ListRecipes(
                     textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
                     recipe = recipe,
                     tokenManager = tokenManager,
-                    recipeOwnershipViewModel = recipeOwnershipViewModel
+                    recipeDetailsViewModel = recipeDetailsViewModel
                 )
             }
         } else {

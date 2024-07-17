@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class RecipeOwnershipViewModel(
+class RecipeDetailsViewModel(
     private val getFavoriteRecipeByRecipeIdUseCase: GetFavoriteRecipeByRecipeIdUseCase,
     private val getRecipeByIdUseCase: GetRecipeByIdUseCase
 ) : ViewModel() {
@@ -64,5 +64,4 @@ class RecipeOwnershipViewModel(
                 }
         }
     }
-
 }

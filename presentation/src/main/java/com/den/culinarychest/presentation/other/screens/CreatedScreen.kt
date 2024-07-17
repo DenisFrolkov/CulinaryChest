@@ -25,7 +25,7 @@ import com.den.culinarychest.presentation.other.common.Item.RecipeItem
 import com.den.culinarychest.presentation.other.route.AppNavigationRoute
 import com.den.culinarychest.presentation.other.ui.theme.SoftGray
 import com.den.culinarychest.presentation.other.ui.theme.SoftPink
-import com.den.culinarychest.presentation.main.viewmodel.RecipeOwnershipViewModel
+import com.den.culinarychest.presentation.main.viewmodel.RecipeDetailsViewModel
 import com.example.culinarychest.data.data.repository.TokenManager
 import com.example.culinarychest.domain.domain.model.recipe.Recipe
 
@@ -33,12 +33,12 @@ import com.example.culinarychest.domain.domain.model.recipe.Recipe
 fun CreatedScreen(
     controller: NavController,
     createdViewModel: CreatedViewModel,
-    recipeOwnershipViewModel: RecipeOwnershipViewModel,
+    recipeDetailsViewModel: RecipeDetailsViewModel,
     tokenManager: TokenManager
 ) {
 
     val listRecipeCreatedUser =
-        createdViewModel.applicationUserRecipes.collectAsState().value
+        createdViewModel.listRecipesUser.collectAsState().value
 
     Box(
         modifier = Modifier
@@ -49,7 +49,7 @@ fun CreatedScreen(
             controller,
             listRecipeCreatedUser,
             tokenManager,
-            recipeOwnershipViewModel = recipeOwnershipViewModel
+            recipeDetailsViewModel = recipeDetailsViewModel
         )
         FABButton(controller)
     }
@@ -74,7 +74,7 @@ private fun ListRecipeCreatedUser(
     controller: NavController,
     listRecipeCreatedUser: List<Recipe>,
     tokenManager: TokenManager,
-    recipeOwnershipViewModel: RecipeOwnershipViewModel
+    recipeDetailsViewModel: RecipeDetailsViewModel
 ) {
     LazyColumn(
         modifier = Modifier
@@ -111,7 +111,7 @@ private fun ListRecipeCreatedUser(
                     textRouteNavigation = AppNavigationRoute.FetchUserRecipeScreen.route,
                     recipe = recipeCreatedUser,
                     tokenManager = tokenManager,
-                    recipeOwnershipViewModel = recipeOwnershipViewModel
+                    recipeDetailsViewModel = recipeDetailsViewModel
                 )
             }
         }

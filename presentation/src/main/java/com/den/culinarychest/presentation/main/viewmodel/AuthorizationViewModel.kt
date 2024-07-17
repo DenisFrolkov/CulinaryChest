@@ -19,7 +19,7 @@ class AuthorizationViewModel(
     private val _authState = MutableLiveData<ProcessingResult<Boolean>>()
     val authState: LiveData<ProcessingResult<Boolean>> = _authState
 
-    fun authorizationApplicationUser(login: Login) {
+    fun authorizationUser(login: Login) {
         viewModelScope.launch {
             authorizationApplicationUserUseCase(login)
                 .collectLatest { result ->
