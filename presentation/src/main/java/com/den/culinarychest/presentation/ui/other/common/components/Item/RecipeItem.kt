@@ -31,8 +31,8 @@ import com.den.culinarychest.R
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
-import com.example.culinarychest.data.data.repository.TokenManager
-import com.example.culinarychest.domain.domain.model.recipe.Recipe
+import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.domain.model.recipe.Recipe
 
 @Composable
 fun RecipeItem(
@@ -63,8 +63,7 @@ fun RecipeItem(
     ) {
         Row {
             if (recipe.imageUrl.isEmpty()) {
-                Row(
-                ) {
+                Row {
                     CircularProgressIndicator(
                         color = SoftGray,
                         strokeWidth = 1.5.dp

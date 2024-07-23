@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.culinarychest.domain.domain.model.ProcessingResult
-import com.example.culinarychest.domain.domain.model.recipe.CreateRecipe
-import com.example.culinarychest.domain.domain.usecase.applicationUserRecipeUseCases.CreateApplicationUserRecipeUseCase
+import com.example.culinarychest.domain.model.ProcessingResult
+import com.example.culinarychest.domain.model.recipe.CreateRecipe
+import com.example.culinarychest.domain.usecase.applicationUserRecipeUseCases.CreateApplicationUserRecipeUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch

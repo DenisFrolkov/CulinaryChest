@@ -2,10 +2,10 @@ package com.den.culinarychest.presentation.ui.main.viewmodel.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.culinarychest.domain.domain.model.ProcessingResult
-import com.example.culinarychest.domain.domain.model.application_user.ApplicationUser
-import com.example.culinarychest.domain.domain.model.application_user.DuplicationUserInfo
-import com.example.culinarychest.domain.domain.usecase.applicationUserUseCases.RegistrationApplicationUserUseCase
+import com.example.culinarychest.domain.model.ProcessingResult
+import com.example.culinarychest.domain.model.application_user.ApplicationUser
+import com.example.culinarychest.domain.model.application_user.DuplicationUserInfo
+import com.example.culinarychest.domain.usecase.applicationUserUseCases.RegistrationApplicationUserUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest

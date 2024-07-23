@@ -28,7 +28,7 @@ import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetail
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageStepsViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.auth.RegistrationViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.SearchViewModel
-import com.example.culinarychest.data.data.repository.TokenManager
+import com.example.culinarychest.data.repository.TokenManager
 
 
 @Composable

@@ -1,0 +1,7 @@
+package com.example.culinarychest.data.model.step
+
+data class UpdateStepDto(
+    val stepId: String,
+    val description: String,
+    val order: String,
+)

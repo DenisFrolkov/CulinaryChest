@@ -2,10 +2,10 @@ package com.den.culinarychest.presentation.ui.main.viewmodel.recipes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.culinarychest.domain.domain.model.step.CreateStep
-import com.example.culinarychest.domain.domain.usecase.recipeStepsUseCases.CreateStepUseCase
-import com.example.culinarychest.domain.domain.usecase.recipeStepsUseCases.DeleteStepUseCase
-import com.example.culinarychest.domain.domain.usecase.recipeStepsUseCases.UpdateStepUseCase
+import com.example.culinarychest.domain.model.step.CreateStep
+import com.example.culinarychest.domain.usecase.recipeStepsUseCases.CreateStepUseCase
+import com.example.culinarychest.domain.usecase.recipeStepsUseCases.DeleteStepUseCase
+import com.example.culinarychest.domain.usecase.recipeStepsUseCases.UpdateStepUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch

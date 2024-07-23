@@ -32,7 +32,7 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.profile.ProfileViewModel
-import com.example.culinarychest.data.data.repository.TokenManager
+import com.example.culinarychest.data.repository.TokenManager
 
 @Composable
 fun ProfileScreen(

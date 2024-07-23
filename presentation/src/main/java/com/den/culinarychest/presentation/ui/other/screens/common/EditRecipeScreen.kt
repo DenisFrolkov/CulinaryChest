@@ -69,11 +69,11 @@ import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageRecipeUserViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageStepsViewModel
-import com.example.culinarychest.data.data.repository.TokenManager
-import com.example.culinarychest.domain.domain.model.recipe.Recipe
-import com.example.culinarychest.domain.domain.model.recipe.UpdateRecipe
-import com.example.culinarychest.domain.domain.model.step.CreateStep
-import com.example.culinarychest.domain.domain.model.step.UpdateStep
+import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.domain.model.recipe.Recipe
+import com.example.culinarychest.domain.model.recipe.UpdateRecipe
+import com.example.culinarychest.domain.model.step.CreateStep
+import com.example.culinarychest.domain.model.step.UpdateStep
 import java.io.File
 import java.io.InputStream
 
@@ -107,7 +107,12 @@ private fun EditRecipe(
     val stepsCreateApp = remember { mutableStateListOf<CreateStep>() }
 
     fun addStepFromServer(stepId: String, textRecipeStep: String, numberTextRecipeStep: String) {
-        val newStep = UpdateStep(stepId, textRecipeStep, numberTextRecipeStep)
+        val newStep =
+            UpdateStep(
+                stepId,
+                textRecipeStep,
+                numberTextRecipeStep
+            )
         stepsFromServer.add(newStep)
     }
 
@@ -116,7 +121,11 @@ private fun EditRecipe(
             stepsCreateApp.any { it.description == textRecipeStep && it.order == numberTextRecipeStep }
 
         if (!isStepAlreadyExists) {
-            val newStep = CreateStep(textRecipeStep, numberTextRecipeStep)
+            val newStep =
+                CreateStep(
+                    textRecipeStep,
+                    numberTextRecipeStep
+                )
             stepsCreateApp.add(newStep)
         }
     }
@@ -182,12 +191,19 @@ private fun EditRecipe(
     } else if (labelEditRecipeMenu == "updateStepCreateApp") {
         updateStepCreateApp(
             index = indexStepEditRecipeMenu,
-            stepCreateApp = CreateStep(textEditRecipeMenu, numberEditRecipeMenu)
+            stepCreateApp = CreateStep(
+                textEditRecipeMenu,
+                numberEditRecipeMenu
+            )
         )
     } else if (labelEditRecipeMenu == "updateStepFromServer") {
         updateStepFromServer(
             index = indexStepEditRecipeMenu,
-            stepFromServer = UpdateStep(idStep, textEditRecipeMenu, numberEditRecipeMenu)
+            stepFromServer = UpdateStep(
+                idStep,
+                textEditRecipeMenu,
+                numberEditRecipeMenu
+            )
         )
     }
 
@@ -1026,13 +1042,21 @@ private fun SaveButton(
                 }
                 updateStepDto.forEach { updateStep ->
                     tokenManager.getToken()?.let {
-                        manageStepsViewModel.updateStepRecipe(it, recipeId, stepId = updateStep.stepId, updateStep = CreateStep(updateStep.description, updateStep.order))
+                        manageStepsViewModel.updateStepRecipe(it, recipeId, stepId = updateStep.stepId, updateStep = CreateStep(
+                            updateStep.description,
+                            updateStep.order
+                        )
+                        )
                     }
                 }
 
                 createStepDto.forEach { createStep ->
                     tokenManager.getToken()?.let {
-                        manageStepsViewModel.createStepsRecipe(it, recipeId, step = CreateStep(createStep.description, createStep.order))
+                        manageStepsViewModel.createStepsRecipe(it, recipeId, step = CreateStep(
+                            createStep.description,
+                            createStep.order
+                        )
+                        )
                     }
                 }
 

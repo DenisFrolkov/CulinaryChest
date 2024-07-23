@@ -36,7 +36,7 @@ import com.den.culinarychest.presentation.ui.other.screens.common.CreatedScreen
 import com.den.culinarychest.presentation.ui.other.screens.common.FavoriteScreen
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
-import com.example.culinarychest.data.data.repository.TokenManager
+import com.example.culinarychest.data.repository.TokenManager
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

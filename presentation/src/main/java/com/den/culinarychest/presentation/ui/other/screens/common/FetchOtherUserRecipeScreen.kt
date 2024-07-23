@@ -55,10 +55,10 @@ import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageOtherRecipeViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
-import com.example.culinarychest.data.data.repository.TokenManager
-import com.example.culinarychest.domain.domain.model.favorite_recipe.CreateFavoriteRecipe
-import com.example.culinarychest.domain.domain.model.favorite_recipe.FavoriteRecipe
-import com.example.culinarychest.domain.domain.model.recipe.Recipe
+import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.domain.model.favorite_recipe.CreateFavoriteRecipe
+import com.example.culinarychest.domain.model.favorite_recipe.FavoriteRecipe
+import com.example.culinarychest.domain.model.recipe.Recipe
 import java.time.LocalDateTime
 
 @Composable
@@ -179,8 +179,7 @@ fun FetchOtherUserRecipeTopBar(
                                 )
                             }
                         clickElement1 = true
-                        if ("${favoriteRecipeByRecipeId?.recipeId}" != recipeId) clickElement1 =
-                            true else clickElement1 = false
+                        clickElement1 = "${favoriteRecipeByRecipeId?.recipeId}" != recipeId
                         passClickElement("${favoriteRecipeByRecipeId?.recipeId}" == recipeId)
                     },
                 imageVector = Icons.Default.Favorite,
@@ -202,8 +201,7 @@ fun FetchOtherUserRecipeTopBar(
                                     it, recipeId
                                 )
                             }
-                        if ("${favoriteRecipeByRecipeId?.recipeId}" == recipeId) clickElement1 =
-                            true else clickElement1 = false
+                        clickElement1 = "${favoriteRecipeByRecipeId?.recipeId}" == recipeId
                         passClickElement("${favoriteRecipeByRecipeId?.recipeId}" != recipeId)
                     },
                 imageVector = Icons.Default.Favorite,

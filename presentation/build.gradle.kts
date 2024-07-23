@@ -53,8 +53,8 @@ android {
 dependencies {
 
     //Подключение к модулю
-    implementation(project(":data:data"))
-    implementation(project(":domain:domain"))
+    implementation(project(":data"))
+    implementation(project(":domain"))
 
     implementation("io.coil-kt:coil-compose:2.3.0")
 

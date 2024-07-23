@@ -36,9 +36,9 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.auth.AuthorizationViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.auth.RegistrationViewModel
-import com.example.culinarychest.data.data.repository.TokenManager
-import com.example.culinarychest.domain.domain.model.application_user.ApplicationUser
-import com.example.culinarychest.domain.domain.model.application_user.Login
+import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.domain.model.application_user.ApplicationUser
+import com.example.culinarychest.domain.model.application_user.Login
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -165,7 +165,10 @@ fun Registration(
                             isLoading = false
                         } else {
                             authorizationViewModel.authorizationUser(
-                                Login(userName = login, password = password)
+                                Login(
+                                    userName = login,
+                                    password = password
+                                )
                             )
                             delay(1000)
                             if (tokenManager.getToken() != null) controller.navigate(

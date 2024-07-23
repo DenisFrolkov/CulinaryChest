@@ -35,8 +35,8 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
-import com.example.culinarychest.data.data.repository.TokenManager
-import com.example.culinarychest.domain.domain.model.recipe.Recipe
+import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.domain.model.recipe.Recipe
 
 @Composable
 fun CreatedScreen(

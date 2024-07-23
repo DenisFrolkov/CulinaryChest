@@ -2,8 +2,8 @@ package com.den.culinarychest.presentation.ui.main.viewmodel.recipes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.culinarychest.domain.domain.usecase.applicationUserRecipeUseCases.DeleteApplicationUserRecipeUseCase
-import com.example.culinarychest.domain.domain.usecase.applicationUserRecipeUseCases.UpdateApplicationUserRecipeUseCase
+import com.example.culinarychest.domain.usecase.applicationUserRecipeUseCases.DeleteApplicationUserRecipeUseCase
+import com.example.culinarychest.domain.usecase.applicationUserRecipeUseCases.UpdateApplicationUserRecipeUseCase
 import kotlinx.coroutines.launch
 import java.io.File
 

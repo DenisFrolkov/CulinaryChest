@@ -20,30 +20,30 @@ import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetail
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageStepsViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.auth.RegistrationViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.SearchViewModel
-import com.example.culinarychest.data.data.api.RetrofitInstance
-import com.example.culinarychest.data.data.repository.ApplicationUserFavoriteRecipeRepositoryImpl
-import com.example.culinarychest.data.data.repository.ApplicationUserRecipeRepositoryImpl
-import com.example.culinarychest.data.data.repository.ApplicationUserRepositoryImpl
-import com.example.culinarychest.data.data.repository.RecipeRepositoryImpl
-import com.example.culinarychest.data.data.repository.RecipeStepsRepositoryImpl
-import com.example.culinarychest.data.data.repository.TokenManager
-import com.example.culinarychest.domain.domain.usecase.applicationUserFavoriteRecipeUseCases.CreateApplicationUserFavoriteRecipesUseCase
-import com.example.culinarychest.domain.domain.usecase.applicationUserFavoriteRecipeUseCases.DeleteApplicationUserFavoriteRecipeUseCase
-import com.example.culinarychest.domain.domain.usecase.applicationUserFavoriteRecipeUseCases.GetApplicationUserFavoriteRecipesUseCase
-import com.example.culinarychest.domain.domain.usecase.applicationUserFavoriteRecipeUseCases.GetFavoriteRecipeByRecipeIdUseCase
-import com.example.culinarychest.domain.domain.usecase.applicationUserRecipeUseCases.CreateApplicationUserRecipeUseCase
-import com.example.culinarychest.domain.domain.usecase.applicationUserRecipeUseCases.DeleteApplicationUserRecipeUseCase
-import com.example.culinarychest.domain.domain.usecase.applicationUserRecipeUseCases.GetApplicationUserRecipesUseCase
-import com.example.culinarychest.domain.domain.usecase.applicationUserRecipeUseCases.UpdateApplicationUserRecipeUseCase
-import com.example.culinarychest.domain.domain.usecase.applicationUserUseCases.AuthorizationApplicationUserUseCase
-import com.example.culinarychest.domain.domain.usecase.applicationUserUseCases.GetApplicationUserInfoUseCase
-import com.example.culinarychest.domain.domain.usecase.applicationUserUseCases.RegistrationApplicationUserUseCase
-import com.example.culinarychest.domain.domain.usecase.recipeRepositoryUseCases.GetRecipeByIdUseCase
-import com.example.culinarychest.domain.domain.usecase.recipeRepositoryUseCases.GetRecipesByIdsUseCase
-import com.example.culinarychest.domain.domain.usecase.recipeRepositoryUseCases.GetRecipesUseCase
-import com.example.culinarychest.domain.domain.usecase.recipeStepsUseCases.CreateStepUseCase
-import com.example.culinarychest.domain.domain.usecase.recipeStepsUseCases.DeleteStepUseCase
-import com.example.culinarychest.domain.domain.usecase.recipeStepsUseCases.UpdateStepUseCase
+import com.example.culinarychest.data.api.RetrofitInstance
+import com.example.culinarychest.data.repository.ApplicationUserFavoriteRecipeRepositoryImpl
+import com.example.culinarychest.data.repository.ApplicationUserRecipeRepositoryImpl
+import com.example.culinarychest.data.repository.ApplicationUserRepositoryImpl
+import com.example.culinarychest.data.repository.RecipeRepositoryImpl
+import com.example.culinarychest.data.repository.RecipeStepsRepositoryImpl
+import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.domain.usecase.applicationUserFavoriteRecipeUseCases.CreateApplicationUserFavoriteRecipesUseCase
+import com.example.culinarychest.domain.usecase.applicationUserFavoriteRecipeUseCases.DeleteApplicationUserFavoriteRecipeUseCase
+import com.example.culinarychest.domain.usecase.applicationUserFavoriteRecipeUseCases.GetApplicationUserFavoriteRecipesUseCase
+import com.example.culinarychest.domain.usecase.applicationUserFavoriteRecipeUseCases.GetFavoriteRecipeByRecipeIdUseCase
+import com.example.culinarychest.domain.usecase.applicationUserRecipeUseCases.CreateApplicationUserRecipeUseCase
+import com.example.culinarychest.domain.usecase.applicationUserRecipeUseCases.DeleteApplicationUserRecipeUseCase
+import com.example.culinarychest.domain.usecase.applicationUserRecipeUseCases.GetApplicationUserRecipesUseCase
+import com.example.culinarychest.domain.usecase.applicationUserRecipeUseCases.UpdateApplicationUserRecipeUseCase
+import com.example.culinarychest.domain.usecase.applicationUserUseCases.AuthorizationApplicationUserUseCase
+import com.example.culinarychest.domain.usecase.applicationUserUseCases.GetApplicationUserInfoUseCase
+import com.example.culinarychest.domain.usecase.applicationUserUseCases.RegistrationApplicationUserUseCase
+import com.example.culinarychest.domain.usecase.recipeRepositoryUseCases.GetRecipeByIdUseCase
+import com.example.culinarychest.domain.usecase.recipeRepositoryUseCases.GetRecipesByIdsUseCase
+import com.example.culinarychest.domain.usecase.recipeRepositoryUseCases.GetRecipesUseCase
+import com.example.culinarychest.domain.usecase.recipeStepsUseCases.CreateStepUseCase
+import com.example.culinarychest.domain.usecase.recipeStepsUseCases.DeleteStepUseCase
+import com.example.culinarychest.domain.usecase.recipeStepsUseCases.UpdateStepUseCase
 
 class MainActivity : ComponentActivity() {
 
@@ -53,7 +53,11 @@ class MainActivity : ComponentActivity() {
         GenericViewModelFactory {
             RegistrationViewModel(
                 RegistrationApplicationUserUseCase(
-                    ApplicationUserRepositoryImpl(RetrofitInstance(tokenManager).culinaryChestApi)
+                    ApplicationUserRepositoryImpl(
+                        RetrofitInstance(
+                            tokenManager
+                        ).culinaryChestApi
+                    )
                 )
             )
         }
@@ -65,7 +69,11 @@ class MainActivity : ComponentActivity() {
             AuthorizationViewModel(
                 tokenManager,
                 AuthorizationApplicationUserUseCase(
-                    ApplicationUserRepositoryImpl(RetrofitInstance(tokenManager).culinaryChestApi)
+                    ApplicationUserRepositoryImpl(
+                        RetrofitInstance(
+                            tokenManager
+                        ).culinaryChestApi
+                    )
                 )
             )
         }
@@ -135,7 +143,11 @@ class MainActivity : ComponentActivity() {
         GenericViewModelFactory {
             ProfileViewModel(
                 GetApplicationUserInfoUseCase(
-                    ApplicationUserRepositoryImpl(RetrofitInstance(tokenManager).culinaryChestApi)
+                    ApplicationUserRepositoryImpl(
+                        RetrofitInstance(
+                            tokenManager
+                        ).culinaryChestApi
+                    )
                 ),
                 GetApplicationUserRecipesUseCase(
                     ApplicationUserRecipeRepositoryImpl(

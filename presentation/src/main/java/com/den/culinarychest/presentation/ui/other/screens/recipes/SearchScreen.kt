@@ -47,7 +47,7 @@ import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetail
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.SearchViewModel
 import com.den.culinarychest.presentation.ui.theme.LightGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
-import com.example.culinarychest.data.data.repository.TokenManager
+import com.example.culinarychest.data.repository.TokenManager
 
 @Composable
 fun SearchScreen(
@@ -189,11 +189,7 @@ private fun SearchBarItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .onFocusChanged { isFocused ->
-                        if (isFocused.isFocused) {
-                            isHistoryVisible = true
-                        } else {
-                            isHistoryVisible = false
-                        }
+                        isHistoryVisible = isFocused.isFocused
                     }
                     .align(Alignment.CenterStart)
                     .padding(end = 40.dp)

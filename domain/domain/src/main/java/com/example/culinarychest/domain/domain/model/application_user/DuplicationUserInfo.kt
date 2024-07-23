@@ -1,6 +1,0 @@
-package com.example.culinarychest.domain.domain.model.application_user
-
-data class DuplicationUserInfo(
-    val duplicateUserName: String?,
-    val duplicateEmail: String?
-)

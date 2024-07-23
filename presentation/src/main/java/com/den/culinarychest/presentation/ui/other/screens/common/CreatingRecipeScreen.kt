@@ -56,8 +56,8 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.CreatingRecipeViewModel
-import com.example.culinarychest.data.data.repository.TokenManager
-import com.example.culinarychest.domain.domain.model.recipe.CreateRecipe
+import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.domain.model.recipe.CreateRecipe
 import java.io.File
 import java.io.InputStream
 import java.time.LocalDateTime

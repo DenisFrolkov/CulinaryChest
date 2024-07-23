@@ -33,8 +33,8 @@ import com.den.culinarychest.presentation.ui.other.common.route.AppNavigationRou
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.auth.AuthorizationViewModel
-import com.example.culinarychest.data.data.repository.TokenManager
-import com.example.culinarychest.domain.domain.model.application_user.Login
+import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.domain.model.application_user.Login
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -127,7 +127,10 @@ fun Authorization(
             PushButton(
                 onClick = {
                     authorizationViewModel.authorizationUser(
-                        Login(userName = login, password = password)
+                        Login(
+                            userName = login,
+                            password = password
+                        )
                     )
                     coroutineScope.launch {
                         isLoading = true
