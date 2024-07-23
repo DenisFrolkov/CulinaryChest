@@ -1,0 +1,151 @@
+package com.den.culinarychest.presentation.other.common.Item
+
+import android.content.Context
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
+import com.den.culinarychest.R
+import com.den.culinarychest.presentation.ui.theme.SoftGray
+import com.den.culinarychest.presentation.ui.theme.SoftOrange
+import com.den.culinarychest.presentation.ui.main.viewmodel.RecipeDetailsViewModel
+import com.example.culinarychest.data.data.repository.TokenManager
+import com.example.culinarychest.domain.domain.model.recipe.Recipe
+
+@Composable
+fun RecipeItem(
+    controller: NavController,
+    textRouteNavigation: String,
+    recipe: Recipe,
+    tokenManager: TokenManager,
+    recipeDetailsViewModel: RecipeDetailsViewModel
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 16.dp)
+            .clickable {
+                tokenManager
+                    .getToken()
+                    ?.let {
+                        recipeDetailsViewModel.getFavoriteRecipeByRecipeId(
+                            it,
+                            recipe.recipeId
+                        )
+                        recipeDetailsViewModel.getRecipeById(token = it, recipeId = recipe.recipeId)
+                    }
+                controller.navigate("${textRouteNavigation}/${recipe.recipeId}")
+            }
+            .border(width = .15.dp, color = SoftGray, shape = RoundedCornerShape(12.dp))
+            .background(SoftOrange, RoundedCornerShape(12.dp))
+    ) {
+        Row {
+            if (recipe.imageUrl.isEmpty()) {
+                Row(
+                ) {
+                    CircularProgressIndicator(
+                        color = SoftGray,
+                        strokeWidth = 1.5.dp
+                    )
+                }
+            } else {
+                LoadImage(
+                    context = LocalContext.current,
+                    recipeImageUrl = recipe.imageUrl
+                )
+            }
+            Column(
+                modifier = Modifier.padding(start = 10.dp, top = 12.dp)
+            ) {
+                Text(
+                    text = recipe.title,
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        color = SoftGray
+                    )
+                )
+                Text(
+                    text = if (recipe.ingredients.length > 160) recipe.ingredients.take(160) + "..." else recipe.ingredients,
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        color = SoftGray
+                    ),
+                    modifier = Modifier.padding(top = 4.dp),
+                )
+            }
+        }
+        Row(
+            modifier = Modifier.padding(start = 23.dp, top = 6.dp, end = 8.dp, bottom = 4.dp)
+        ) {
+            DisplayRecipeInfo(
+                iconRecipeInfo = painterResource(id = R.drawable.recipe_info_star_icon),
+                sizeRecipeInfoIcon = 20,
+                textRecipeInfo = "${recipe.savedCount}",
+                textFontSize = 12
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            DisplayRecipeInfo(
+                iconRecipeInfo = painterResource(id = R.drawable.recipe_info_time_icon),
+                sizeRecipeInfoIcon = 20,
+                textRecipeInfo = recipe.preparationTime,
+                textFontSize = 12
+            )
+            Box(
+                contentAlignment = Alignment.CenterEnd,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                DisplayRecipeInfo(
+                    iconRecipeInfo = painterResource(id = R.drawable.recipe_info_calendar_icon),
+                    sizeRecipeInfoIcon = 16,
+                    textRecipeInfo = recipe.creationDate.takeWhile { it != 'T' },
+                    textFontSize = 10
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun LoadImage(context: Context, recipeImageUrl: String) {
+
+    val desiredPath = recipeImageUrl.substringAfter("/wwwroot/")
+    val imageUrl = "https://zany-meme-jp7rjw5xjwpfpv47-7286.app.github.dev/images/${desiredPath}"
+    val imageLoader = createImageLoader(context)
+
+    val painter = rememberAsyncImagePainter(
+        model = imageUrl,
+        imageLoader = imageLoader
+    )
+
+    Image(
+        painter = painter,
+        contentDescription = null,
+        contentScale = ContentScale.Fit,
+        modifier = Modifier
+            .padding(start = 16.dp, top = 16.dp)
+            .size(94.dp)
+    )
+}
