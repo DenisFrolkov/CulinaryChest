@@ -47,17 +47,17 @@ import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetail
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.SearchViewModel
 import com.den.culinarychest.presentation.ui.theme.LightGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
-import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.data.repository.TokenRepositoryImpl
 
 @Composable
 fun SearchScreen(
     navController: NavController,
     recipeDetailsViewModel: RecipeDetailsViewModel,
     searchViewModel: SearchViewModel,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
-    tokenManager.getToken()?.let {
+    tokenManagerImpl.getToken()?.let {
         searchViewModel.getListRecipes(it, null)
     }
 
@@ -65,7 +65,7 @@ fun SearchScreen(
         controller = navController,
         searchViewModel = searchViewModel,
         recipeDetailsViewModel = recipeDetailsViewModel,
-        tokenManager = tokenManager
+        tokenManagerImpl = tokenManagerImpl
     )
 }
 
@@ -75,7 +75,7 @@ private fun Search(
     controller: NavController,
     searchViewModel: SearchViewModel,
     recipeDetailsViewModel: RecipeDetailsViewModel,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
     var searchText by remember { mutableStateOf("") }
 
@@ -95,7 +95,7 @@ private fun Search(
         ) {
             SearchBarItem(
                 searchViewModel = searchViewModel,
-                tokenManager = tokenManager,
+                tokenManagerImpl = tokenManagerImpl,
                 onTextChanged = { text -> searchText = text }
             )
         }
@@ -123,7 +123,7 @@ private fun Search(
                         controller = controller,
                         textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
                         recipe = recipe,
-                        tokenManager = tokenManager,
+                        tokenManagerImpl = tokenManagerImpl,
                         recipeDetailsViewModel = recipeDetailsViewModel
                     )
                 }
@@ -136,7 +136,7 @@ private fun Search(
 @Composable
 private fun SearchBarItem(
     searchViewModel: SearchViewModel,
-    tokenManager: TokenManager,
+    tokenManagerImpl: TokenRepositoryImpl,
     onTextChanged: (String) -> Unit,
 ) {
 
@@ -182,7 +182,7 @@ private fun SearchBarItem(
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        tokenManager.getToken()?.let { token -> searchViewModel.getListRecipes(token, enteredSearchText.text) }
+                        tokenManagerImpl.getToken()?.let { token -> searchViewModel.getListRecipes(token, enteredSearchText.text) }
                         keyboardController?.hide()
                     }
                 ),

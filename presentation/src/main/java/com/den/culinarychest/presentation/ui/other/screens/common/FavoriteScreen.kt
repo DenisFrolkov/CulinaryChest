@@ -27,7 +27,7 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
-import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.data.repository.TokenRepositoryImpl
 import com.example.culinarychest.domain.model.recipe.Recipe
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -36,11 +36,11 @@ fun FavoriteScreen(
     controller: NavController,
     favoriteViewModel: FavoriteViewModel,
     recipeDetailsViewModel: RecipeDetailsViewModel,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
     val favoriteRecipeList = favoriteViewModel.listFavoriteRecipesUser.collectAsState().value
-    tokenManager.getToken()?.let { token ->
+    tokenManagerImpl.getToken()?.let { token ->
         val recipeIds = favoriteRecipeList.map { it.recipeId.toString() }
         favoriteViewModel.getListRecipesByIds(token, recipeIds)
     }
@@ -52,7 +52,7 @@ fun FavoriteScreen(
     if (recipe.isEmpty()) {
         EmptyScreenText()
     } else {
-        ListRecipes(controller, recipe, recipeDetailsViewModel, tokenManager)
+        ListRecipes(controller, recipe, recipeDetailsViewModel, tokenManagerImpl)
     }
 }
 
@@ -61,7 +61,7 @@ private fun ListRecipes(
     controller: NavController,
     recipeDtoList: List<Recipe>,
     recipeDetailsViewModel: RecipeDetailsViewModel,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
     LazyColumn(
         modifier = Modifier
@@ -80,7 +80,7 @@ private fun ListRecipes(
                     controller = controller,
                     textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
                     recipe = recipe,
-                    tokenManager = tokenManager,
+                    tokenManagerImpl = tokenManagerImpl,
                     recipeDetailsViewModel = recipeDetailsViewModel
                 )
             }

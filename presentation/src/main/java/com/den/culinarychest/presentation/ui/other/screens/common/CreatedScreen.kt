@@ -35,7 +35,7 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
-import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.data.repository.TokenRepositoryImpl
 import com.example.culinarychest.domain.model.recipe.Recipe
 
 @Composable
@@ -43,7 +43,7 @@ fun CreatedScreen(
     controller: NavController,
     createdViewModel: CreatedViewModel,
     recipeDetailsViewModel: RecipeDetailsViewModel,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
     val listRecipeCreatedUser =
@@ -57,7 +57,7 @@ fun CreatedScreen(
         ListRecipeCreatedUser(
             controller,
             listRecipeCreatedUser,
-            tokenManager,
+            tokenManagerImpl,
             recipeDetailsViewModel = recipeDetailsViewModel
         )
         FABButton(controller)
@@ -82,7 +82,7 @@ private fun FABButton(controller: NavController) {
 private fun ListRecipeCreatedUser(
     controller: NavController,
     listRecipeCreatedUser: List<Recipe>,
-    tokenManager: TokenManager,
+    tokenManagerImpl: TokenRepositoryImpl,
     recipeDetailsViewModel: RecipeDetailsViewModel
 ) {
     LazyColumn(
@@ -119,7 +119,7 @@ private fun ListRecipeCreatedUser(
                     controller = controller,
                     textRouteNavigation = AppNavigationRoute.FetchUserRecipeScreen.route,
                     recipe = recipeCreatedUser,
-                    tokenManager = tokenManager,
+                    tokenManagerImpl = tokenManagerImpl,
                     recipeDetailsViewModel = recipeDetailsViewModel
                 )
             }

@@ -1,17 +1,15 @@
 package com.example.culinarychest.domain.repository
 
-import com.example.culinarychest.domain.model.ProcessingResult
 import com.example.culinarychest.domain.model.recipe.Recipe
-import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface ApplicationUserRecipeRepository {
 
-    suspend fun getApplicationUserRecipes(token: String): Flow<ProcessingResult<List<Recipe>>>
+    suspend fun getUserRecipes(token: String): List<Recipe>
 
-    suspend fun deleteApplicationUserRecipe(token: String, recipeId: String)
+    suspend fun deleteUserRecipe(token: String, recipeId: String)
 
-    suspend fun createApplicationUserRecipe(
+    suspend fun createUserRecipe(
         token: String,
         title: String,
         recipeImage: File,
@@ -21,7 +19,7 @@ interface ApplicationUserRecipeRepository {
         preparationTime: String
     )
 
-    suspend fun updateApplicationUserRecipe(
+    suspend fun updateUserRecipe(
         token: String,
         recipeId: String,
         title: String,

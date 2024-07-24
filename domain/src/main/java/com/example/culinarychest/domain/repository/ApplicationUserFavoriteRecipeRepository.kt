@@ -6,8 +6,8 @@ import com.example.culinarychest.domain.model.favorite_recipe.CreateFavoriteReci
 import kotlinx.coroutines.flow.Flow
 
 interface ApplicationUserFavoriteRecipeRepository {
-    suspend fun getApplicationUserFavoriteRecipes(token: String): Flow<ProcessingResult<List<FavoriteRecipe>>>
-    suspend fun getFavoriteRecipeByRecipeId(token: String, recipeId: String): Flow<ProcessingResult<FavoriteRecipe>>
+    suspend fun getUserFavoriteRecipes(token: String): List<FavoriteRecipe>
+    suspend fun getFavoriteRecipeByRecipeId(token: String, recipeId: String): FavoriteRecipe
     suspend fun createApplicationUserFavoriteRecipes(token: String, recipeId: Int, addedDate: CreateFavoriteRecipe)
     suspend fun deleteApplicationUserFavoriteRecipe(token: String, recipeId: String)
 }

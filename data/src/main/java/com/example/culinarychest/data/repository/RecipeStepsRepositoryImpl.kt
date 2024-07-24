@@ -19,29 +19,12 @@ class RecipeStepsRepositoryImpl(
     override suspend fun getRecipeSteps(
         token: String,
         recipeId: String
-    ): Flow<ProcessingResult<List<Step>>> =
-        flow {
-            try {
-                val response =
-                    culinaryChestAPI.getListStepsRecipe(token, recipeId).map { it.toDomain() }
-                emit(ProcessingResult.Success(response))
-            } catch (e: HttpException) {
-                emit(ProcessingResult.Error(e.localizedMessage ?: "An unexpected error occurred"))
-            } catch (e: IOException) {
-                emit(ProcessingResult.Error("Couldn't reach server. Check your internet connection."))
-            }
-        }
+    ): List<Step> {
+        return culinaryChestAPI.getListStepsRecipe(token, recipeId).map { it.toDomain() }
+    }
 
     override suspend fun createRecipeStep(token: String, recipeId: String, step: CreateStep) {
-        try {
-            culinaryChestAPI.createStepRecipe(token, recipeId, step.toDto())
-        } catch (e: HttpException) {
-            val errorMessage = "Unexpected error occurred: ${e.localizedMessage}"
-            println(errorMessage)
-        } catch (e: IOException) {
-            val errorMessage = "Network Error: Please check your internet connection and try again."
-            println(errorMessage)
-        }
+        return culinaryChestAPI.createStepRecipe(token, recipeId, step.toDto())
     }
 
     override suspend fun updateRecipeStep(
@@ -50,26 +33,10 @@ class RecipeStepsRepositoryImpl(
         stepId: String,
         updateStep: CreateStep
     ) {
-        try {
-            culinaryChestAPI.updateStepRecipe(token, recipeId, stepId, updateStep.toDto())
-        } catch (e: HttpException) {
-            val errorMessage = "Unexpected error occurred: ${e.localizedMessage}"
-            println(errorMessage)
-        } catch (e: IOException) {
-            val errorMessage = "Network Error: Please check your internet connection and try again."
-            println(errorMessage)
-        }
+        return culinaryChestAPI.updateStepRecipe(token, recipeId, stepId, updateStep.toDto())
     }
 
     override suspend fun deleteRecipeStep(token: String, recipeId: String, stepId: String) {
-        try {
-            culinaryChestAPI.deleteStepRecipe(token, recipeId, stepId)
-        } catch (e: HttpException) {
-            val errorMessage = "Unexpected error occurred: ${e.localizedMessage}"
-            println(errorMessage)
-        } catch (e: IOException) {
-            val errorMessage = "Network Error: Please check your internet connection and try again."
-            println(errorMessage)
-        }
+        return culinaryChestAPI.deleteStepRecipe(token, recipeId, stepId)
     }
 }

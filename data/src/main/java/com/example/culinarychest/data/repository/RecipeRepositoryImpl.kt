@@ -17,44 +17,21 @@ class RecipeRepositoryImpl(
     override suspend fun getRecipes(
         token: String,
         searchTerm: String?
-    ): Flow<ProcessingResult<List<Recipe>>> =
-        flow {
-            try {
-                val response = culinaryChestAPI.getListRecipes(token, searchTerm).map { it.toDomain() }
-                emit(ProcessingResult.Success(response))
-            } catch (e: HttpException) {
-                emit(ProcessingResult.Error(e.localizedMessage ?: "An unexpected error occurred"))
-            } catch (e: IOException) {
-                emit(ProcessingResult.Error("Couldn't reach server. Check your internet connection."))
-            }
-        }
+    ): List<Recipe> {
+        return culinaryChestAPI.getListRecipes(token, searchTerm).map { it.toDomain() }
+    }
 
     override suspend fun getRecipesByIds(
         token: String,
         recipeIds: List<String>
-    ): Flow<ProcessingResult<List<Recipe>>> = flow {
-        try {
-            val response = culinaryChestAPI.getListRecipeByIds(token, recipeIds).map { it.toDomain() }
-            emit(ProcessingResult.Success(response))
-        } catch (e: HttpException) {
-            emit(ProcessingResult.Error(e.localizedMessage ?: "An unexpected error occurred"))
-        } catch (e: IOException) {
-            emit(ProcessingResult.Error("Couldn't reach server. Check your internet connection."))
-        }
+    ): List<Recipe> {
+        return culinaryChestAPI.getListRecipeByIds(token, recipeIds).map { it.toDomain() }
     }
 
     override suspend fun getRecipeById(
         token: String,
         recipeId: String
-    ): Flow<ProcessingResult<List<Recipe>>> =
-        flow {
-            try {
-                val response = culinaryChestAPI.getRecipeById(token, recipeId).map { it.toDomain() }
-                emit(ProcessingResult.Success(response))
-            } catch (e: HttpException) {
-                emit(ProcessingResult.Error(e.localizedMessage ?: "An unexpected error occurred"))
-            } catch (e: IOException) {
-                emit(ProcessingResult.Error("Couldn't reach server. Check your internet connection."))
-            }
-        }
+    ): List<Recipe> {
+        return culinaryChestAPI.getRecipeById(token, recipeId).map { it.toDomain() }
+    }
 }

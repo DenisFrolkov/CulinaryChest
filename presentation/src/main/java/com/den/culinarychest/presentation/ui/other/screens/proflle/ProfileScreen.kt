@@ -32,16 +32,16 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.profile.ProfileViewModel
-import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.data.repository.TokenRepositoryImpl
 
 @Composable
 fun ProfileScreen(
     navController: NavController,
     profileViewModel: ProfileViewModel,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
-    tokenManager.getToken()?.let {
+    tokenManagerImpl.getToken()?.let {
         profileViewModel.getUserInfo(it)
         profileViewModel.getUserFavoriteRecipesCount(it)
         profileViewModel.getUserRecipesCount(it)
@@ -113,7 +113,7 @@ fun ProfileScreen(
                     textColor = Color.Red,
                     onClick = {
                         navController.navigate(AppNavigationRoute.AuthorizationScreen.route)
-                        tokenManager.clearToken()
+                        tokenManagerImpl.clearToken()
                     }
                 )
             }

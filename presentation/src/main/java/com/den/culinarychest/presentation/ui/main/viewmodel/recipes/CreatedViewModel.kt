@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.model.ProcessingResult
 import com.example.culinarychest.domain.model.recipe.Recipe
-import com.example.culinarychest.domain.usecase.applicationUserRecipeUseCases.GetApplicationUserRecipesUseCase
+import com.example.culinarychest.domain.usecase.userRecipeUseCases.GetUserRecipesUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CreatedViewModel(
-    private val getApplicationUserRecipesUseCase: GetApplicationUserRecipesUseCase,
+    private val getUserRecipesUseCase: GetUserRecipesUseCase,
 ) : ViewModel() {
 
     private val _listRecipesUser = MutableStateFlow<List<Recipe>>(emptyList())
@@ -25,7 +25,7 @@ class CreatedViewModel(
 
     fun getListRecipesUser(token: String) {
         viewModelScope.launch {
-            getApplicationUserRecipesUseCase(token)
+            getUserRecipesUseCase(token)
                 .collectLatest { result ->
                     when (result) {
                         is ProcessingResult.Error -> {

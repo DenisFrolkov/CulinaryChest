@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.model.ProcessingResult
 import com.example.culinarychest.domain.model.application_user.ApplicationUser
 import com.example.culinarychest.domain.model.application_user.DuplicationUserInfo
-import com.example.culinarychest.domain.usecase.applicationUserUseCases.RegistrationApplicationUserUseCase
+import com.example.culinarychest.domain.usecase.userUseCases.RegistrationApplicationUserUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest

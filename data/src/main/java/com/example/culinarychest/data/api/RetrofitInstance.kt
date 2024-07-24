@@ -1,7 +1,7 @@
 package com.example.culinarychest.data.api
 
 import android.annotation.SuppressLint
-import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.data.repository.TokenRepositoryImpl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -13,7 +13,7 @@ import javax.net.ssl.X509TrustManager
 
 const val BASE_URL = "https://zany-meme-jp7rjw5xjwpfpv47-7286.app.github.dev"
 
-class RetrofitInstance(private val tokenManager: TokenManager) {
+class RetrofitInstance(private val tokenManagerImpl: TokenRepositoryImpl) {
 
     val okHttpClient: OkHttpClient = OkHttpClient.Builder()
         .apply {
@@ -51,7 +51,7 @@ class RetrofitInstance(private val tokenManager: TokenManager) {
         .build()
 
     private fun getToken(): String? {
-        return tokenManager.getToken()
+        return tokenManagerImpl.getToken()
     }
 
     val culinaryChestApi: CulinaryChestAPI = Retrofit.Builder()

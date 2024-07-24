@@ -31,7 +31,7 @@ import com.den.culinarychest.R
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
-import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.data.repository.TokenRepositoryImpl
 import com.example.culinarychest.domain.model.recipe.Recipe
 
 @Composable
@@ -39,7 +39,7 @@ fun RecipeItem(
     controller: NavController,
     textRouteNavigation: String,
     recipe: Recipe,
-    tokenManager: TokenManager,
+    tokenManagerImpl: TokenRepositoryImpl,
     recipeDetailsViewModel: RecipeDetailsViewModel
 ) {
     Column(
@@ -47,7 +47,7 @@ fun RecipeItem(
             .fillMaxWidth()
             .padding(bottom = 16.dp)
             .clickable {
-                tokenManager
+                tokenManagerImpl
                     .getToken()
                     ?.let {
                         recipeDetailsViewModel.getFavoriteRecipeByRecipeId(

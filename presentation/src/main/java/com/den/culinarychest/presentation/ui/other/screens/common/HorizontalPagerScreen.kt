@@ -36,7 +36,7 @@ import com.den.culinarychest.presentation.ui.other.screens.common.CreatedScreen
 import com.den.culinarychest.presentation.ui.other.screens.common.FavoriteScreen
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
-import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.data.repository.TokenRepositoryImpl
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -46,14 +46,14 @@ fun HorizontalPagerScreen(
     createdViewModel: CreatedViewModel,
     favoriteViewModel: FavoriteViewModel,
     recipeDetailsViewModel: RecipeDetailsViewModel,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
     HorizontalPager(
         controller = navController,
         createdViewModel = createdViewModel,
         favoriteViewModel = favoriteViewModel,
         recipeDetailsViewModel = recipeDetailsViewModel,
-        tokenManager = tokenManager
+        tokenManagerImpl = tokenManagerImpl
     )
 }
 
@@ -65,10 +65,10 @@ private fun HorizontalPager(
     createdViewModel: CreatedViewModel,
     favoriteViewModel: FavoriteViewModel,
     recipeDetailsViewModel: RecipeDetailsViewModel,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
-    tokenManager.getToken()?.let {
+    tokenManagerImpl.getToken()?.let {
         favoriteViewModel.getListFavoriteRecipesUser(it)
         createdViewModel.getListRecipesUser(it)
     }
@@ -112,14 +112,14 @@ private fun HorizontalPager(
                     controller = controller,
                     createdViewModel = createdViewModel,
                     recipeDetailsViewModel = recipeDetailsViewModel,
-                    tokenManager = tokenManager
+                    tokenManagerImpl = tokenManagerImpl
                 )
 
                 1 -> FavoriteScreen(
                     controller = controller,
                     favoriteViewModel = favoriteViewModel,
                     recipeDetailsViewModel = recipeDetailsViewModel,
-                    tokenManager = tokenManager
+                    tokenManagerImpl = tokenManagerImpl
                 )
             }
         }

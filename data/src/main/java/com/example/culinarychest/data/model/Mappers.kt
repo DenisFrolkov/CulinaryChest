@@ -7,25 +7,19 @@ import com.example.culinarychest.data.model.application_user.LoginDto
 import com.example.culinarychest.data.model.application_user.TokenDto
 import com.example.culinarychest.data.model.favorite_recipe.CreateFavoriteRecipeDto
 import com.example.culinarychest.data.model.favorite_recipe.FavoriteRecipeDto
-import com.example.culinarychest.data.model.recipe.CreateRecipeDto
 import com.example.culinarychest.data.model.recipe.RecipeDto
-import com.example.culinarychest.data.model.recipe.UpdateRecipeDto
 import com.example.culinarychest.data.model.step.CreateStepDto
 import com.example.culinarychest.data.model.step.StepDto
-import com.example.culinarychest.data.model.step.UpdateStepDto
 import com.example.culinarychest.domain.model.application_user.ApplicationUser
-import com.example.culinarychest.domain.model.application_user.ApplicationUserInfo
+import com.example.culinarychest.domain.model.application_user.UserInfo
 import com.example.culinarychest.domain.model.application_user.DuplicationUserInfo
 import com.example.culinarychest.domain.model.application_user.Login
 import com.example.culinarychest.domain.model.application_user.Token
 import com.example.culinarychest.domain.model.favorite_recipe.CreateFavoriteRecipe
 import com.example.culinarychest.domain.model.favorite_recipe.FavoriteRecipe
-import com.example.culinarychest.domain.model.recipe.CreateRecipe
 import com.example.culinarychest.domain.model.recipe.Recipe
-import com.example.culinarychest.domain.model.recipe.UpdateRecipe
 import com.example.culinarychest.domain.model.step.CreateStep
 import com.example.culinarychest.domain.model.step.Step
-import com.example.culinarychest.domain.model.step.UpdateStep
 
 object Mappers {
 
@@ -38,8 +32,8 @@ object Mappers {
         )
     }
 
-    fun ApplicationUserInfoDto.toDomain(): ApplicationUserInfo {
-        return ApplicationUserInfo(
+    fun ApplicationUserInfoDto.toDomain(): UserInfo {
+        return UserInfo(
             id = this.id,
             userName = this.userName,
             email = this.email
@@ -48,6 +42,12 @@ object Mappers {
 
     fun DuplicationUserInfoDto.toDomain(): DuplicationUserInfo {
         return DuplicationUserInfo(
+            duplicateUserName = this.duplicateUserName, duplicateEmail = this.duplicateEmail
+        )
+    }
+
+    fun DuplicationUserInfo.toDto(): DuplicationUserInfoDto {
+        return DuplicationUserInfoDto(
             duplicateUserName = this.duplicateUserName, duplicateEmail = this.duplicateEmail
         )
     }
@@ -61,6 +61,12 @@ object Mappers {
 
     fun TokenDto.toDomain(): Token {
         return Token(
+            token = this.token
+        )
+    }
+
+    fun Token.toDto(): TokenDto {
+        return TokenDto(
             token = this.token
         )
     }

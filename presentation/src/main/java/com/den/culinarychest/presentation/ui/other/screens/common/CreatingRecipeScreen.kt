@@ -56,7 +56,7 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.CreatingRecipeViewModel
-import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.data.repository.TokenRepositoryImpl
 import com.example.culinarychest.domain.model.recipe.CreateRecipe
 import java.io.File
 import java.io.InputStream
@@ -66,12 +66,12 @@ import java.time.LocalDateTime
 fun CreatingRecipeScreen(
     navController: NavController,
     creatingRecipeViewModel: CreatingRecipeViewModel,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
     CreatingRecipe(
         navController = navController,
         creatingRecipeViewModel = creatingRecipeViewModel,
-        tokenManager = tokenManager
+        tokenManagerImpl = tokenManagerImpl
     )
 }
 
@@ -81,7 +81,7 @@ fun CreatingRecipeScreen(
 private fun CreatingRecipe(
     navController: NavController,
     creatingRecipeViewModel: CreatingRecipeViewModel,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
     var textTitle by remember { mutableStateOf("") }
@@ -184,7 +184,7 @@ private fun CreatingRecipe(
                             onClick = {
                                 clickButton = true
                                 if (titleValidation == false && ingredientsValidation == false && imageValidation == true && preparationTimeValidation == true && createRecipe.steps.isNotEmpty()) {
-                                    val token = tokenManager.getToken()
+                                    val token = tokenManagerImpl.getToken()
                                     token?.let {
                                         creatingRecipeViewModel.createRecipeUser(
                                             it,

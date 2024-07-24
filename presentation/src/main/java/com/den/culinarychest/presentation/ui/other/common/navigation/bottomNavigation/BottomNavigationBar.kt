@@ -39,7 +39,7 @@ import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.main.viewmodel.profile.ProfileViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.SearchViewModel
-import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.data.repository.TokenRepositoryImpl
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -50,7 +50,7 @@ fun BottomNavigationBar(
     createdViewModel: CreatedViewModel,
     favoriteViewModel: FavoriteViewModel,
     profileViewModel: ProfileViewModel,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
     val bottomController = rememberNavController()
@@ -129,7 +129,7 @@ fun BottomNavigationBar(
                     navController = navController,
                     recipeDetailsViewModel = recipeDetailsViewModel,
                     searchViewModel = searchViewModel,
-                    tokenManager = tokenManager
+                    tokenManagerImpl = tokenManagerImpl
                 )
             }
             composable(BottomNavigationRoute.TopNavigationBar.route) {
@@ -138,14 +138,14 @@ fun BottomNavigationBar(
                     createdViewModel = createdViewModel,
                     favoriteViewModel = favoriteViewModel,
                     recipeDetailsViewModel = recipeDetailsViewModel,
-                    tokenManager = tokenManager
+                    tokenManagerImpl = tokenManagerImpl
                 )
             }
             composable(BottomNavigationRoute.ProfileScreen.route) {
                 ProfileScreen(
                     navController = navController,
                     profileViewModel = profileViewModel,
-                    tokenManager = tokenManager)
+                    tokenManagerImpl = tokenManagerImpl)
             }
         }
     }

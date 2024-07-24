@@ -69,7 +69,7 @@ import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageRecipeUserViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageStepsViewModel
-import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.data.repository.TokenRepositoryImpl
 import com.example.culinarychest.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.model.recipe.UpdateRecipe
 import com.example.culinarychest.domain.model.step.CreateStep
@@ -83,14 +83,14 @@ fun EditRecipeScreen(
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     manageStepsViewModel: ManageStepsViewModel,
     recipe: Recipe,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
     EditRecipe(
         controller = navController,
         manageRecipeUserViewModel = manageRecipeUserViewModel,
         manageStepsViewModel = manageStepsViewModel,
         recipe = recipe,
-        tokenManager = tokenManager
+        tokenManagerImpl = tokenManagerImpl
     )
 }
 
@@ -100,7 +100,7 @@ private fun EditRecipe(
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     manageStepsViewModel: ManageStepsViewModel,
     recipe: Recipe,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
     val stepsFromServer = remember { mutableStateListOf<UpdateStep>() }
@@ -372,7 +372,7 @@ private fun EditRecipe(
                         createStepDto = stepsCreateApp.toList(),
                         manageRecipeUserViewModel = manageRecipeUserViewModel,
                         manageStepsViewModel = manageStepsViewModel,
-                        tokenManager = tokenManager,
+                        tokenManagerImpl = tokenManagerImpl,
                         buttonColor = EditRecipeColor
                     )
                 }
@@ -1022,7 +1022,7 @@ private fun SaveButton(
     createStepDto: List<CreateStep>,
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     manageStepsViewModel: ManageStepsViewModel,
-    tokenManager: TokenManager,
+    tokenManagerImpl: TokenRepositoryImpl,
     buttonColor: Color,
 ) {
     Box(
@@ -1036,12 +1036,12 @@ private fun SaveButton(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
-                tokenManager.getToken()?.let {
+                tokenManagerImpl.getToken()?.let {
                     manageRecipeUserViewModel.updateRecipeUser(
                         it, recipeId, updateInfoRecipe.title, updateInfoRecipe.recipeImage, updateInfoRecipe.ingredients, updateInfoRecipe.creationDate, updateInfoRecipe.preparationTime)
                 }
                 updateStepDto.forEach { updateStep ->
-                    tokenManager.getToken()?.let {
+                    tokenManagerImpl.getToken()?.let {
                         manageStepsViewModel.updateStepRecipe(it, recipeId, stepId = updateStep.stepId, updateStep = CreateStep(
                             updateStep.description,
                             updateStep.order
@@ -1051,7 +1051,7 @@ private fun SaveButton(
                 }
 
                 createStepDto.forEach { createStep ->
-                    tokenManager.getToken()?.let {
+                    tokenManagerImpl.getToken()?.let {
                         manageStepsViewModel.createStepsRecipe(it, recipeId, step = CreateStep(
                             createStep.description,
                             createStep.order

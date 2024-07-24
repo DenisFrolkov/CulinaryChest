@@ -28,7 +28,7 @@ import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetail
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageStepsViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.auth.RegistrationViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.SearchViewModel
-import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.data.repository.TokenRepositoryImpl
 
 
 @Composable
@@ -44,10 +44,10 @@ fun AppNavigation(
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     manageOtherRecipeViewModel: ManageOtherRecipeViewModel,
     manageStepsViewModel: ManageStepsViewModel,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
-    val token = remember { tokenManager.getToken() }
+    val token = remember { tokenManagerImpl.getToken() }
 
     val isUserAuthorized = token != null
 
@@ -67,7 +67,7 @@ fun AppNavigation(
             AuthorizationScreen(
                 navController = appNavigationController,
                 authorizationViewModel = authorizationViewModel,
-                tokenManager = tokenManager
+                tokenManagerImpl = tokenManagerImpl
             )
 
         }
@@ -76,7 +76,7 @@ fun AppNavigation(
                 navController = appNavigationController,
                 registrationApplicationUser = registrationViewModel,
                 authorizationViewModel = authorizationViewModel,
-                tokenManager = tokenManager
+                tokenManagerImpl = tokenManagerImpl
             )
         }
         composable(AppNavigationRoute.BottomAppNavigationBar.route) {
@@ -87,7 +87,7 @@ fun AppNavigation(
                 createdViewModel = createdViewModel,
                 favoriteViewModel = favoriteViewModel,
                 profileViewModel = profileViewModel,
-                tokenManager = tokenManager,
+                tokenManagerImpl = tokenManagerImpl,
             )
         }
         composable(
@@ -97,7 +97,7 @@ fun AppNavigation(
             val recipeId = backStackEntry.arguments?.getString("recipeId")
                 ?: "Надо придумать реализацию, если такого рецепта не существует"
             recipeId.let { recipe ->
-                tokenManager.getToken()?.let { token ->
+                tokenManagerImpl.getToken()?.let { token ->
                     recipeDetailsViewModel.getRecipeById(
                         token,
                         recipe
@@ -113,7 +113,7 @@ fun AppNavigation(
                     recipe = recipe,
                     recipeDetailsViewModel = recipeDetailsViewModel,
                     manageOtherRecipeViewModel = manageOtherRecipeViewModel,
-                    tokenManager = tokenManager
+                    tokenManagerImpl = tokenManagerImpl
                 )
             }
         }
@@ -125,7 +125,7 @@ fun AppNavigation(
                 ?: "Надо придумать реализацию, если такого рецепта не существует"
 
             recipeId.let { recipe ->
-                tokenManager.getToken()?.let { token ->
+                tokenManagerImpl.getToken()?.let { token ->
                     recipeDetailsViewModel.getRecipeById(
                         token,
                         recipe
@@ -139,7 +139,7 @@ fun AppNavigation(
                     navController = appNavigationController,
                     manageRecipeUserViewModel = manageRecipeUserViewModel,
                     recipe = recipe,
-                    tokenManager = tokenManager
+                    tokenManagerImpl = tokenManagerImpl
                 )
             }
         }
@@ -151,7 +151,7 @@ fun AppNavigation(
                 ?: "Надо придумать реализацию, если такого рецепта не существует"
 
             recipeId.let { recipe ->
-                tokenManager.getToken()?.let { token ->
+                tokenManagerImpl.getToken()?.let { token ->
                     recipeDetailsViewModel.getRecipeById(
                         token,
                         recipe
@@ -166,7 +166,7 @@ fun AppNavigation(
                     manageRecipeUserViewModel = manageRecipeUserViewModel,
                     manageStepsViewModel = manageStepsViewModel,
                     recipe = recipe,
-                    tokenManager = tokenManager
+                    tokenManagerImpl = tokenManagerImpl
                 )
             }
         }
@@ -174,7 +174,7 @@ fun AppNavigation(
             CreatingRecipeScreen(
                 navController = appNavigationController,
                 creatingRecipeViewModel = creatingRecipeViewModel,
-                tokenManager = tokenManager
+                tokenManagerImpl = tokenManagerImpl
             )
         }
     }

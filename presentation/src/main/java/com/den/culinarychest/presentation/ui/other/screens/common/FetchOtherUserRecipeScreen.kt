@@ -55,7 +55,7 @@ import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageOtherRecipeViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
-import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.data.repository.TokenRepositoryImpl
 import com.example.culinarychest.domain.model.favorite_recipe.CreateFavoriteRecipe
 import com.example.culinarychest.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.model.recipe.Recipe
@@ -67,14 +67,14 @@ fun FetchOtherUserRecipeScreen(
     recipe: Recipe,
     recipeDetailsViewModel: RecipeDetailsViewModel,
     manageOtherRecipeViewModel: ManageOtherRecipeViewModel,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
     FetchOtherUserRecipe(
         controller = navController,
         recipe = recipe,
         recipeDetailsViewModel = recipeDetailsViewModel,
         manageOtherRecipeViewModel = manageOtherRecipeViewModel,
-        tokenManager = tokenManager
+        tokenManagerImpl = tokenManagerImpl
     )
 }
 
@@ -84,7 +84,7 @@ fun FetchOtherUserRecipe(
     recipe: Recipe,
     recipeDetailsViewModel: RecipeDetailsViewModel,
     manageOtherRecipeViewModel: ManageOtherRecipeViewModel,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
     var clickElementLike by remember {
         mutableStateOf(false)
@@ -99,7 +99,7 @@ fun FetchOtherUserRecipe(
             favoriteRecipeByRecipeId = favoriteRecipeByRecipeId,
             clickElement = clickElementLike,
             manageOtherRecipeViewModel = manageOtherRecipeViewModel,
-            tokenManager = tokenManager,
+            tokenManagerImpl = tokenManagerImpl,
             passClickElement = { clickElementLike = it }
         )
         LazyColumn(
@@ -128,7 +128,7 @@ fun FetchOtherUserRecipeTopBar(
     recipeId: String,
     favoriteRecipeByRecipeId: FavoriteRecipe?,
     manageOtherRecipeViewModel: ManageOtherRecipeViewModel,
-    tokenManager: TokenManager,
+    tokenManagerImpl: TokenRepositoryImpl,
     clickElement: Boolean,
     passClickElement: (Boolean) -> Unit
 ) {
@@ -165,7 +165,7 @@ fun FetchOtherUserRecipeTopBar(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
                     ) {
-                        tokenManager
+                        tokenManagerImpl
                             .getToken()
                             ?.let {
                                 manageOtherRecipeViewModel.createFavoriteRecipesUser(
@@ -194,7 +194,7 @@ fun FetchOtherUserRecipeTopBar(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
                     ) {
-                        tokenManager
+                        tokenManagerImpl
                             .getToken()
                             ?.let {
                                 manageOtherRecipeViewModel.deleteFavoriteRecipeUser(

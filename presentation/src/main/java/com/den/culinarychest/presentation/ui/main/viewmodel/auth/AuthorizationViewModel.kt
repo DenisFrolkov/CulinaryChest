@@ -4,16 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.data.repository.TokenRepositoryImpl
 import com.example.culinarychest.domain.model.ProcessingResult
 import com.example.culinarychest.domain.model.application_user.Login
-import com.example.culinarychest.domain.usecase.applicationUserUseCases.AuthorizationApplicationUserUseCase
+import com.example.culinarychest.domain.usecase.userUseCases.UserUseCase
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class AuthorizationViewModel(
-    private val tokenManager: TokenManager,
-    private val authorizationApplicationUserUseCase: AuthorizationApplicationUserUseCase
+    private val tokenManagerImpl: TokenRepositoryImpl,
+    private val userUseCase: UserUseCase
 ) : ViewModel() {
 
     private val _authState = MutableLiveData<ProcessingResult<Boolean>>()
@@ -21,7 +21,7 @@ class AuthorizationViewModel(
 
     fun authorizationUser(login: Login) {
         viewModelScope.launch {
-            authorizationApplicationUserUseCase(login)
+            userUseCase(login)
                 .collectLatest { result ->
                     when (result) {
                         is ProcessingResult.Error -> {
@@ -29,7 +29,7 @@ class AuthorizationViewModel(
                         }
                         is ProcessingResult.Success -> {
                             val token = result.data?.token.orEmpty()
-                            tokenManager.saveToken(token)
+                            tokenManagerImpl.saveToken(token)
                             _authState.value = ProcessingResult.Success(token.isNotBlank())
                         }
                     }

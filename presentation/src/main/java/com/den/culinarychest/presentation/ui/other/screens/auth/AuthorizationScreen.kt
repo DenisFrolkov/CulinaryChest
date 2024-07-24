@@ -33,7 +33,7 @@ import com.den.culinarychest.presentation.ui.other.common.route.AppNavigationRou
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.auth.AuthorizationViewModel
-import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.data.repository.TokenRepositoryImpl
 import com.example.culinarychest.domain.model.application_user.Login
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -42,13 +42,13 @@ import kotlinx.coroutines.launch
 fun AuthorizationScreen(
     navController: NavController,
     authorizationViewModel: AuthorizationViewModel,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
     Authorization(
         controller = navController,
         authorizationViewModel = authorizationViewModel,
-        tokenManager = tokenManager
+        tokenManagerImpl = tokenManagerImpl
     )
 }
 
@@ -57,7 +57,7 @@ fun AuthorizationScreen(
 fun Authorization(
     controller: NavController,
     authorizationViewModel: AuthorizationViewModel,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -67,7 +67,7 @@ fun Authorization(
     var isLoading by remember { mutableStateOf(false) }
 
     val tokenVerification by remember {
-        derivedStateOf { tokenManager.getToken() == null }
+        derivedStateOf { tokenManagerImpl.getToken() == null }
     }
 
     val loginValidation by remember {
@@ -135,7 +135,7 @@ fun Authorization(
                     coroutineScope.launch {
                         isLoading = true
                         delay(1000)
-                        if (tokenManager.getToken() == null) {
+                        if (tokenManagerImpl.getToken() == null) {
                             isLoading = false
                             clickButton = true
                         } else {

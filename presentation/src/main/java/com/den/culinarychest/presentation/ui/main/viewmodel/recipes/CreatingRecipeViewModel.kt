@@ -6,14 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.model.ProcessingResult
 import com.example.culinarychest.domain.model.recipe.CreateRecipe
-import com.example.culinarychest.domain.usecase.applicationUserRecipeUseCases.CreateApplicationUserRecipeUseCase
+import com.example.culinarychest.domain.usecase.userRecipeUseCases.CreateUserRecipeUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.io.File
 
 class CreatingRecipeViewModel(
-    private val createApplicationUserRecipeUseCase: CreateApplicationUserRecipeUseCase,
+    private val createUserRecipeUseCase: CreateUserRecipeUseCase,
 ) : ViewModel() {
 
     private val _createdRecipeResult = MutableLiveData<ProcessingResult<CreateRecipe>>()
@@ -33,7 +33,7 @@ class CreatingRecipeViewModel(
     ) {
         viewModelScope.launch {
             try {
-                createApplicationUserRecipeUseCase(
+                createUserRecipeUseCase(
                     token, title, recipeImage, ingredients, steps, creationDate, preparationTime
                 )
                 _createdRecipeResult.value = ProcessingResult.Success(null)

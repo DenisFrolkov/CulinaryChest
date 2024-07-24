@@ -21,23 +21,23 @@ import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageStepsV
 import com.den.culinarychest.presentation.ui.main.viewmodel.auth.RegistrationViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.SearchViewModel
 import com.example.culinarychest.data.api.RetrofitInstance
-import com.example.culinarychest.data.repository.ApplicationUserFavoriteRecipeRepositoryImpl
-import com.example.culinarychest.data.repository.ApplicationUserRecipeRepositoryImpl
-import com.example.culinarychest.data.repository.ApplicationUserRepositoryImpl
+import com.example.culinarychest.data.repository.UserFavoriteRecipeRepositoryImpl
+import com.example.culinarychest.data.repository.UserRecipeRepositoryImpl
+import com.example.culinarychest.data.repository.UserRepositoryImpl
 import com.example.culinarychest.data.repository.RecipeRepositoryImpl
 import com.example.culinarychest.data.repository.RecipeStepsRepositoryImpl
-import com.example.culinarychest.data.repository.TokenManager
-import com.example.culinarychest.domain.usecase.applicationUserFavoriteRecipeUseCases.CreateApplicationUserFavoriteRecipesUseCase
-import com.example.culinarychest.domain.usecase.applicationUserFavoriteRecipeUseCases.DeleteApplicationUserFavoriteRecipeUseCase
-import com.example.culinarychest.domain.usecase.applicationUserFavoriteRecipeUseCases.GetApplicationUserFavoriteRecipesUseCase
-import com.example.culinarychest.domain.usecase.applicationUserFavoriteRecipeUseCases.GetFavoriteRecipeByRecipeIdUseCase
-import com.example.culinarychest.domain.usecase.applicationUserRecipeUseCases.CreateApplicationUserRecipeUseCase
-import com.example.culinarychest.domain.usecase.applicationUserRecipeUseCases.DeleteApplicationUserRecipeUseCase
-import com.example.culinarychest.domain.usecase.applicationUserRecipeUseCases.GetApplicationUserRecipesUseCase
-import com.example.culinarychest.domain.usecase.applicationUserRecipeUseCases.UpdateApplicationUserRecipeUseCase
-import com.example.culinarychest.domain.usecase.applicationUserUseCases.AuthorizationApplicationUserUseCase
-import com.example.culinarychest.domain.usecase.applicationUserUseCases.GetApplicationUserInfoUseCase
-import com.example.culinarychest.domain.usecase.applicationUserUseCases.RegistrationApplicationUserUseCase
+import com.example.culinarychest.data.repository.TokenRepositoryImpl
+import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.CreateApplicationUserFavoriteRecipesUseCase
+import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.DeleteApplicationUserFavoriteRecipeUseCase
+import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.GetUserFavoriteRecipesUseCase
+import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.GetFavoriteRecipeByRecipeIdUseCase
+import com.example.culinarychest.domain.usecase.userRecipeUseCases.CreateUserRecipeUseCase
+import com.example.culinarychest.domain.usecase.userRecipeUseCases.DeleteUserRecipeUseCase
+import com.example.culinarychest.domain.usecase.userRecipeUseCases.GetUserRecipesUseCase
+import com.example.culinarychest.domain.usecase.userRecipeUseCases.UpdateUserRecipeUseCase
+import com.example.culinarychest.domain.usecase.userUseCases.UserUseCase
+import com.example.culinarychest.domain.usecase.userUseCases.GetApplicationUserInfoUseCase
+import com.example.culinarychest.domain.usecase.userUseCases.RegistrationApplicationUserUseCase
 import com.example.culinarychest.domain.usecase.recipeRepositoryUseCases.GetRecipeByIdUseCase
 import com.example.culinarychest.domain.usecase.recipeRepositoryUseCases.GetRecipesByIdsUseCase
 import com.example.culinarychest.domain.usecase.recipeRepositoryUseCases.GetRecipesUseCase
@@ -47,15 +47,15 @@ import com.example.culinarychest.domain.usecase.recipeStepsUseCases.UpdateStepUs
 
 class MainActivity : ComponentActivity() {
 
-    val tokenManager = TokenManager(this)
+    val tokenManagerImpl = TokenRepositoryImpl(this)
 
     private val registrationApplicationUserViewModel by viewModels<RegistrationViewModel> {
         GenericViewModelFactory {
             RegistrationViewModel(
                 RegistrationApplicationUserUseCase(
-                    ApplicationUserRepositoryImpl(
+                    UserRepositoryImpl(
                         RetrofitInstance(
-                            tokenManager
+                            tokenManagerImpl
                         ).culinaryChestApi
                     )
                 )
@@ -67,11 +67,11 @@ class MainActivity : ComponentActivity() {
     private val authorizationApplicationUserViewModel by viewModels<AuthorizationViewModel> {
         GenericViewModelFactory {
             AuthorizationViewModel(
-                tokenManager,
-                AuthorizationApplicationUserUseCase(
-                    ApplicationUserRepositoryImpl(
+                tokenManagerImpl,
+                UserUseCase(
+                    UserRepositoryImpl(
                         RetrofitInstance(
-                            tokenManager
+                            tokenManagerImpl
                         ).culinaryChestApi
                     )
                 )
@@ -84,7 +84,7 @@ class MainActivity : ComponentActivity() {
             SearchViewModel(
                 GetRecipesUseCase(
                     RecipeRepositoryImpl(
-                        RetrofitInstance(tokenManager).culinaryChestApi
+                        RetrofitInstance(tokenManagerImpl).culinaryChestApi
                     )
                 )
             )
@@ -95,14 +95,14 @@ class MainActivity : ComponentActivity() {
         GenericViewModelFactory {
             RecipeDetailsViewModel(
                 GetFavoriteRecipeByRecipeIdUseCase(
-                    ApplicationUserFavoriteRecipeRepositoryImpl(
-                        RetrofitInstance(tokenManager)
+                    UserFavoriteRecipeRepositoryImpl(
+                        RetrofitInstance(tokenManagerImpl)
                             .culinaryChestApi
                     )
                 ),
                 GetRecipeByIdUseCase(
                     RecipeRepositoryImpl(
-                        RetrofitInstance(tokenManager).culinaryChestApi
+                        RetrofitInstance(tokenManagerImpl).culinaryChestApi
                     )
                 )
             )
@@ -112,9 +112,9 @@ class MainActivity : ComponentActivity() {
     private val createdViewModel by viewModels<CreatedViewModel> {
         GenericViewModelFactory {
             CreatedViewModel(
-                GetApplicationUserRecipesUseCase(
-                    ApplicationUserRecipeRepositoryImpl(
-                        RetrofitInstance(tokenManager)
+                GetUserRecipesUseCase(
+                    UserRecipeRepositoryImpl(
+                        RetrofitInstance(tokenManagerImpl)
                             .culinaryChestApi
                     )
                 )
@@ -124,15 +124,15 @@ class MainActivity : ComponentActivity() {
     private val favoriteViewModel by viewModels<FavoriteViewModel> {
         GenericViewModelFactory {
             FavoriteViewModel(
-                GetApplicationUserFavoriteRecipesUseCase(
-                    ApplicationUserFavoriteRecipeRepositoryImpl(
-                        RetrofitInstance(tokenManager)
+                GetUserFavoriteRecipesUseCase(
+                    UserFavoriteRecipeRepositoryImpl(
+                        RetrofitInstance(tokenManagerImpl)
                             .culinaryChestApi
                     )
                 ),
                 GetRecipesByIdsUseCase(
                     RecipeRepositoryImpl(
-                        RetrofitInstance(tokenManager).culinaryChestApi
+                        RetrofitInstance(tokenManagerImpl).culinaryChestApi
                     )
                 )
             )
@@ -143,21 +143,21 @@ class MainActivity : ComponentActivity() {
         GenericViewModelFactory {
             ProfileViewModel(
                 GetApplicationUserInfoUseCase(
-                    ApplicationUserRepositoryImpl(
+                    UserRepositoryImpl(
                         RetrofitInstance(
-                            tokenManager
+                            tokenManagerImpl
                         ).culinaryChestApi
                     )
                 ),
-                GetApplicationUserRecipesUseCase(
-                    ApplicationUserRecipeRepositoryImpl(
-                        RetrofitInstance(tokenManager)
+                GetUserRecipesUseCase(
+                    UserRecipeRepositoryImpl(
+                        RetrofitInstance(tokenManagerImpl)
                             .culinaryChestApi
                     )
                 ),
-                GetApplicationUserFavoriteRecipesUseCase(
-                    ApplicationUserFavoriteRecipeRepositoryImpl(
-                        RetrofitInstance(tokenManager)
+                GetUserFavoriteRecipesUseCase(
+                    UserFavoriteRecipeRepositoryImpl(
+                        RetrofitInstance(tokenManagerImpl)
                             .culinaryChestApi
                     )
                 )
@@ -168,9 +168,9 @@ class MainActivity : ComponentActivity() {
     private val creatingRecipeViewModel by viewModels<CreatingRecipeViewModel> {
         GenericViewModelFactory {
             CreatingRecipeViewModel(
-                CreateApplicationUserRecipeUseCase(
-                    ApplicationUserRecipeRepositoryImpl(
-                        RetrofitInstance(tokenManager).culinaryChestApi
+                CreateUserRecipeUseCase(
+                    UserRecipeRepositoryImpl(
+                        RetrofitInstance(tokenManagerImpl).culinaryChestApi
                     )
                 )
             )
@@ -180,15 +180,15 @@ class MainActivity : ComponentActivity() {
     private val manageRecipeUserViewModel by viewModels<ManageRecipeUserViewModel> {
         GenericViewModelFactory {
             ManageRecipeUserViewModel(
-                UpdateApplicationUserRecipeUseCase(
-                    ApplicationUserRecipeRepositoryImpl(
-                        RetrofitInstance(tokenManager)
+                UpdateUserRecipeUseCase(
+                    UserRecipeRepositoryImpl(
+                        RetrofitInstance(tokenManagerImpl)
                             .culinaryChestApi
                     )
                 ),
-                DeleteApplicationUserRecipeUseCase(
-                    ApplicationUserRecipeRepositoryImpl(
-                        RetrofitInstance(tokenManager)
+                DeleteUserRecipeUseCase(
+                    UserRecipeRepositoryImpl(
+                        RetrofitInstance(tokenManagerImpl)
                             .culinaryChestApi
                     )
                 )
@@ -200,14 +200,14 @@ class MainActivity : ComponentActivity() {
         GenericViewModelFactory {
             ManageOtherRecipeViewModel(
                 CreateApplicationUserFavoriteRecipesUseCase(
-                    ApplicationUserFavoriteRecipeRepositoryImpl(
-                        RetrofitInstance(tokenManager)
+                    UserFavoriteRecipeRepositoryImpl(
+                        RetrofitInstance(tokenManagerImpl)
                             .culinaryChestApi
                     )
                 ),
                 DeleteApplicationUserFavoriteRecipeUseCase(
-                    ApplicationUserFavoriteRecipeRepositoryImpl(
-                        RetrofitInstance(tokenManager)
+                    UserFavoriteRecipeRepositoryImpl(
+                        RetrofitInstance(tokenManagerImpl)
                             .culinaryChestApi
                     )
                 )
@@ -221,17 +221,17 @@ class MainActivity : ComponentActivity() {
                 return ManageStepsViewModel(
                     CreateStepUseCase(
                         RecipeStepsRepositoryImpl(
-                            RetrofitInstance(tokenManager).culinaryChestApi
+                            RetrofitInstance(tokenManagerImpl).culinaryChestApi
                         )
                     ),
                     DeleteStepUseCase(
                         RecipeStepsRepositoryImpl(
-                            RetrofitInstance(tokenManager).culinaryChestApi
+                            RetrofitInstance(tokenManagerImpl).culinaryChestApi
                         )
                     ),
                     UpdateStepUseCase(
                         RecipeStepsRepositoryImpl(
-                            RetrofitInstance(tokenManager).culinaryChestApi
+                            RetrofitInstance(tokenManagerImpl).culinaryChestApi
                         )
                     )
                 )
@@ -256,7 +256,7 @@ class MainActivity : ComponentActivity() {
                     manageRecipeUserViewModel,
                     manageOtherRecipeViewModel,
                     manageStepsViewModel,
-                    tokenManager
+                    tokenManagerImpl
                 )
             }
         }

@@ -3,8 +3,8 @@ package com.den.culinarychest.presentation.ui.main.viewmodel.recipes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.model.favorite_recipe.CreateFavoriteRecipe
-import com.example.culinarychest.domain.usecase.applicationUserFavoriteRecipeUseCases.CreateApplicationUserFavoriteRecipesUseCase
-import com.example.culinarychest.domain.usecase.applicationUserFavoriteRecipeUseCases.DeleteApplicationUserFavoriteRecipeUseCase
+import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.CreateApplicationUserFavoriteRecipesUseCase
+import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.DeleteApplicationUserFavoriteRecipeUseCase
 import kotlinx.coroutines.launch
 
 class ManageOtherRecipeViewModel(

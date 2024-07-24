@@ -4,10 +4,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.model.ProcessingResult
-import com.example.culinarychest.domain.model.application_user.ApplicationUserInfo
-import com.example.culinarychest.domain.usecase.applicationUserFavoriteRecipeUseCases.GetApplicationUserFavoriteRecipesUseCase
-import com.example.culinarychest.domain.usecase.applicationUserRecipeUseCases.GetApplicationUserRecipesUseCase
-import com.example.culinarychest.domain.usecase.applicationUserUseCases.GetApplicationUserInfoUseCase
+import com.example.culinarychest.domain.model.application_user.UserInfo
+import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.GetUserFavoriteRecipesUseCase
+import com.example.culinarychest.domain.usecase.userRecipeUseCases.GetUserRecipesUseCase
+import com.example.culinarychest.domain.usecase.userUseCases.GetApplicationUserInfoUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,11 +18,11 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val getApplicationUserInfoUseCase: GetApplicationUserInfoUseCase,
-    private val getApplicationUserRecipesUseCase: GetApplicationUserRecipesUseCase,
-    private val getApplicationUserFavoriteRecipesUseCase: GetApplicationUserFavoriteRecipesUseCase
+    private val getUserRecipesUseCase: GetUserRecipesUseCase,
+    private val getUserFavoriteRecipesUseCase: GetUserFavoriteRecipesUseCase
 ) : ViewModel() {
 
-    private val _userInfoResult = MutableStateFlow<ApplicationUserInfo?>(null)
+    private val _userInfoResult = MutableStateFlow<UserInfo?>(null)
     val userInfoResult = _userInfoResult.asStateFlow()
 
     private val _numberRecipesApplicationUser = MutableStateFlow<Int?>(null)
@@ -55,7 +55,7 @@ class ProfileViewModel(
 
     fun getUserRecipesCount(token: String) {
         viewModelScope.launch {
-            getApplicationUserRecipesUseCase(token)
+            getUserRecipesUseCase(token)
                 .collectLatest { result ->
                     when (result) {
                         is ProcessingResult.Error -> {
@@ -74,7 +74,7 @@ class ProfileViewModel(
 
     fun getUserFavoriteRecipesCount(token: String) {
         viewModelScope.launch {
-            getApplicationUserFavoriteRecipesUseCase(token)
+            getUserFavoriteRecipesUseCase(token)
                 .collectLatest { result ->
                     when (result) {
                         is ProcessingResult.Error -> {

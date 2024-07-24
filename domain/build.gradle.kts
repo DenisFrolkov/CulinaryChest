@@ -9,5 +9,6 @@ java {
 }
 
 dependencies{
+    implementation(libs.retrofit)
     implementation(libs.kotlinx.coroutines.core)
 }

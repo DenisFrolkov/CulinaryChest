@@ -2,14 +2,14 @@ package com.den.culinarychest.presentation.ui.main.viewmodel.recipes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.culinarychest.domain.usecase.applicationUserRecipeUseCases.DeleteApplicationUserRecipeUseCase
-import com.example.culinarychest.domain.usecase.applicationUserRecipeUseCases.UpdateApplicationUserRecipeUseCase
+import com.example.culinarychest.domain.usecase.userRecipeUseCases.DeleteUserRecipeUseCase
+import com.example.culinarychest.domain.usecase.userRecipeUseCases.UpdateUserRecipeUseCase
 import kotlinx.coroutines.launch
 import java.io.File
 
 class ManageRecipeUserViewModel(
-    private val updateApplicationUserRecipeUseCase: UpdateApplicationUserRecipeUseCase,
-    private val deleteApplicationUserRecipeUseCase: DeleteApplicationUserRecipeUseCase
+    private val updateUserRecipeUseCase: UpdateUserRecipeUseCase,
+    private val deleteUserRecipeUseCase: DeleteUserRecipeUseCase
 ) : ViewModel() {
 
     fun updateRecipeUser(
@@ -23,7 +23,7 @@ class ManageRecipeUserViewModel(
     ) {
         viewModelScope.launch {
             try {
-                updateApplicationUserRecipeUseCase(
+                updateUserRecipeUseCase(
                     token, recipeId, title, recipeImage, ingredients, creationDate, preparationTime
                 )
             } catch (e: Exception) {
@@ -35,7 +35,7 @@ class ManageRecipeUserViewModel(
     fun deleteRecipeUser(token: String, recipeId: String) {
         viewModelScope.launch {
             try {
-                deleteApplicationUserRecipeUseCase(
+                deleteUserRecipeUseCase(
                     token,
                     recipeId
                 )

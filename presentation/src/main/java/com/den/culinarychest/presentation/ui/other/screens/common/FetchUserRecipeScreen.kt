@@ -51,7 +51,7 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageRecipeUserViewModel
-import com.example.culinarychest.data.repository.TokenManager
+import com.example.culinarychest.data.repository.TokenRepositoryImpl
 import com.example.culinarychest.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.model.step.Step
 
@@ -60,13 +60,13 @@ fun FetchUserRecipeScreen(
     navController: NavController,
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     recipe: Recipe,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
     FetchUserRecipe(
         controller = navController,
         manageRecipeUserViewModel = manageRecipeUserViewModel,
         recipe = recipe,
-        tokenManager = tokenManager
+        tokenManagerImpl = tokenManagerImpl
     )
 }
 
@@ -75,7 +75,7 @@ fun FetchUserRecipe(
     controller: NavController,
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     recipe: Recipe,
-    tokenManager: TokenManager
+    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
     val recipeIngredients = """ ${recipe.ingredients} """.trimIndent()
@@ -131,7 +131,7 @@ fun FetchUserRecipe(
 
                         "Удалить" -> {
                             controller.popBackStack()
-                            tokenManager.getToken()?.let {
+                            tokenManagerImpl.getToken()?.let {
                                 manageRecipeUserViewModel.deleteRecipeUser(
                                     it,
                                     recipe.recipeId
