@@ -43,7 +43,6 @@ fun CreatedScreen(
     controller: NavController,
     createdViewModel: CreatedViewModel,
     recipeDetailsViewModel: RecipeDetailsViewModel,
-    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
     val listRecipeCreatedUser =
@@ -57,7 +56,6 @@ fun CreatedScreen(
         ListRecipeCreatedUser(
             controller,
             listRecipeCreatedUser,
-            tokenManagerImpl,
             recipeDetailsViewModel = recipeDetailsViewModel
         )
         FABButton(controller)
@@ -82,7 +80,6 @@ private fun FABButton(controller: NavController) {
 private fun ListRecipeCreatedUser(
     controller: NavController,
     listRecipeCreatedUser: List<Recipe>,
-    tokenManagerImpl: TokenRepositoryImpl,
     recipeDetailsViewModel: RecipeDetailsViewModel
 ) {
     LazyColumn(
@@ -119,7 +116,6 @@ private fun ListRecipeCreatedUser(
                     controller = controller,
                     textRouteNavigation = AppNavigationRoute.FetchUserRecipeScreen.route,
                     recipe = recipeCreatedUser,
-                    tokenManagerImpl = tokenManagerImpl,
                     recipeDetailsViewModel = recipeDetailsViewModel
                 )
             }

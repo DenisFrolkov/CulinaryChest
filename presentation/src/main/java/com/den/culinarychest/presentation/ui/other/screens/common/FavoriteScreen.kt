@@ -36,14 +36,11 @@ fun FavoriteScreen(
     controller: NavController,
     favoriteViewModel: FavoriteViewModel,
     recipeDetailsViewModel: RecipeDetailsViewModel,
-    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
     val favoriteRecipeList = favoriteViewModel.listFavoriteRecipesUser.collectAsState().value
-    tokenManagerImpl.getToken()?.let { token ->
         val recipeIds = favoriteRecipeList.map { it.recipeId.toString() }
-        favoriteViewModel.getListRecipesByIds(token, recipeIds)
-    }
+        favoriteViewModel.getListRecipesByIds(recipeIds)
 
     val recipe =
         favoriteViewModel.listRecipesById.collectAsState().value
@@ -52,7 +49,7 @@ fun FavoriteScreen(
     if (recipe.isEmpty()) {
         EmptyScreenText()
     } else {
-        ListRecipes(controller, recipe, recipeDetailsViewModel, tokenManagerImpl)
+        ListRecipes(controller, recipe, recipeDetailsViewModel)
     }
 }
 
@@ -61,7 +58,6 @@ private fun ListRecipes(
     controller: NavController,
     recipeDtoList: List<Recipe>,
     recipeDetailsViewModel: RecipeDetailsViewModel,
-    tokenManagerImpl: TokenRepositoryImpl
 ) {
     LazyColumn(
         modifier = Modifier
@@ -80,7 +76,6 @@ private fun ListRecipes(
                     controller = controller,
                     textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
                     recipe = recipe,
-                    tokenManagerImpl = tokenManagerImpl,
                     recipeDetailsViewModel = recipeDetailsViewModel
                 )
             }

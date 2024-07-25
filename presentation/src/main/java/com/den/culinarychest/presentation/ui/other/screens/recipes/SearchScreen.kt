@@ -54,18 +54,14 @@ fun SearchScreen(
     navController: NavController,
     recipeDetailsViewModel: RecipeDetailsViewModel,
     searchViewModel: SearchViewModel,
-    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
-    tokenManagerImpl.getToken()?.let {
-        searchViewModel.getListRecipes(it, null)
-    }
+    searchViewModel.getListRecipes(null)
 
     Search(
         controller = navController,
         searchViewModel = searchViewModel,
         recipeDetailsViewModel = recipeDetailsViewModel,
-        tokenManagerImpl = tokenManagerImpl
     )
 }
 
@@ -75,7 +71,6 @@ private fun Search(
     controller: NavController,
     searchViewModel: SearchViewModel,
     recipeDetailsViewModel: RecipeDetailsViewModel,
-    tokenManagerImpl: TokenRepositoryImpl
 ) {
     var searchText by remember { mutableStateOf("") }
 
@@ -95,7 +90,6 @@ private fun Search(
         ) {
             SearchBarItem(
                 searchViewModel = searchViewModel,
-                tokenManagerImpl = tokenManagerImpl,
                 onTextChanged = { text -> searchText = text }
             )
         }
@@ -123,7 +117,6 @@ private fun Search(
                         controller = controller,
                         textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
                         recipe = recipe,
-                        tokenManagerImpl = tokenManagerImpl,
                         recipeDetailsViewModel = recipeDetailsViewModel
                     )
                 }
@@ -136,7 +129,6 @@ private fun Search(
 @Composable
 private fun SearchBarItem(
     searchViewModel: SearchViewModel,
-    tokenManagerImpl: TokenRepositoryImpl,
     onTextChanged: (String) -> Unit,
 ) {
 
@@ -182,7 +174,7 @@ private fun SearchBarItem(
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        tokenManagerImpl.getToken()?.let { token -> searchViewModel.getListRecipes(token, enteredSearchText.text) }
+                        searchViewModel.getListRecipes(enteredSearchText.text)
                         keyboardController?.hide()
                     }
                 ),

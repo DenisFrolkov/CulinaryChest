@@ -6,11 +6,13 @@ import com.example.culinarychest.domain.model.step.CreateStep
 import com.example.culinarychest.domain.usecase.recipeStepsUseCases.CreateStepUseCase
 import com.example.culinarychest.domain.usecase.recipeStepsUseCases.DeleteStepUseCase
 import com.example.culinarychest.domain.usecase.recipeStepsUseCases.UpdateStepUseCase
+import com.example.culinarychest.domain.usecase.tokenUseCase.GetTokenUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class ManageStepsViewModel(
+    private val getTokenUseCase: GetTokenUseCase,
     private val createStepUseCase: CreateStepUseCase,
     private val deleteStepUseCase: DeleteStepUseCase,
     private val updateStepUseCase: UpdateStepUseCase
@@ -19,29 +21,37 @@ class ManageStepsViewModel(
     private val _showErrorToastChannel = Channel<Boolean>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
 
-    fun createStepsRecipe(token: String, recipeId: String, step: CreateStep) {
+    private var getToken: String? = null
+
+    init {
+        viewModelScope.launch {
+            getToken = getTokenUseCase.invoke().toString()
+        }
+    }
+
+    fun createStepsRecipe(recipeId: String, step: CreateStep) {
         viewModelScope.launch {
             try {
-                createStepUseCase(token, recipeId, step)
+                getToken?.let { createStepUseCase(it, recipeId, step) }
             } catch (e: Exception) {
                 TODO("Not yet implemented")
             }
         }
     }
 
-    fun updateStepRecipe(token: String, recipeId: String, stepId: String, updateStep: CreateStep) {
+    fun updateStepRecipe(recipeId: String, stepId: String, updateStep: CreateStep) {
         viewModelScope.launch {
             try {
-                updateStepUseCase(token, recipeId, stepId, updateStep)
+                getToken?.let { updateStepUseCase(it, recipeId, stepId, updateStep) }
             } catch (e: Exception) {
                 TODO("Not yet implemented")
             }
         }
     }
-    fun deleteStepRecipe(token: String, recipeId: String, stepId: String) {
+    fun deleteStepRecipe(recipeId: String, stepId: String) {
         viewModelScope.launch {
             try {
-                deleteStepUseCase(token, recipeId, stepId)
+                getToken?.let { deleteStepUseCase(it, recipeId, stepId) }
             } catch (e: Exception) {
                 TODO("Not yet implemented")
             }

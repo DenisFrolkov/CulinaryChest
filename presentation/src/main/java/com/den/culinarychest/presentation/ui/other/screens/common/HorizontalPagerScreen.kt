@@ -46,14 +46,12 @@ fun HorizontalPagerScreen(
     createdViewModel: CreatedViewModel,
     favoriteViewModel: FavoriteViewModel,
     recipeDetailsViewModel: RecipeDetailsViewModel,
-    tokenManagerImpl: TokenRepositoryImpl
 ) {
     HorizontalPager(
         controller = navController,
         createdViewModel = createdViewModel,
         favoriteViewModel = favoriteViewModel,
         recipeDetailsViewModel = recipeDetailsViewModel,
-        tokenManagerImpl = tokenManagerImpl
     )
 }
 
@@ -65,13 +63,10 @@ private fun HorizontalPager(
     createdViewModel: CreatedViewModel,
     favoriteViewModel: FavoriteViewModel,
     recipeDetailsViewModel: RecipeDetailsViewModel,
-    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
-    tokenManagerImpl.getToken()?.let {
-        favoriteViewModel.getListFavoriteRecipesUser(it)
-        createdViewModel.getListRecipesUser(it)
-    }
+    favoriteViewModel.getListFavoriteRecipesUser()
+    createdViewModel.getListRecipesUser()
 
     val pagerState = rememberPagerState(pageCount = { 2 })
 
@@ -112,14 +107,12 @@ private fun HorizontalPager(
                     controller = controller,
                     createdViewModel = createdViewModel,
                     recipeDetailsViewModel = recipeDetailsViewModel,
-                    tokenManagerImpl = tokenManagerImpl
                 )
 
                 1 -> FavoriteScreen(
                     controller = controller,
                     favoriteViewModel = favoriteViewModel,
                     recipeDetailsViewModel = recipeDetailsViewModel,
-                    tokenManagerImpl = tokenManagerImpl
                 )
             }
         }

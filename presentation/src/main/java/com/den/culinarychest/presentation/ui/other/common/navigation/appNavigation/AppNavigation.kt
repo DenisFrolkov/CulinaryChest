@@ -47,7 +47,7 @@ fun AppNavigation(
     tokenManagerImpl: TokenRepositoryImpl
 ) {
 
-    val token = remember { tokenManagerImpl.getToken() }
+    val token = remember { authorizationViewModel.authState }
 
     val isUserAuthorized = token != null
 
@@ -97,13 +97,10 @@ fun AppNavigation(
             val recipeId = backStackEntry.arguments?.getString("recipeId")
                 ?: "Надо придумать реализацию, если такого рецепта не существует"
             recipeId.let { recipe ->
-                tokenManagerImpl.getToken()?.let { token ->
-                    recipeDetailsViewModel.getRecipeById(
-                        token,
-                        recipe
-                    )
-                    recipeDetailsViewModel.getFavoriteRecipeByRecipeId(token, recipe)
-                }
+                recipeDetailsViewModel.getRecipeById(
+                    recipe
+                )
+                recipeDetailsViewModel.getFavoriteRecipeByRecipeId(recipe)
             }
 
             val recipeInfo = recipeDetailsViewModel.recipe.collectAsState().value
@@ -113,7 +110,6 @@ fun AppNavigation(
                     recipe = recipe,
                     recipeDetailsViewModel = recipeDetailsViewModel,
                     manageOtherRecipeViewModel = manageOtherRecipeViewModel,
-                    tokenManagerImpl = tokenManagerImpl
                 )
             }
         }
@@ -125,12 +121,9 @@ fun AppNavigation(
                 ?: "Надо придумать реализацию, если такого рецепта не существует"
 
             recipeId.let { recipe ->
-                tokenManagerImpl.getToken()?.let { token ->
                     recipeDetailsViewModel.getRecipeById(
-                        token,
                         recipe
                     )
-                }
             }
 
             val recipeInfo = recipeDetailsViewModel.recipe.collectAsState().value
@@ -139,7 +132,6 @@ fun AppNavigation(
                     navController = appNavigationController,
                     manageRecipeUserViewModel = manageRecipeUserViewModel,
                     recipe = recipe,
-                    tokenManagerImpl = tokenManagerImpl
                 )
             }
         }
@@ -151,12 +143,9 @@ fun AppNavigation(
                 ?: "Надо придумать реализацию, если такого рецепта не существует"
 
             recipeId.let { recipe ->
-                tokenManagerImpl.getToken()?.let { token ->
                     recipeDetailsViewModel.getRecipeById(
-                        token,
                         recipe
                     )
-                }
             }
 
             val recipeInfo = recipeDetailsViewModel.recipe.collectAsState().value
@@ -166,7 +155,6 @@ fun AppNavigation(
                     manageRecipeUserViewModel = manageRecipeUserViewModel,
                     manageStepsViewModel = manageStepsViewModel,
                     recipe = recipe,
-                    tokenManagerImpl = tokenManagerImpl
                 )
             }
         }
@@ -174,7 +162,6 @@ fun AppNavigation(
             CreatingRecipeScreen(
                 navController = appNavigationController,
                 creatingRecipeViewModel = creatingRecipeViewModel,
-                tokenManagerImpl = tokenManagerImpl
             )
         }
     }

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.model.ProcessingResult
 import com.example.culinarychest.domain.model.recipe.CreateRecipe
+import com.example.culinarychest.domain.usecase.tokenUseCase.GetTokenUseCase
 import com.example.culinarychest.domain.usecase.userRecipeUseCases.CreateUserRecipeUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -13,6 +14,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class CreatingRecipeViewModel(
+    private val getTokenUseCase: GetTokenUseCase,
     private val createUserRecipeUseCase: CreateUserRecipeUseCase,
 ) : ViewModel() {
 
@@ -22,8 +24,15 @@ class CreatingRecipeViewModel(
     private val _showErrorToastChannel = Channel<Boolean>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
 
+    private var getToken: String? = null
+
+    init {
+        viewModelScope.launch {
+            getToken = getTokenUseCase.invoke().toString()
+        }
+    }
+
     fun createRecipeUser(
-        token: String,
         title: String,
         recipeImage: File,
         ingredients: String,
@@ -33,9 +42,11 @@ class CreatingRecipeViewModel(
     ) {
         viewModelScope.launch {
             try {
-                createUserRecipeUseCase(
-                    token, title, recipeImage, ingredients, steps, creationDate, preparationTime
-                )
+                getToken?.let {
+                    createUserRecipeUseCase(
+                        it, title, recipeImage, ingredients, steps, creationDate, preparationTime
+                    )
+                }
                 _createdRecipeResult.value = ProcessingResult.Success(null)
             } catch (e: Exception) {
                 _createdRecipeResult.value =

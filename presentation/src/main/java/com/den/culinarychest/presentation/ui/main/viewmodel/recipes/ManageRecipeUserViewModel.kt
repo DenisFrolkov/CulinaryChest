@@ -2,18 +2,27 @@ package com.den.culinarychest.presentation.ui.main.viewmodel.recipes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.culinarychest.domain.usecase.tokenUseCase.GetTokenUseCase
 import com.example.culinarychest.domain.usecase.userRecipeUseCases.DeleteUserRecipeUseCase
 import com.example.culinarychest.domain.usecase.userRecipeUseCases.UpdateUserRecipeUseCase
 import kotlinx.coroutines.launch
 import java.io.File
 
 class ManageRecipeUserViewModel(
+    private val getTokenUseCase: GetTokenUseCase,
     private val updateUserRecipeUseCase: UpdateUserRecipeUseCase,
     private val deleteUserRecipeUseCase: DeleteUserRecipeUseCase
 ) : ViewModel() {
 
+    private var getToken: String? = null
+
+    init {
+        viewModelScope.launch {
+            getToken = getTokenUseCase.invoke().toString()
+        }
+    }
+
     fun updateRecipeUser(
-        token: String,
         recipeId: String,
         title: String,
         recipeImage: File? = null,
@@ -23,22 +32,26 @@ class ManageRecipeUserViewModel(
     ) {
         viewModelScope.launch {
             try {
-                updateUserRecipeUseCase(
-                    token, recipeId, title, recipeImage, ingredients, creationDate, preparationTime
-                )
+                getToken?.let {
+                    updateUserRecipeUseCase(
+                        it, recipeId, title, recipeImage, ingredients, creationDate, preparationTime
+                    )
+                }
             } catch (e: Exception) {
 
             }
         }
     }
 
-    fun deleteRecipeUser(token: String, recipeId: String) {
+    fun deleteRecipeUser(recipeId: String) {
         viewModelScope.launch {
             try {
-                deleteUserRecipeUseCase(
-                    token,
-                    recipeId
-                )
+                getToken?.let {
+                    deleteUserRecipeUseCase(
+                        it,
+                        recipeId
+                    )
+                }
             } catch (e: Exception) {
 
             }

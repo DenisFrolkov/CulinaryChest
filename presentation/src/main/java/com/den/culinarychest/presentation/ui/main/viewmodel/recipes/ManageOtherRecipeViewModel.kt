@@ -3,40 +3,53 @@ package com.den.culinarychest.presentation.ui.main.viewmodel.recipes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.model.favorite_recipe.CreateFavoriteRecipe
+import com.example.culinarychest.domain.usecase.tokenUseCase.GetTokenUseCase
 import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.CreateApplicationUserFavoriteRecipesUseCase
 import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.DeleteApplicationUserFavoriteRecipeUseCase
 import kotlinx.coroutines.launch
 
 class ManageOtherRecipeViewModel(
+    private val getTokenUseCase: GetTokenUseCase,
     private val createApplicationUserFavoriteRecipesUseCase: CreateApplicationUserFavoriteRecipesUseCase,
     private val deleteApplicationUserFavoriteRecipeUseCase: DeleteApplicationUserFavoriteRecipeUseCase
     ) : ViewModel() {
 
+    private var getToken: String? = null
+
+    init {
+        viewModelScope.launch {
+            getToken = getTokenUseCase.invoke().toString()
+        }
+    }
+
     fun createFavoriteRecipesUser(
-        token: String,
         recipeId: Int,
         addedDate: CreateFavoriteRecipe
     ) {
         viewModelScope.launch {
             try {
-                createApplicationUserFavoriteRecipesUseCase(
-                    token,
-                    recipeId,
-                    addedDate
-                )
+                getToken?.let {
+                    createApplicationUserFavoriteRecipesUseCase(
+                        it,
+                        recipeId,
+                        addedDate
+                    )
+                }
             } catch (e: Exception) {
                 // Обработка ошибки
             }
         }
     }
 
-    fun deleteFavoriteRecipeUser(token: String, recipeId: String) {
+    fun deleteFavoriteRecipeUser(recipeId: String) {
         viewModelScope.launch {
             try {
-                deleteApplicationUserFavoriteRecipeUseCase(
-                    token,
-                    recipeId
-                )
+                getToken?.let {
+                    deleteApplicationUserFavoriteRecipeUseCase(
+                        it,
+                        recipeId
+                    )
+                }
             } catch (e: Exception) {
 
             }

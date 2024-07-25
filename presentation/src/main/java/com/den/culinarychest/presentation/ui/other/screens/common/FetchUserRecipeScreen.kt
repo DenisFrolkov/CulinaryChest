@@ -60,13 +60,11 @@ fun FetchUserRecipeScreen(
     navController: NavController,
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     recipe: Recipe,
-    tokenManagerImpl: TokenRepositoryImpl
 ) {
     FetchUserRecipe(
         controller = navController,
         manageRecipeUserViewModel = manageRecipeUserViewModel,
         recipe = recipe,
-        tokenManagerImpl = tokenManagerImpl
     )
 }
 
@@ -75,7 +73,6 @@ fun FetchUserRecipe(
     controller: NavController,
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     recipe: Recipe,
-    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
     val recipeIngredients = """ ${recipe.ingredients} """.trimIndent()
@@ -131,12 +128,9 @@ fun FetchUserRecipe(
 
                         "Удалить" -> {
                             controller.popBackStack()
-                            tokenManagerImpl.getToken()?.let {
-                                manageRecipeUserViewModel.deleteRecipeUser(
-                                    it,
-                                    recipe.recipeId
-                                )
-                            }
+                            manageRecipeUserViewModel.deleteRecipeUser(
+                                recipe.recipeId
+                            )
                         }
                     }
                 }

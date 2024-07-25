@@ -39,7 +39,6 @@ fun RecipeItem(
     controller: NavController,
     textRouteNavigation: String,
     recipe: Recipe,
-    tokenManagerImpl: TokenRepositoryImpl,
     recipeDetailsViewModel: RecipeDetailsViewModel
 ) {
     Column(
@@ -47,15 +46,10 @@ fun RecipeItem(
             .fillMaxWidth()
             .padding(bottom = 16.dp)
             .clickable {
-                tokenManagerImpl
-                    .getToken()
-                    ?.let {
-                        recipeDetailsViewModel.getFavoriteRecipeByRecipeId(
-                            it,
-                            recipe.recipeId
-                        )
-                        recipeDetailsViewModel.getRecipeById(token = it, recipeId = recipe.recipeId)
-                    }
+                recipeDetailsViewModel.getFavoriteRecipeByRecipeId(
+                    recipe.recipeId
+                )
+                recipeDetailsViewModel.getRecipeById(recipeId = recipe.recipeId)
                 controller.navigate("${textRouteNavigation}/${recipe.recipeId}")
             }
             .border(width = .15.dp, color = SoftGray, shape = RoundedCornerShape(12.dp))

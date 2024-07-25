@@ -41,11 +41,9 @@ fun ProfileScreen(
     tokenManagerImpl: TokenRepositoryImpl
 ) {
 
-    tokenManagerImpl.getToken()?.let {
-        profileViewModel.getUserInfo(it)
-        profileViewModel.getUserFavoriteRecipesCount(it)
-        profileViewModel.getUserRecipesCount(it)
-    }
+    profileViewModel.getUserInfo()
+    profileViewModel.getUserFavoriteRecipesCount()
+    profileViewModel.getUserRecipesCount()
 
     val userInfo = profileViewModel.userInfoResult.collectAsState().value
 

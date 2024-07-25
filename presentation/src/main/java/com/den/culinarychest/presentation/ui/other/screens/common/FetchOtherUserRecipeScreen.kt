@@ -67,14 +67,12 @@ fun FetchOtherUserRecipeScreen(
     recipe: Recipe,
     recipeDetailsViewModel: RecipeDetailsViewModel,
     manageOtherRecipeViewModel: ManageOtherRecipeViewModel,
-    tokenManagerImpl: TokenRepositoryImpl
 ) {
     FetchOtherUserRecipe(
         controller = navController,
         recipe = recipe,
         recipeDetailsViewModel = recipeDetailsViewModel,
         manageOtherRecipeViewModel = manageOtherRecipeViewModel,
-        tokenManagerImpl = tokenManagerImpl
     )
 }
 
@@ -84,7 +82,6 @@ fun FetchOtherUserRecipe(
     recipe: Recipe,
     recipeDetailsViewModel: RecipeDetailsViewModel,
     manageOtherRecipeViewModel: ManageOtherRecipeViewModel,
-    tokenManagerImpl: TokenRepositoryImpl
 ) {
     var clickElementLike by remember {
         mutableStateOf(false)
@@ -99,7 +96,6 @@ fun FetchOtherUserRecipe(
             favoriteRecipeByRecipeId = favoriteRecipeByRecipeId,
             clickElement = clickElementLike,
             manageOtherRecipeViewModel = manageOtherRecipeViewModel,
-            tokenManagerImpl = tokenManagerImpl,
             passClickElement = { clickElementLike = it }
         )
         LazyColumn(
@@ -128,7 +124,6 @@ fun FetchOtherUserRecipeTopBar(
     recipeId: String,
     favoriteRecipeByRecipeId: FavoriteRecipe?,
     manageOtherRecipeViewModel: ManageOtherRecipeViewModel,
-    tokenManagerImpl: TokenRepositoryImpl,
     clickElement: Boolean,
     passClickElement: (Boolean) -> Unit
 ) {
@@ -165,19 +160,14 @@ fun FetchOtherUserRecipeTopBar(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
                     ) {
-                        tokenManagerImpl
-                            .getToken()
-                            ?.let {
-                                manageOtherRecipeViewModel.createFavoriteRecipesUser(
-                                    it,
-                                    recipeId.toInt(),
-                                    CreateFavoriteRecipe(
-                                        LocalDateTime
-                                            .now()
-                                            .toString()
-                                    )
-                                )
-                            }
+                        manageOtherRecipeViewModel.createFavoriteRecipesUser(
+                            recipeId.toInt(),
+                            CreateFavoriteRecipe(
+                                LocalDateTime
+                                    .now()
+                                    .toString()
+                            )
+                        )
                         clickElement1 = true
                         clickElement1 = "${favoriteRecipeByRecipeId?.recipeId}" != recipeId
                         passClickElement("${favoriteRecipeByRecipeId?.recipeId}" == recipeId)
@@ -194,13 +184,9 @@ fun FetchOtherUserRecipeTopBar(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
                     ) {
-                        tokenManagerImpl
-                            .getToken()
-                            ?.let {
-                                manageOtherRecipeViewModel.deleteFavoriteRecipeUser(
-                                    it, recipeId
-                                )
-                            }
+                        manageOtherRecipeViewModel.deleteFavoriteRecipeUser(
+                            recipeId
+                        )
                         clickElement1 = "${favoriteRecipeByRecipeId?.recipeId}" == recipeId
                         passClickElement("${favoriteRecipeByRecipeId?.recipeId}" != recipeId)
                     },
@@ -216,32 +202,32 @@ fun FetchOtherUserRecipeTopBar(
 fun FetchOtherUserRecipeImage(
     context: Context,
     recipeImageUrl: String
-    ) {
-        val desiredPath = recipeImageUrl.substringAfter("/wwwroot/")
-        val imageUrl = "https://zany-meme-jp7rjw5xjwpfpv47-7286.app.github.dev/images/${desiredPath}"
-        val imageLoader = CreateImageLoader(context)
+) {
+    val desiredPath = recipeImageUrl.substringAfter("/wwwroot/")
+    val imageUrl = "https://zany-meme-jp7rjw5xjwpfpv47-7286.app.github.dev/images/${desiredPath}"
+    val imageLoader = CreateImageLoader(context)
 
-        val painter = rememberAsyncImagePainter(
-            model = imageUrl,
-            imageLoader = imageLoader
-        )
-        Box(
-            contentAlignment = Alignment.Center,
+    val painter = rememberAsyncImagePainter(
+        model = imageUrl,
+        imageLoader = imageLoader
+    )
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxSize()
+            .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(15.dp))
+    ) {
+        Image(
+            painter = painter,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
-                .fillMaxSize()
-                .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(15.dp))
-        ) {
-            Image(
-                painter = painter,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(400.dp)
-                    .padding(horizontal = 10.dp, vertical = 6.dp)
-                    .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp))
-                    .clip(shape = RoundedCornerShape(15.dp))
-            )
-        }
+                .size(400.dp)
+                .padding(horizontal = 10.dp, vertical = 6.dp)
+                .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp))
+                .clip(shape = RoundedCornerShape(15.dp))
+        )
+    }
 }
 
 @Composable

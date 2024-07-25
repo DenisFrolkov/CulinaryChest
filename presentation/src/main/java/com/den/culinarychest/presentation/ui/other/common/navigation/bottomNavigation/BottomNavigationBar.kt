@@ -129,7 +129,6 @@ fun BottomNavigationBar(
                     navController = navController,
                     recipeDetailsViewModel = recipeDetailsViewModel,
                     searchViewModel = searchViewModel,
-                    tokenManagerImpl = tokenManagerImpl
                 )
             }
             composable(BottomNavigationRoute.TopNavigationBar.route) {
@@ -138,7 +137,6 @@ fun BottomNavigationBar(
                     createdViewModel = createdViewModel,
                     favoriteViewModel = favoriteViewModel,
                     recipeDetailsViewModel = recipeDetailsViewModel,
-                    tokenManagerImpl = tokenManagerImpl
                 )
             }
             composable(BottomNavigationRoute.ProfileScreen.route) {

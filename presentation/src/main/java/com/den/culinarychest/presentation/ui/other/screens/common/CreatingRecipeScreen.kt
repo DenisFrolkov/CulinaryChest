@@ -66,12 +66,10 @@ import java.time.LocalDateTime
 fun CreatingRecipeScreen(
     navController: NavController,
     creatingRecipeViewModel: CreatingRecipeViewModel,
-    tokenManagerImpl: TokenRepositoryImpl
 ) {
     CreatingRecipe(
         navController = navController,
         creatingRecipeViewModel = creatingRecipeViewModel,
-        tokenManagerImpl = tokenManagerImpl
     )
 }
 
@@ -81,7 +79,6 @@ fun CreatingRecipeScreen(
 private fun CreatingRecipe(
     navController: NavController,
     creatingRecipeViewModel: CreatingRecipeViewModel,
-    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
     var textTitle by remember { mutableStateOf("") }
@@ -184,20 +181,16 @@ private fun CreatingRecipe(
                             onClick = {
                                 clickButton = true
                                 if (titleValidation == false && ingredientsValidation == false && imageValidation == true && preparationTimeValidation == true && createRecipe.steps.isNotEmpty()) {
-                                    val token = tokenManagerImpl.getToken()
-                                    token?.let {
-                                        creatingRecipeViewModel.createRecipeUser(
-                                            it,
-                                            recipeImage = createRecipe.recipeImage!!,
-                                            title = createRecipe.title,
-                                            ingredients = createRecipe.ingredients,
-                                            steps = createRecipe.steps.toString(),
-                                            creationDate = createRecipe.creationDate,
-                                            preparationTime = createRecipe.preparationTime
-                                        )
-                                    }
-                                    navController.popBackStack()
+                                    creatingRecipeViewModel.createRecipeUser(
+                                        recipeImage = createRecipe.recipeImage!!,
+                                        title = createRecipe.title,
+                                        ingredients = createRecipe.ingredients,
+                                        steps = createRecipe.steps.toString(),
+                                        creationDate = createRecipe.creationDate,
+                                        preparationTime = createRecipe.preparationTime
+                                    )
                                 }
+                                navController.popBackStack()
                             }
                         )
                     }

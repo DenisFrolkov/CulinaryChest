@@ -83,14 +83,12 @@ fun EditRecipeScreen(
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     manageStepsViewModel: ManageStepsViewModel,
     recipe: Recipe,
-    tokenManagerImpl: TokenRepositoryImpl
 ) {
     EditRecipe(
         controller = navController,
         manageRecipeUserViewModel = manageRecipeUserViewModel,
         manageStepsViewModel = manageStepsViewModel,
         recipe = recipe,
-        tokenManagerImpl = tokenManagerImpl
     )
 }
 
@@ -100,7 +98,6 @@ private fun EditRecipe(
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     manageStepsViewModel: ManageStepsViewModel,
     recipe: Recipe,
-    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
     val stepsFromServer = remember { mutableStateListOf<UpdateStep>() }
@@ -372,7 +369,6 @@ private fun EditRecipe(
                         createStepDto = stepsCreateApp.toList(),
                         manageRecipeUserViewModel = manageRecipeUserViewModel,
                         manageStepsViewModel = manageStepsViewModel,
-                        tokenManagerImpl = tokenManagerImpl,
                         buttonColor = EditRecipeColor
                     )
                 }
@@ -445,7 +441,8 @@ private fun EditRecipeImage(
             .padding(top = 6.dp)
     ) {
         val desiredPath = recipeImageUrl.substringAfter("/wwwroot/")
-        val imageUrl = "https://zany-meme-jp7rjw5xjwpfpv47-7286.app.github.dev/images/${desiredPath}"
+        val imageUrl =
+            "https://zany-meme-jp7rjw5xjwpfpv47-7286.app.github.dev/images/${desiredPath}"
         val imageLoader = CreateImageLoader(context)
 
         val painter = rememberAsyncImagePainter(
@@ -509,7 +506,7 @@ private fun EditRecipeImage(
                 )
                 .height(height = 98.dp)
                 .align(Alignment.BottomCenter)
-                .clickable {imagePickerLauncher.launch("image/*") }
+                .clickable { imagePickerLauncher.launch("image/*") }
         ) {
             Text(
                 text = stringResource(id = R.string.click_change_image),
@@ -1022,7 +1019,6 @@ private fun SaveButton(
     createStepDto: List<CreateStep>,
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     manageStepsViewModel: ManageStepsViewModel,
-    tokenManagerImpl: TokenRepositoryImpl,
     buttonColor: Color,
 ) {
     Box(
@@ -1036,28 +1032,30 @@ private fun SaveButton(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
-                tokenManagerImpl.getToken()?.let {
-                    manageRecipeUserViewModel.updateRecipeUser(
-                        it, recipeId, updateInfoRecipe.title, updateInfoRecipe.recipeImage, updateInfoRecipe.ingredients, updateInfoRecipe.creationDate, updateInfoRecipe.preparationTime)
-                }
+                manageRecipeUserViewModel.updateRecipeUser(
+                    recipeId,
+                    updateInfoRecipe.title,
+                    updateInfoRecipe.recipeImage,
+                    updateInfoRecipe.ingredients,
+                    updateInfoRecipe.creationDate,
+                    updateInfoRecipe.preparationTime
+                )
                 updateStepDto.forEach { updateStep ->
-                    tokenManagerImpl.getToken()?.let {
-                        manageStepsViewModel.updateStepRecipe(it, recipeId, stepId = updateStep.stepId, updateStep = CreateStep(
+                    manageStepsViewModel.updateStepRecipe(
+                        recipeId, stepId = updateStep.stepId, updateStep = CreateStep(
                             updateStep.description,
                             updateStep.order
                         )
-                        )
-                    }
+                    )
                 }
 
                 createStepDto.forEach { createStep ->
-                    tokenManagerImpl.getToken()?.let {
-                        manageStepsViewModel.createStepsRecipe(it, recipeId, step = CreateStep(
+                    manageStepsViewModel.createStepsRecipe(
+                        recipeId, step = CreateStep(
                             createStep.description,
                             createStep.order
                         )
-                        )
-                    }
+                    )
                 }
 
                 controller.navigate(navigationRoute)
