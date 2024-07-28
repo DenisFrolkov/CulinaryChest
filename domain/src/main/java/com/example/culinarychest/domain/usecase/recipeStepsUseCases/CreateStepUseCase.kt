@@ -7,7 +7,7 @@ import com.example.culinarychest.domain.usecase.safeApiCall
 class CreateStepUseCase(
     private val repository: RecipeStepsRepository
 ) {
-    suspend operator fun invoke(token: String, recipeId: String, step: CreateStep) {
-        safeApiCall { repository.createRecipeStep(token, recipeId, step) }
+    suspend operator fun invoke(createStep: CreateStep) {
+        safeApiCall { repository.createRecipeStep(createStep) }
     }
 }

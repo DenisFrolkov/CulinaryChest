@@ -1,0 +1,189 @@
+package com.den.culinarychest.presentation.other.screens
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.den.culinarychest.R
+import com.den.culinarychest.presentation.ui.main.viewmodel.common.TokenViewModel
+import com.den.culinarychest.presentation.ui.other.common.route.AppNavigationRoute
+import com.den.culinarychest.presentation.ui.theme.SoftGray
+import com.den.culinarychest.presentation.ui.theme.SoftOrange
+import com.den.culinarychest.presentation.ui.theme.SoftPink
+import com.den.culinarychest.presentation.ui.main.viewmodel.profile.ProfileViewModel
+import com.example.culinarychest.data.repository.TokenRepositoryImpl
+import com.example.culinarychest.domain.model.application_user.UserInfo
+import kotlinx.coroutines.launch
+
+@Composable
+fun ProfileScreen(
+    navController: NavController,
+    profileViewModel: ProfileViewModel,
+    tokenViewModel: TokenViewModel
+) {
+
+    profileViewModel.getUserInfo()
+    profileViewModel.getUserFavoriteRecipesCount()
+    profileViewModel.getUserRecipesCount()
+
+    val userInfo = profileViewModel.userInfoResult.collectAsState().value
+
+    val applicationUserRecipeSize = profileViewModel.numberRecipesApplicationUser.collectAsState().value
+    val favoriteRecipeSize = profileViewModel.numberFavoriteRecipesApplicationUser.collectAsState().value
+
+    Column {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(SoftOrange)
+                .border(width = 0.1.dp, color = SoftGray)
+        ) {
+            Column {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 34.dp)
+                ) {
+                    userInfo?.let {
+                        Text(
+                            text = it.userName,
+                            style = TextStyle(
+                                color = SoftGray,
+                                fontSize = 20.sp
+                            ),
+                            modifier = Modifier
+                                .padding(top = 6.dp)
+                                .align(Alignment.CenterHorizontally),
+                        )
+                    }
+                }
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp, bottom = 8.dp)
+                        .padding(horizontal = 18.dp)
+                ) {
+                    ProfileStatisticsItem(
+                        textStatistic = stringResource(R.string.favorite_recipe_text),
+                        numberStatistic = "$favoriteRecipeSize"
+                    )
+                    ProfileStatisticsItem(
+                        textStatistic = stringResource(R.string.created_recipe_text),
+                        numberStatistic = "$applicationUserRecipeSize"
+                    )
+                }
+            }
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = SoftPink)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 88.dp)
+            ) {
+                SettingButton(
+                    borderColor = Color.Red,
+                    textButton = stringResource(R.string.exit_text),
+                    textColor = Color.Red,
+                    onClick = {
+                        tokenViewModel.clearToken()
+                        navController.navigate(AppNavigationRoute.AuthorizationScreen.route) {
+                            popUpTo(0)
+                        }
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SettingButton(
+    borderColor: Color,
+    textButton: String,
+    textColor: Color,
+    onClick: () -> Unit
+) {
+    Spacer(modifier = Modifier.height(16.dp))
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = SoftOrange, shape = RoundedCornerShape(12.dp))
+            .border(width = 0.5.dp, color = borderColor, shape = RoundedCornerShape(12.dp))
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                onClick()
+            },
+    ) {
+        Text(
+            text = textButton,
+            style = TextStyle(
+                fontSize = 16.sp,
+                color = textColor
+            ),
+            modifier = Modifier.padding(vertical = 12.dp)
+        )
+    }
+}
+
+@Composable
+private fun ProfileStatisticsItem(
+    textStatistic: String,
+    numberStatistic: String
+) {
+    Column(
+        verticalArrangement = Arrangement.Center
+    ) {
+        androidx.compose.material.Text(
+            text = textStatistic,
+            style = TextStyle(
+                color = SoftGray,
+                fontSize = 14.sp
+            )
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        androidx.compose.material.Text(
+            text = numberStatistic,
+            style = TextStyle(
+                color = SoftGray,
+                fontSize = 16.sp
+            ),
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+        )
+    }
+}
+

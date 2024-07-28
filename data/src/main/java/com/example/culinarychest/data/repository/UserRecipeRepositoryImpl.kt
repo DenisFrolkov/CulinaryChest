@@ -2,7 +2,11 @@ package com.example.culinarychest.data.repository
 
 import com.example.culinarychest.data.api.CulinaryChestAPI
 import com.example.culinarychest.data.model.Mappers.toDomain
+import com.example.culinarychest.domain.model.application_user.Token
+import com.example.culinarychest.domain.model.recipe.CreateRecipe
 import com.example.culinarychest.domain.model.recipe.Recipe
+import com.example.culinarychest.domain.model.recipe.RecipeRequest
+import com.example.culinarychest.domain.model.recipe.UpdateRecipe
 import com.example.culinarychest.domain.repository.ApplicationUserRecipeRepository
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -14,32 +18,26 @@ class UserRecipeRepositoryImpl(
     private val culinaryChestAPI: CulinaryChestAPI
 ) : ApplicationUserRecipeRepository {
 
-    override suspend fun getUserRecipes(token: String): List<Recipe> {
-        return culinaryChestAPI.getListRecipesUser(token).map { it.toDomain() }
+    override suspend fun getUserRecipes(token: Token): List<Recipe> {
+        return culinaryChestAPI.getListRecipesUser(token.token).map { it.toDomain() }
     }
 
     override suspend fun createUserRecipe(
-        token: String,
-        title: String,
-        recipeImage: File,
-        ingredients: String,
-        steps: String,
-        creationDate: String,
-        preparationTime: String
+        createRecipe: CreateRecipe
     ) {
         val recipeImagePart = MultipartBody.Part.createFormData(
             "recipeImage",
-            recipeImage.name,
-            recipeImage.asRequestBody("image/*".toMediaTypeOrNull())
+            createRecipe.recipeImage.name,
+            createRecipe.recipeImage.asRequestBody("image/*".toMediaTypeOrNull())
         )
-        val titlePart = title.toRequestBody("text/plain".toMediaTypeOrNull())
-        val ingredientsPart = ingredients.toRequestBody("text/plain".toMediaTypeOrNull())
-        val stepsPart = steps.toRequestBody("text/plain".toMediaTypeOrNull())
-        val creationDatePart = creationDate.toRequestBody("text/plain".toMediaTypeOrNull())
-        val preparationTimePart = preparationTime.toRequestBody("text/plain".toMediaTypeOrNull())
+        val titlePart = createRecipe.title.toRequestBody("text/plain".toMediaTypeOrNull())
+        val ingredientsPart = createRecipe.ingredients.toRequestBody("text/plain".toMediaTypeOrNull())
+        val stepsPart = createRecipe.steps.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        val creationDatePart = createRecipe.creationDate.toRequestBody("text/plain".toMediaTypeOrNull())
+        val preparationTimePart = createRecipe.preparationTime.toRequestBody("text/plain".toMediaTypeOrNull())
 
         return culinaryChestAPI.createRecipeUser(
-            token,
+            createRecipe.token.token,
             titlePart,
             recipeImagePart,
             ingredientsPart,
@@ -50,29 +48,23 @@ class UserRecipeRepositoryImpl(
     }
 
     override suspend fun updateUserRecipe(
-        token: String,
-        recipeId: String,
-        title: String,
-        recipeImage: File?,
-        ingredients: String,
-        creationDate: String,
-        preparationTime: String
+        updateRecipe: UpdateRecipe
     ) {
-        val recipeImagePart = if (recipeImage != null) {
+        val recipeImagePart = if (updateRecipe.recipeImage != null) {
             MultipartBody.Part.createFormData(
                 "recipeImage",
-                recipeImage.name,
-                recipeImage.asRequestBody("image/*".toMediaTypeOrNull())
+                updateRecipe.recipeImage?.name,
+                updateRecipe.recipeImage!!.asRequestBody("image/*".toMediaTypeOrNull())
             )
         } else null
-        val titlePart = title.toRequestBody("text/plain".toMediaTypeOrNull())
-        val ingredientsPart = ingredients.toRequestBody("text/plain".toMediaTypeOrNull())
-        val preparationTimePart = preparationTime.toRequestBody("text/plain".toMediaTypeOrNull())
-        val creationDatePart = creationDate.toRequestBody("text/plain".toMediaTypeOrNull())
+        val titlePart = updateRecipe.title.toRequestBody("text/plain".toMediaTypeOrNull())
+        val ingredientsPart = updateRecipe.ingredients.toRequestBody("text/plain".toMediaTypeOrNull())
+        val preparationTimePart = updateRecipe.preparationTime.toRequestBody("text/plain".toMediaTypeOrNull())
+        val creationDatePart = updateRecipe.creationDate.toRequestBody("text/plain".toMediaTypeOrNull())
 
         return culinaryChestAPI.updateRecipeUser(
-            token,
-            recipeId,
+            updateRecipe.token.token,
+            updateRecipe.recipeId,
             titlePart,
             recipeImagePart,
             ingredientsPart,
@@ -81,10 +73,10 @@ class UserRecipeRepositoryImpl(
         )
     }
 
-    override suspend fun deleteUserRecipe(token: String, recipeId: String) {
+    override suspend fun deleteUserRecipe(recipeRequest: RecipeRequest) {
         return culinaryChestAPI.deleteRecipeUser(
-            token,
-            recipeId
+            recipeRequest.token.token,
+            recipeRequest.recipeId
         )
     }
 }

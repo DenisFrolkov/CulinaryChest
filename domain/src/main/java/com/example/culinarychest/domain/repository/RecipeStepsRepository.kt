@@ -1,13 +1,14 @@
 package com.example.culinarychest.domain.repository
 
-import com.example.culinarychest.domain.model.ProcessingResult
+import com.example.culinarychest.domain.model.recipe.RecipeRequest
 import com.example.culinarychest.domain.model.step.CreateStep
+import com.example.culinarychest.domain.model.step.DeleteStep
 import com.example.culinarychest.domain.model.step.Step
-import kotlinx.coroutines.flow.Flow
+import com.example.culinarychest.domain.model.step.UpdateStep
 
 interface RecipeStepsRepository {
-    suspend fun getRecipeSteps(token: String, recipeId: String): List<Step>
-    suspend fun createRecipeStep(token: String, recipeId: String, step: CreateStep)
-    suspend fun updateRecipeStep(token: String, recipeId: String, stepId: String, updateStep: CreateStep)
-    suspend fun deleteRecipeStep(token: String, recipeId: String, stepId: String)
+    suspend fun getRecipeSteps(recipeRequest: RecipeRequest): List<Step>
+    suspend fun createRecipeStep(createStep: CreateStep)
+    suspend fun updateRecipeStep(updateStep: UpdateStep)
+    suspend fun deleteRecipeStep(deleteStep: DeleteStep)
 }

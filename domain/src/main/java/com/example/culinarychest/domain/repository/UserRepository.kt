@@ -8,7 +8,7 @@ import com.example.culinarychest.domain.model.application_user.Token
 import retrofit2.Response
 
 interface UserRepository {
-    suspend fun registrationApplicationUser(user: ApplicationUser) : Response<DuplicationUserInfo>
+    suspend fun registrationUser(user: ApplicationUser) : Response<DuplicationUserInfo>
     suspend fun authorizationApplicationUser(login: Login): Response<Token>
     suspend fun getApplicationUserInfo(token: String): UserInfo
 }

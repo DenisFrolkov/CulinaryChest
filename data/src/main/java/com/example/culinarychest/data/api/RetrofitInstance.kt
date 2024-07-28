@@ -1,6 +1,7 @@
 package com.example.culinarychest.data.api
 
 import android.annotation.SuppressLint
+import com.example.culinarychest.data.model.application_user.TokenDto
 import com.example.culinarychest.data.repository.TokenRepositoryImpl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -39,7 +40,7 @@ class RetrofitInstance(private val tokenManagerImpl: TokenRepositoryImpl) {
             addInterceptor { chain ->
                 val original = chain.request()
                 val requestBuilder = original.newBuilder()
-                    .header("Authorization", "Bearer ${getToken()}")
+                    .header("Authorization", "Bearer ${getToken().token}")
                     .method(original.method, original.body)
                 val request = requestBuilder.build()
                 chain.proceed(request)
@@ -50,8 +51,8 @@ class RetrofitInstance(private val tokenManagerImpl: TokenRepositoryImpl) {
         })
         .build()
 
-    private fun getToken(): String? {
-        return tokenManagerImpl.getToken()
+    private fun getToken(): TokenDto {
+        return TokenDto(token = tokenManagerImpl.getToken().toString())
     }
 
     val culinaryChestApi: CulinaryChestAPI = Retrofit.Builder()

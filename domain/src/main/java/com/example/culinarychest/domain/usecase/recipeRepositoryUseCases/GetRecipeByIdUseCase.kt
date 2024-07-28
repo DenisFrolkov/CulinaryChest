@@ -2,6 +2,7 @@ package com.example.culinarychest.domain.usecase.recipeRepositoryUseCases
 
 import com.example.culinarychest.domain.model.ProcessingResult
 import com.example.culinarychest.domain.model.recipe.Recipe
+import com.example.culinarychest.domain.model.recipe.RecipeRequest
 import com.example.culinarychest.domain.repository.RecipeRepository
 import com.example.culinarychest.domain.usecase.safeApiCall
 import kotlinx.coroutines.flow.Flow
@@ -10,7 +11,7 @@ import kotlinx.coroutines.flow.flow
 class GetRecipeByIdUseCase(
     private val repository: RecipeRepository
 ) {
-    suspend operator fun invoke(token: String, recipeId: String): Flow<ProcessingResult<List<Recipe>>> = flow {
-        emit(safeApiCall { repository.getRecipeById(token, recipeId) })
+    suspend operator fun invoke(recipeRequest: RecipeRequest): Flow<ProcessingResult<List<Recipe>>> = flow {
+        emit(safeApiCall { repository.getRecipeById(recipeRequest) })
     }
 }

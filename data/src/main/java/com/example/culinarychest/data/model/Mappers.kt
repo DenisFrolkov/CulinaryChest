@@ -1,14 +1,14 @@
 package com.example.culinarychest.data.model
 
-import com.example.culinarychest.data.model.application_user.ApplicationUserDto
-import com.example.culinarychest.data.model.application_user.ApplicationUserInfoDto
+import com.example.culinarychest.data.model.application_user.UserDto
+import com.example.culinarychest.data.model.application_user.UserInfoDto
 import com.example.culinarychest.data.model.application_user.DuplicationUserInfoDto
 import com.example.culinarychest.data.model.application_user.LoginDto
 import com.example.culinarychest.data.model.application_user.TokenDto
 import com.example.culinarychest.data.model.favorite_recipe.CreateFavoriteRecipeDto
 import com.example.culinarychest.data.model.favorite_recipe.FavoriteRecipeDto
 import com.example.culinarychest.data.model.recipe.RecipeDto
-import com.example.culinarychest.data.model.step.CreateStepDto
+import com.example.culinarychest.data.model.step.StepDataDto
 import com.example.culinarychest.data.model.step.StepDto
 import com.example.culinarychest.domain.model.application_user.ApplicationUser
 import com.example.culinarychest.domain.model.application_user.UserInfo
@@ -18,13 +18,13 @@ import com.example.culinarychest.domain.model.application_user.Token
 import com.example.culinarychest.domain.model.favorite_recipe.CreateFavoriteRecipe
 import com.example.culinarychest.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.model.recipe.Recipe
-import com.example.culinarychest.domain.model.step.CreateStep
 import com.example.culinarychest.domain.model.step.Step
+import com.example.culinarychest.domain.model.step.StepData
 
 object Mappers {
 
-    fun ApplicationUser.toDto(): ApplicationUserDto {
-        return ApplicationUserDto(
+    fun ApplicationUser.toDto(): UserDto {
+        return UserDto(
             userName = this.userName,
             email = this.email,
             password = this.password,
@@ -32,7 +32,7 @@ object Mappers {
         )
     }
 
-    fun ApplicationUserInfoDto.toDomain(): UserInfo {
+    fun UserInfoDto.toDomain(): UserInfo {
         return UserInfo(
             id = this.id,
             userName = this.userName,
@@ -73,6 +73,8 @@ object Mappers {
 
     fun CreateFavoriteRecipe.toDto(): CreateFavoriteRecipeDto {
         return CreateFavoriteRecipeDto(
+            token = this.token.toDto(),
+            recipeId = this.recipeId,
             addedDate = this.addedDate
         )
     }
@@ -101,8 +103,8 @@ object Mappers {
         )
     }
 
-    fun CreateStep.toDto(): CreateStepDto {
-        return CreateStepDto(
+    fun StepData.toDto(): StepDataDto {
+        return StepDataDto(
             description = this.description,
             order = this.order
         )

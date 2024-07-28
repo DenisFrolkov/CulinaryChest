@@ -6,5 +6,7 @@ sealed class ProcessingResult<T>(
 ) {
     class Success<T>(data: T?) : ProcessingResult<T>(data)
     class Error<T>(message: String, data: T? = null) : ProcessingResult<T>(data, message)
+
+    class Loading<T> : ProcessingResult<T>()
 }
 

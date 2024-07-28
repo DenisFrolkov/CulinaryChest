@@ -2,6 +2,7 @@ package com.example.culinarychest.data.repository
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.culinarychest.domain.model.application_user.Token
 import com.example.culinarychest.domain.repository.TokenRepository
 
 private const val SHARED_PREFS_AUTH = "shared_prefs_auth"
@@ -13,8 +14,8 @@ class TokenRepositoryImpl(private val context: Context) : TokenRepository {
         context.getSharedPreferences(SHARED_PREFS_AUTH, Context.MODE_PRIVATE)
     }
 
-    override fun saveToken(token: String) {
-        return sharedPreferences.edit().putString(SHARED_PREFS_TOKEN, token).apply()
+    override fun saveToken(token: Token) {
+        return sharedPreferences.edit().putString(SHARED_PREFS_TOKEN, token.token).apply()
     }
 
     override fun getToken(): String? {

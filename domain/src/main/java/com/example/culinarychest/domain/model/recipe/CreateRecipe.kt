@@ -1,9 +1,11 @@
 package com.example.culinarychest.domain.model.recipe
 
+import com.example.culinarychest.domain.model.application_user.Token
 import java.io.File
 
 data class CreateRecipe(
-    val recipeImage: File?,
+    val token: Token,
+    val recipeImage: File,
     val title: String,
     val ingredients: String,
     val steps: List<String>,

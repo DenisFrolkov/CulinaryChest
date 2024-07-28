@@ -1,13 +1,13 @@
 package com.example.culinarychest.domain.repository
 
-import com.example.culinarychest.domain.model.ProcessingResult
+import com.example.culinarychest.domain.model.application_user.Token
 import com.example.culinarychest.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.model.favorite_recipe.CreateFavoriteRecipe
-import kotlinx.coroutines.flow.Flow
+import com.example.culinarychest.domain.model.favorite_recipe.FavoriteRecipeRequest
 
 interface ApplicationUserFavoriteRecipeRepository {
-    suspend fun getUserFavoriteRecipes(token: String): List<FavoriteRecipe>
-    suspend fun getFavoriteRecipeByRecipeId(token: String, recipeId: String): FavoriteRecipe
-    suspend fun createApplicationUserFavoriteRecipes(token: String, recipeId: Int, addedDate: CreateFavoriteRecipe)
-    suspend fun deleteApplicationUserFavoriteRecipe(token: String, recipeId: String)
+    suspend fun getUserFavoriteRecipes(token: Token): List<FavoriteRecipe>
+    suspend fun getFavoriteRecipeByRecipeId(favoriteRecipeRequest: FavoriteRecipeRequest): FavoriteRecipe
+    suspend fun createApplicationUserFavoriteRecipes(createFavoriteRecipe: CreateFavoriteRecipe)
+    suspend fun deleteApplicationUserFavoriteRecipe(favoriteRecipeRequest: FavoriteRecipeRequest)
 }

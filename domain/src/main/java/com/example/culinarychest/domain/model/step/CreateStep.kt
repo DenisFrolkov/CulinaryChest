@@ -1,6 +1,9 @@
 package com.example.culinarychest.domain.model.step
 
+import com.example.culinarychest.domain.model.application_user.Token
+
 data class CreateStep(
-    val description: String,
-    val order: String,
+    val token: Token,
+    val recipeId: String,
+    val stepData: StepData,
 )

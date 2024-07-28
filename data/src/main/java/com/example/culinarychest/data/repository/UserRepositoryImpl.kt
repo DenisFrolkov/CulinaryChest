@@ -16,13 +16,15 @@ import retrofit2.Response
 class UserRepositoryImpl(
     private val culinaryChestAPI: CulinaryChestAPI
 ) : UserRepository {
-    override suspend fun registrationApplicationUser(user: ApplicationUser): Response<DuplicationUserInfo> {
-
+    override suspend fun registrationUser(user: ApplicationUser): Response<DuplicationUserInfo> {
         val response = culinaryChestAPI.registrationUser(user.toDto())
 
-        val domainResponse = response.body()?.toDomain()
-
-        return Response.success(domainResponse)
+        return if (response.isSuccessful) {
+            val domainResponse = response.body()?.toDomain()
+            Response.success(domainResponse)
+        } else {
+            Response.error(response.code(), response.errorBody()!!)
+        }
     }
 
     override suspend fun authorizationApplicationUser(login: Login): Response<Token> {
