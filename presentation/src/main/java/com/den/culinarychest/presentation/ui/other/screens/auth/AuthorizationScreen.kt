@@ -12,8 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -33,7 +36,9 @@ import com.den.culinarychest.presentation.ui.other.common.route.AppNavigationRou
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.auth.AuthorizationViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.common.TokenViewModel
 import com.example.culinarychest.data.repository.TokenRepositoryImpl
+import com.example.culinarychest.domain.model.ProcessingResult
 import com.example.culinarychest.domain.model.application_user.Login
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -42,13 +47,13 @@ import kotlinx.coroutines.launch
 fun AuthorizationScreen(
     navController: NavController,
     authorizationViewModel: AuthorizationViewModel,
-    tokenManagerImpl: TokenRepositoryImpl
+    tokenViewModel: TokenViewModel,
 ) {
 
     Authorization(
         controller = navController,
         authorizationViewModel = authorizationViewModel,
-        tokenManagerImpl = tokenManagerImpl
+        tokenViewModel = tokenViewModel,
     )
 }
 
@@ -57,7 +62,7 @@ fun AuthorizationScreen(
 fun Authorization(
     controller: NavController,
     authorizationViewModel: AuthorizationViewModel,
-    tokenManagerImpl: TokenRepositoryImpl
+    tokenViewModel: TokenViewModel,
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -67,7 +72,7 @@ fun Authorization(
     var isLoading by remember { mutableStateOf(false) }
 
     val tokenVerification by remember {
-        derivedStateOf { tokenManagerImpl.getToken() == null }
+        derivedStateOf { tokenViewModel.token.value == null }
     }
 
     val loginValidation by remember {
@@ -82,6 +87,8 @@ fun Authorization(
     }
 
     val focusManager = LocalFocusManager.current
+
+    val authState by authorizationViewModel.authState.collectAsState()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -126,29 +133,31 @@ fun Authorization(
         } else {
             PushButton(
                 onClick = {
-                    authorizationViewModel.authorizationUser(
-                        Login(
-                            userName = login,
-                            password = password
-                        )
-                    )
+                    isLoading = true
                     coroutineScope.launch {
-                        isLoading = true
-                        delay(1000)
-                        if (tokenManagerImpl.getToken() == null) {
-                            isLoading = false
-                            clickButton = true
-                        } else {
-                            clickButton = false
-                            controller.navigate(AppNavigationRoute.BottomAppNavigationBar.route)
-                            isLoading = false
-                        }
+                        authorizationViewModel.authorizationUser(Login(userName = login, password = password))
                     }
                     focusManager.clearFocus()
                 }
             )
         }
-
+        when (authState) {
+            is ProcessingResult.Error -> {
+                isLoading = false
+                clickButton = true
+            }
+            is ProcessingResult.Success -> {
+                if ((authState as ProcessingResult.Success).data == true) {
+                    authorizationViewModel.clearState()
+                    controller.navigate(AppNavigationRoute.BottomAppNavigationBar.route)
+                    clickButton = false
+                    isLoading = false
+                }
+            }
+            else -> {
+                isLoading = true
+            }
+        }
         Spacer(modifier = Modifier.height(height = 8.dp))
         Text(
             modifier = Modifier.clickable(

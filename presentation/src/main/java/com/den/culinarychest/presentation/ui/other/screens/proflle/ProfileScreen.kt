@@ -16,8 +16,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,18 +30,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
+import com.den.culinarychest.presentation.ui.main.viewmodel.common.TokenViewModel
 import com.den.culinarychest.presentation.ui.other.common.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.profile.ProfileViewModel
 import com.example.culinarychest.data.repository.TokenRepositoryImpl
+import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(
     navController: NavController,
     profileViewModel: ProfileViewModel,
-    tokenManagerImpl: TokenRepositoryImpl
+    tokenViewModel: TokenViewModel
 ) {
 
     profileViewModel.getUserInfo()
@@ -46,6 +51,8 @@ fun ProfileScreen(
     profileViewModel.getUserRecipesCount()
 
     val userInfo = profileViewModel.userInfoResult.collectAsState().value
+
+    val token by tokenViewModel.token.collectAsState()
 
     val applicationUserRecipeSize = profileViewModel.numberRecipesApplicationUser.collectAsState().value
     val favoriteRecipeSize = profileViewModel.numberFavoriteRecipesApplicationUser.collectAsState().value
@@ -110,8 +117,10 @@ fun ProfileScreen(
                     textButton = stringResource(R.string.exit_text),
                     textColor = Color.Red,
                     onClick = {
-                        navController.navigate(AppNavigationRoute.AuthorizationScreen.route)
-                        tokenManagerImpl.clearToken()
+                        tokenViewModel.clearToken()
+                        navController.navigate(AppNavigationRoute.AuthorizationScreen.route) {
+                            popUpTo(0)
+                        }
                     }
                 )
             }

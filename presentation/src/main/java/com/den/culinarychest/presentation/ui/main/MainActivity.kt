@@ -19,6 +19,7 @@ import com.den.culinarychest.presentation.ui.main.viewmodel.profile.ProfileViewM
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageStepsViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.auth.RegistrationViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.common.TokenViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.SearchViewModel
 import com.example.culinarychest.data.api.RetrofitInstance
 import com.example.culinarychest.data.repository.UserFavoriteRecipeRepositoryImpl
@@ -44,12 +45,29 @@ import com.example.culinarychest.domain.usecase.recipeRepositoryUseCases.GetReci
 import com.example.culinarychest.domain.usecase.recipeStepsUseCases.CreateStepUseCase
 import com.example.culinarychest.domain.usecase.recipeStepsUseCases.DeleteStepUseCase
 import com.example.culinarychest.domain.usecase.recipeStepsUseCases.UpdateStepUseCase
+import com.example.culinarychest.domain.usecase.tokenUseCase.ClearTokenUseCase
 import com.example.culinarychest.domain.usecase.tokenUseCase.GetTokenUseCase
 import com.example.culinarychest.domain.usecase.tokenUseCase.SaveTokenUseCase
 
 class MainActivity : ComponentActivity() {
 
     private val tokenManagerImpl = TokenRepositoryImpl(this)
+
+    private val tokenViewModel by viewModels<TokenViewModel> {
+        GenericViewModelFactory {
+            TokenViewModel(
+                SaveTokenUseCase(
+                    tokenManagerImpl
+                ),
+                GetTokenUseCase(
+                    tokenManagerImpl
+                ),
+                ClearTokenUseCase(
+                    tokenManagerImpl
+                )
+            )
+        }
+    }
 
     private val registrationApplicationUserViewModel by viewModels<RegistrationViewModel> {
         GenericViewModelFactory {
@@ -258,6 +276,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CulinaryChestTheme {
                 AppNavigation(
+                    tokenViewModel,
                     registrationApplicationUserViewModel,
                     authorizationApplicationUserViewModel,
                     searchViewModel,
@@ -269,7 +288,6 @@ class MainActivity : ComponentActivity() {
                     manageRecipeUserViewModel,
                     manageOtherRecipeViewModel,
                     manageStepsViewModel,
-                    tokenManagerImpl
                 )
             }
         }

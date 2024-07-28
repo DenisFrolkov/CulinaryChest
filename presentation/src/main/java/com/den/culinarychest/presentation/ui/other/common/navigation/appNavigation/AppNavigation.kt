@@ -3,6 +3,7 @@ package com.den.culinarychest.presentation.ui.other.common.navigation.appNavigat
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -27,12 +28,14 @@ import com.den.culinarychest.presentation.ui.main.viewmodel.profile.ProfileViewM
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageStepsViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.auth.RegistrationViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.common.TokenViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.SearchViewModel
 import com.example.culinarychest.data.repository.TokenRepositoryImpl
 
 
 @Composable
 fun AppNavigation(
+    tokenViewModel: TokenViewModel,
     registrationViewModel: RegistrationViewModel,
     authorizationViewModel: AuthorizationViewModel,
     searchViewModel: SearchViewModel,
@@ -44,17 +47,17 @@ fun AppNavigation(
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     manageOtherRecipeViewModel: ManageOtherRecipeViewModel,
     manageStepsViewModel: ManageStepsViewModel,
-    tokenManagerImpl: TokenRepositoryImpl
 ) {
 
-    val token = remember { authorizationViewModel.authState }
+    val token by tokenViewModel.token.collectAsState()
 
-    val isUserAuthorized = token != null
+    val isUserAuthorized = token == null
 
     val startDestination = if (isUserAuthorized) {
-        AppNavigationRoute.BottomAppNavigationBar.route
-    } else {
         AppNavigationRoute.AuthorizationScreen.route
+
+    } else {
+        AppNavigationRoute.BottomAppNavigationBar.route
     }
 
     val appNavigationController = rememberNavController()
@@ -67,7 +70,7 @@ fun AppNavigation(
             AuthorizationScreen(
                 navController = appNavigationController,
                 authorizationViewModel = authorizationViewModel,
-                tokenManagerImpl = tokenManagerImpl
+                tokenViewModel = tokenViewModel,
             )
 
         }
@@ -76,7 +79,7 @@ fun AppNavigation(
                 navController = appNavigationController,
                 registrationApplicationUser = registrationViewModel,
                 authorizationViewModel = authorizationViewModel,
-                tokenManagerImpl = tokenManagerImpl
+                tokenViewModel = tokenViewModel
             )
         }
         composable(AppNavigationRoute.BottomAppNavigationBar.route) {
@@ -87,7 +90,7 @@ fun AppNavigation(
                 createdViewModel = createdViewModel,
                 favoriteViewModel = favoriteViewModel,
                 profileViewModel = profileViewModel,
-                tokenManagerImpl = tokenManagerImpl,
+                tokenViewModel = tokenViewModel,
             )
         }
         composable(

@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import com.example.culinarychest.domain.repository.TokenRepository
 
 private const val SHARED_PREFS_AUTH = "shared_prefs_auth"
-private const val SHARED_PREFS_TOKEN = "shared_prefs_auth"
+private const val SHARED_PREFS_TOKEN = "shared_prefs_token"
 
 class TokenRepositoryImpl(private val context: Context) : TokenRepository {
 

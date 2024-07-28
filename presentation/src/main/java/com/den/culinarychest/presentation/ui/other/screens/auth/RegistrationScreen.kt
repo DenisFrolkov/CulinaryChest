@@ -36,6 +36,7 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.auth.AuthorizationViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.auth.RegistrationViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.common.TokenViewModel
 import com.example.culinarychest.data.repository.TokenRepositoryImpl
 import com.example.culinarychest.domain.model.application_user.ApplicationUser
 import com.example.culinarychest.domain.model.application_user.Login
@@ -47,13 +48,13 @@ fun RegistrationScreen(
     navController: NavController,
     registrationApplicationUser: RegistrationViewModel,
     authorizationViewModel: AuthorizationViewModel,
-    tokenManagerImpl: TokenRepositoryImpl
+    tokenViewModel: TokenViewModel,
 ) {
     Registration(
         controller = navController,
         registrationApplicationUser = registrationApplicationUser,
         authorizationViewModel = authorizationViewModel,
-        tokenManagerImpl = tokenManagerImpl
+        tokenViewModel = tokenViewModel,
     )
 }
 
@@ -63,7 +64,7 @@ fun Registration(
     controller: NavController,
     registrationApplicationUser: RegistrationViewModel,
     authorizationViewModel: AuthorizationViewModel,
-    tokenManagerImpl: TokenRepositoryImpl
+    tokenViewModel: TokenViewModel,
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -171,9 +172,8 @@ fun Registration(
                                 )
                             )
                             delay(1000)
-                            if (tokenManagerImpl.getToken() != null) controller.navigate(
-                                AppNavigationRoute.BottomAppNavigationBar.route
-                            ) else isLoading = false
+                            if (tokenViewModel.token.value != null)
+                                controller.navigate( AppNavigationRoute.BottomAppNavigationBar.route) else isLoading = false
                         }
                     }
                     focusManager.clearFocus()

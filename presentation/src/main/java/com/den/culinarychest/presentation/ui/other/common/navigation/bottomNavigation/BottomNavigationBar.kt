@@ -8,12 +8,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Text
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -33,6 +35,7 @@ import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.FavoriteView
 import com.den.culinarychest.presentation.ui.other.common.route.BottomNavigationRoute
 import com.den.culinarychest.presentation.other.screens.HorizontalPagerScreen
 import com.den.culinarychest.presentation.other.screens.ProfileScreen
+import com.den.culinarychest.presentation.ui.main.viewmodel.common.TokenViewModel
 import com.den.culinarychest.presentation.ui.other.screens.recipes.SearchScreen
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
@@ -50,7 +53,7 @@ fun BottomNavigationBar(
     createdViewModel: CreatedViewModel,
     favoriteViewModel: FavoriteViewModel,
     profileViewModel: ProfileViewModel,
-    tokenManagerImpl: TokenRepositoryImpl
+    tokenViewModel: TokenViewModel
 ) {
 
     val bottomController = rememberNavController()
@@ -143,7 +146,8 @@ fun BottomNavigationBar(
                 ProfileScreen(
                     navController = navController,
                     profileViewModel = profileViewModel,
-                    tokenManagerImpl = tokenManagerImpl)
+                    tokenViewModel = tokenViewModel
+                )
             }
         }
     }
