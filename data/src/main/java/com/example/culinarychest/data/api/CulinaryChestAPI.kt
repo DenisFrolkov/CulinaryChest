@@ -1,10 +1,10 @@
 package com.example.culinarychest.data.api
 
-import com.example.culinarychest.data.model.application_user.UserDto
-import com.example.culinarychest.data.model.application_user.UserInfoDto
 import com.example.culinarychest.data.model.application_user.DuplicationUserInfoDto
 import com.example.culinarychest.data.model.application_user.LoginDto
 import com.example.culinarychest.data.model.application_user.TokenDto
+import com.example.culinarychest.data.model.application_user.UserDto
+import com.example.culinarychest.data.model.application_user.UserInfoDto
 import com.example.culinarychest.data.model.favorite_recipe.FavoriteRecipeDto
 import com.example.culinarychest.data.model.recipe.RecipeDto
 import com.example.culinarychest.data.model.step.StepDataDto

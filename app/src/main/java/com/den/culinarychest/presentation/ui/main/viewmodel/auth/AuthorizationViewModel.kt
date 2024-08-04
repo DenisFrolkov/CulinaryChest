@@ -1,6 +1,5 @@
 package com.den.culinarychest.presentation.ui.main.viewmodel.auth
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.model.ProcessingResult
@@ -50,11 +49,6 @@ class AuthorizationViewModel(
                 }
             }
         }
-    }
-
-    override fun onCleared() {
-        Log.e("AAA", "VM cleared")
-        super.onCleared()
     }
 
     fun clearState() {

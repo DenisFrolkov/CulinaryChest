@@ -8,14 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -30,24 +28,25 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.CreatedViewModel
-import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.FavoriteViewModel
-import com.den.culinarychest.presentation.ui.other.common.route.BottomNavigationRoute
 import com.den.culinarychest.presentation.other.screens.HorizontalPagerScreen
 import com.den.culinarychest.presentation.other.screens.ProfileScreen
+import com.den.culinarychest.presentation.ui.main.viewmodel.ImageViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.common.TokenViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.profile.ProfileViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.CreatedViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.FavoriteViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.SearchViewModel
+import com.den.culinarychest.presentation.ui.other.common.route.BottomNavigationRoute
 import com.den.culinarychest.presentation.ui.other.screens.recipes.SearchScreen
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
-import com.den.culinarychest.presentation.ui.main.viewmodel.profile.ProfileViewModel
-import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
-import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.SearchViewModel
-import com.example.culinarychest.data.repository.TokenRepositoryImpl
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun BottomNavigationBar(
     navController: NavController,
+    imageViewModel: ImageViewModel,
     searchViewModel: SearchViewModel,
     recipeDetailsViewModel: RecipeDetailsViewModel,
     createdViewModel: CreatedViewModel,
@@ -130,6 +129,7 @@ fun BottomNavigationBar(
             composable(BottomNavigationRoute.SearchScreen.route) {
                 SearchScreen(
                     navController = navController,
+                    imageViewModel = imageViewModel,
                     recipeDetailsViewModel = recipeDetailsViewModel,
                     searchViewModel = searchViewModel,
                 )
@@ -137,6 +137,7 @@ fun BottomNavigationBar(
             composable(BottomNavigationRoute.TopNavigationBar.route) {
                 HorizontalPagerScreen(
                     navController = navController,
+                    imageViewModel = imageViewModel,
                     createdViewModel = createdViewModel,
                     favoriteViewModel = favoriteViewModel,
                     recipeDetailsViewModel = recipeDetailsViewModel,

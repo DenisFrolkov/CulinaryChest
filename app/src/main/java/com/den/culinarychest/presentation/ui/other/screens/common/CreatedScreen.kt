@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
+import com.den.culinarychest.presentation.ui.main.viewmodel.ImageViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.CreatedViewModel
 import com.den.culinarychest.presentation.ui.other.common.components.Item.RecipeItem
 import com.den.culinarychest.presentation.ui.other.common.route.AppNavigationRoute
@@ -35,18 +36,19 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
-import com.example.culinarychest.data.repository.TokenRepositoryImpl
 import com.example.culinarychest.domain.model.recipe.Recipe
 
 @Composable
 fun CreatedScreen(
     controller: NavController,
+    imageViewModel: ImageViewModel,
     createdViewModel: CreatedViewModel,
     recipeDetailsViewModel: RecipeDetailsViewModel,
 ) {
 
     val listRecipeCreatedUser =
         createdViewModel.listRecipesUser.collectAsState().value
+
 
     Box(
         modifier = Modifier
@@ -55,8 +57,9 @@ fun CreatedScreen(
     ) {
         ListRecipeCreatedUser(
             controller,
+            imageViewModel,
             listRecipeCreatedUser,
-            recipeDetailsViewModel = recipeDetailsViewModel
+            recipeDetailsViewModel
         )
         FABButton(controller)
     }
@@ -79,6 +82,7 @@ private fun FABButton(controller: NavController) {
 @Composable
 private fun ListRecipeCreatedUser(
     controller: NavController,
+    imageViewModel: ImageViewModel,
     listRecipeCreatedUser: List<Recipe>,
     recipeDetailsViewModel: RecipeDetailsViewModel
 ) {
@@ -114,6 +118,7 @@ private fun ListRecipeCreatedUser(
             items(listRecipeCreatedUser) { recipeCreatedUser ->
                 RecipeItem(
                     controller = controller,
+                    imageViewModel = imageViewModel,
                     textRouteNavigation = AppNavigationRoute.FetchUserRecipeScreen.route,
                     recipe = recipeCreatedUser,
                     recipeDetailsViewModel = recipeDetailsViewModel

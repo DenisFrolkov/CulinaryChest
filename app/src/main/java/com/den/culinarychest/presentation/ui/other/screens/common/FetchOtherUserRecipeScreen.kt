@@ -1,7 +1,6 @@
 package com.den.culinarychest.presentation.ui.other.screens.common
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,7 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
+import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Text
@@ -45,18 +44,17 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.den.culinarychest.R
+import com.den.culinarychest.presentation.ui.main.viewmodel.ImageViewModel
 import com.den.culinarychest.presentation.ui.other.common.components.Item.DisplayRecipeInfo
 import com.den.culinarychest.presentation.ui.other.common.components.Item.StepRecipeItem
-import com.den.culinarychest.presentation.ui.other.common.components.Item.CreateImageLoader
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageOtherRecipeViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
-import com.example.culinarychest.data.repository.TokenRepositoryImpl
-import com.example.culinarychest.domain.model.favorite_recipe.CreateFavoriteRecipe
 import com.example.culinarychest.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.model.recipe.Recipe
 import java.time.LocalDateTime
@@ -64,12 +62,14 @@ import java.time.LocalDateTime
 @Composable
 fun FetchOtherUserRecipeScreen(
     navController: NavController,
+    imageViewModel: ImageViewModel,
     recipe: Recipe,
     recipeDetailsViewModel: RecipeDetailsViewModel,
     manageOtherRecipeViewModel: ManageOtherRecipeViewModel,
 ) {
     FetchOtherUserRecipe(
         controller = navController,
+        imageViewModel = imageViewModel,
         recipe = recipe,
         recipeDetailsViewModel = recipeDetailsViewModel,
         manageOtherRecipeViewModel = manageOtherRecipeViewModel,
@@ -79,10 +79,14 @@ fun FetchOtherUserRecipeScreen(
 @Composable
 fun FetchOtherUserRecipe(
     controller: NavController,
+    imageViewModel: ImageViewModel,
     recipe: Recipe,
     recipeDetailsViewModel: RecipeDetailsViewModel,
     manageOtherRecipeViewModel: ManageOtherRecipeViewModel,
 ) {
+
+    val recipeImageUrl = imageViewModel.photoUrl.collectAsState().value
+
     var clickElementLike by remember {
         mutableStateOf(false)
     }
@@ -90,14 +94,12 @@ fun FetchOtherUserRecipe(
     val favoriteRecipeByRecipeId by recipeDetailsViewModel.favoriteRecipeByRecipeId.collectAsState()
 
     Column {
-        FetchOtherUserRecipeTopBar(
-            controller = controller,
+        FetchOtherUserRecipeTopBar(controller = controller,
             recipeId = recipe.recipeId,
             favoriteRecipeByRecipeId = favoriteRecipeByRecipeId,
             clickElement = clickElementLike,
             manageOtherRecipeViewModel = manageOtherRecipeViewModel,
-            passClickElement = { clickElementLike = it }
-        )
+            passClickElement = { clickElementLike = it })
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -105,8 +107,7 @@ fun FetchOtherUserRecipe(
         ) {
             item {
                 FetchOtherUserRecipeImage(
-                    context = LocalContext.current,
-                    recipeImageUrl = recipe.imageUrl
+                    recipeImageUrl
                 )
                 FetchOtherUserRecipeMiniInformation(recipe = recipe)
                 FetchOtherUserRecipeTitle(recipe = recipe)
@@ -140,18 +141,15 @@ fun FetchOtherUserRecipeTopBar(
             .border(width = 0.1.dp, color = SoftGray)
             .padding(horizontal = 20.dp, vertical = 14.dp)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.back_icon),
+        Image(painter = painterResource(id = R.drawable.back_icon),
             contentDescription = null,
             modifier = Modifier
                 .size(24.dp)
                 .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null
+                    interactionSource = remember { MutableInteractionSource() }, indication = null
                 ) {
                     controller.popBackStack()
-                }
-        )
+                })
         if (clickElement1 != ("${favoriteRecipeByRecipeId?.recipeId}" != recipeId)) {
             Icon(
                 modifier = Modifier
@@ -198,25 +196,17 @@ fun FetchOtherUserRecipeTopBar(
 
 @Composable
 fun FetchOtherUserRecipeImage(
-    context: Context,
-    recipeImageUrl: String
+    recipeImageUrl: String?,
 ) {
-    val desiredPath = recipeImageUrl.substringAfter("/wwwroot/")
-    val imageUrl = "https://zany-meme-jp7rjw5xjwpfpv47-7286.app.github.dev/images/${desiredPath}"
-    val imageLoader = CreateImageLoader(context)
-
-    val painter = rememberAsyncImagePainter(
-        model = imageUrl,
-        imageLoader = imageLoader
-    )
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
             .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(15.dp))
     ) {
-        Image(
-            painter = painter,
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current).data(recipeImageUrl).crossfade(true)
+                .build(),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -233,8 +223,7 @@ fun FetchOtherUserRecipeMiniInformation(
     recipe: Recipe
 ) {
     Row(
-        modifier = Modifier
-            .padding(start = 24.dp, top = 6.dp, end = 8.dp)
+        modifier = Modifier.padding(start = 24.dp, top = 6.dp, end = 8.dp)
     ) {
         DisplayRecipeInfo(
             iconRecipeInfo = painterResource(id = R.drawable.recipe_info_star_icon),
@@ -275,8 +264,7 @@ fun FetchOtherUserRecipeTitle(
             .padding(horizontal = 10.dp, vertical = 5.dp),
         text = recipe.title,
         style = TextStyle(
-            fontSize = 18.sp,
-            color = SoftGray
+            fontSize = 18.sp, color = SoftGray
         ),
         textAlign = TextAlign.Center
     )
@@ -300,25 +288,19 @@ fun FetchOtherUserRecipeIngredient(
             modifier = Modifier.padding(all = 6.dp),
             text = stringResource(R.string.ingredients_text),
             style = TextStyle(
-                fontSize = 14.sp,
-                color = SoftGray
+                fontSize = 14.sp, color = SoftGray
             )
         )
-        Text(
-            modifier = Modifier
-                .padding(start = 14.dp, end = 6.dp, bottom = 6.dp),
+        Text(modifier = Modifier.padding(start = 14.dp, end = 6.dp, bottom = 6.dp),
             text = buildAnnotatedString {
                 withStyle(
-                    style =
-                    SpanStyle(
-                        fontSize = 16.sp,
-                        color = Color.Black
+                    style = SpanStyle(
+                        fontSize = 16.sp, color = Color.Black
                     )
                 ) {
                     append(recipeIngredients.replace(", ", "\n"))
                 }
-            }
-        )
+            })
     }
 }
 
@@ -330,14 +312,12 @@ fun FetchOtherUserRecipeSteps(
         modifier = Modifier.padding(start = 10.dp, top = 10.dp, bottom = 6.dp),
         text = stringResource(R.string.preparation_steps_text),
         style = TextStyle(
-            fontSize = 16.sp,
-            color = SoftGray
+            fontSize = 16.sp, color = SoftGray
         )
     )
     recipe.steps.forEach { step ->
         StepRecipeItem(
-            numberStep = "${step.order}",
-            textStep = step.description
+            numberStep = "${step.order}", textStep = step.description
         )
     }
 }

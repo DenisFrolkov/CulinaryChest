@@ -1,7 +1,6 @@
 package com.den.culinarychest.presentation.ui.other.screens.common
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,28 +41,30 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.den.culinarychest.R
+import com.den.culinarychest.presentation.ui.main.viewmodel.ImageViewModel
 import com.den.culinarychest.presentation.ui.other.common.components.Item.DisplayRecipeInfo
 import com.den.culinarychest.presentation.ui.other.common.components.Item.StepRecipeItem
-import com.den.culinarychest.presentation.ui.other.common.components.Item.CreateImageLoader
 import com.den.culinarychest.presentation.ui.other.common.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageRecipeUserViewModel
-import com.example.culinarychest.data.repository.TokenRepositoryImpl
 import com.example.culinarychest.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.model.step.Step
 
 @Composable
 fun FetchUserRecipeScreen(
     navController: NavController,
+    imageViewModel: ImageViewModel,
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     recipe: Recipe,
 ) {
     FetchUserRecipe(
         controller = navController,
+        imageViewModel = imageViewModel,
         manageRecipeUserViewModel = manageRecipeUserViewModel,
         recipe = recipe,
     )
@@ -71,35 +73,29 @@ fun FetchUserRecipeScreen(
 @Composable
 fun FetchUserRecipe(
     controller: NavController,
+    imageViewModel: ImageViewModel,
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     recipe: Recipe,
 ) {
 
+    val recipeImageUrl = imageViewModel.photoUrl.collectAsState().value
     val recipeIngredients = """ ${recipe.ingredients} """.trimIndent()
-
     val dropDownMenuItems = arrayOf(
-        "Редактировать",
-        "Удалить"
+        "Редактировать", "Удалить"
     )
-
     var mappingDropdownMenu by remember { mutableStateOf(false) }
 
     Column {
-        FetchUserRecipeTopBar(
-            controller = controller,
+        FetchUserRecipeTopBar(controller = controller,
             mappingDropdownMenu = mappingDropdownMenu,
-            onClickParametersIcon = { newValue -> mappingDropdownMenu = newValue }
-        )
+            onClickParametersIcon = { newValue -> mappingDropdownMenu = newValue })
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = SoftPink)
         ) {
             item {
-                FetchUserRecipeImage(
-                    context = LocalContext.current,
-                    recipeImageUrl = recipe.imageUrl
-                )
+                FetchUserRecipeImage(recipeImageUrl = recipeImageUrl)
                 FetchUserRecipeMiniInformation(recipe = recipe)
                 FetchUserRecipeTitle(recipe = recipe)
                 FetchUserRecipeIngredient(recipeIngredients = recipeIngredients)
@@ -115,8 +111,7 @@ fun FetchUserRecipe(
                 .fillMaxWidth()
                 .padding(top = 52.dp)
         ) {
-            RecipeDropDownMenu(
-                dropDownMenuItems = dropDownMenuItems,
+            RecipeDropDownMenu(dropDownMenuItems = dropDownMenuItems,
                 onClickParameters = { newValueParameters ->
                     mappingDropdownMenu = newValueParameters
                 },
@@ -133,8 +128,7 @@ fun FetchUserRecipe(
                             )
                         }
                     }
-                }
-            )
+                })
         }
     }
 }
@@ -154,24 +148,20 @@ fun FetchUserRecipeTopBar(
             .border(width = 0.1.dp, color = SoftGray)
             .padding(horizontal = 20.dp, vertical = 14.dp)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.back_icon),
+        Image(painter = painterResource(id = R.drawable.back_icon),
             contentDescription = null,
             modifier = Modifier
                 .size(24.dp)
                 .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null
+                    interactionSource = remember { MutableInteractionSource() }, indication = null
                 ) {
                     controller.popBackStack()
-                }
-        )
+                })
         Image(
             modifier = Modifier
                 .size(24.dp)
                 .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null
+                    interactionSource = remember { MutableInteractionSource() }, indication = null
                 ) {
                     onClickParametersIcon(!mappingDropdownMenu)
                 },
@@ -183,29 +173,24 @@ fun FetchUserRecipeTopBar(
 
 @Composable
 fun FetchUserRecipeImage(
-    context: Context,
-    recipeImageUrl: String
+    recipeImageUrl: String?
 ) {
-    val desiredPath = recipeImageUrl.substringAfter("/wwwroot/")
-    val imageUrl = "https://zany-meme-jp7rjw5xjwpfpv47-7286.app.github.dev/images/${desiredPath}"
-    val imageLoader = CreateImageLoader(context)
 
-    val painter = rememberAsyncImagePainter(
-        model = imageUrl,
-        imageLoader = imageLoader
-    )
+
     Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
+        contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
     ) {
-        Image(
-            painter = painter,
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current).data(recipeImageUrl).crossfade(true)
+                .build(),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(400.dp)
                 .padding(horizontal = 10.dp, vertical = 6.dp)
-                .border(width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp))
+                .border(
+                    width = 0.dp, color = SoftPink, shape = RoundedCornerShape(12.dp)
+                )
                 .clip(shape = RoundedCornerShape(15.dp))
         )
     }
@@ -216,8 +201,7 @@ fun FetchUserRecipeMiniInformation(
     recipe: Recipe
 ) {
     Row(
-        modifier = Modifier
-            .padding(start = 24.dp, top = 6.dp, end = 8.dp)
+        modifier = Modifier.padding(start = 24.dp, top = 6.dp, end = 8.dp)
     ) {
         DisplayRecipeInfo(
             iconRecipeInfo = painterResource(id = R.drawable.recipe_info_star_icon),
@@ -258,8 +242,7 @@ fun FetchUserRecipeTitle(
             .padding(horizontal = 10.dp, vertical = 5.dp),
         text = recipe.title,
         style = TextStyle(
-            fontSize = 18.sp,
-            color = SoftGray
+            fontSize = 18.sp, color = SoftGray
         ),
         textAlign = TextAlign.Center
     )
@@ -280,24 +263,19 @@ fun FetchUserRecipeIngredient(
             modifier = Modifier.padding(all = 6.dp),
             text = stringResource(R.string.ingredients_text),
             style = TextStyle(
-                fontSize = 14.sp,
-                color = SoftGray
+                fontSize = 14.sp, color = SoftGray
             )
         )
         Text(
             text = buildAnnotatedString {
                 withStyle(
-                    style =
-                    SpanStyle(
-                        fontSize = 16.sp,
-                        color = Color.Black
+                    style = SpanStyle(
+                        fontSize = 16.sp, color = Color.Black
                     )
                 ) {
                     append(recipeIngredients.replace(", ", "\n"))
                 }
-            },
-            modifier = Modifier
-                .padding(start = 14.dp, end = 6.dp, bottom = 6.dp)
+            }, modifier = Modifier.padding(start = 14.dp, end = 6.dp, bottom = 6.dp)
         )
     }
 }
@@ -310,14 +288,12 @@ fun FetchUserRecipeSteps(
         modifier = Modifier.padding(start = 10.dp, top = 10.dp, bottom = 6.dp),
         text = stringResource(R.string.preparation_steps_text),
         style = TextStyle(
-            fontSize = 16.sp,
-            color = SoftGray
+            fontSize = 16.sp, color = SoftGray
         )
     )
     recipeSteps.forEach { step ->
         StepRecipeItem(
-            numberStep = "${step.order}",
-            textStep = step.description
+            numberStep = "${step.order}", textStep = step.description
         )
     }
 }
@@ -329,27 +305,23 @@ fun RecipeDropDownMenu(
     onItemClick: (String) -> Unit
 ) {
     Column(
-        modifier = Modifier
-            .background(color = Color.White, shape = RoundedCornerShape(bottomStart = 12.dp))
+        modifier = Modifier.background(
+                color = Color.White,
+                shape = RoundedCornerShape(bottomStart = 12.dp)
+            )
     ) {
         dropDownMenuItems.forEach { dropDownMenuItem ->
-            Text(
-                text = dropDownMenuItem,
-                style = TextStyle(
-                    fontSize = 18.sp,
-                    color = Color.Black
-                ),
-                modifier = Modifier
-                    .clickable(
-                        interactionSource = MutableInteractionSource(),
-                        indication = null
-                    ) {
-                        onClickParameters(false)
-                        onItemClick(dropDownMenuItem)
-                    }
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
+            Text(text = dropDownMenuItem, style = TextStyle(
+                fontSize = 18.sp, color = Color.Black
+            ), modifier = Modifier
+                .clickable(
+                    interactionSource = MutableInteractionSource(), indication = null
+                ) {
+                    onClickParameters(false)
+                    onItemClick(dropDownMenuItem)
+                }
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .align(Alignment.CenterHorizontally))
         }
     }
 }

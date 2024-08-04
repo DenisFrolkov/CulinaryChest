@@ -1,7 +1,6 @@
 package com.den.culinarychest.presentation.ui.other.screens.common
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -31,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -57,9 +57,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.ui.other.common.components.Item.CreateImageLoader
+import com.den.culinarychest.presentation.ui.main.viewmodel.ImageViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageRecipeUserViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageStepsViewModel
+import com.den.culinarychest.presentation.ui.other.common.model.AddStep
+import com.den.culinarychest.presentation.ui.other.common.model.AddStepCreate
 import com.den.culinarychest.presentation.ui.other.common.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.EditRecipeColor
 import com.den.culinarychest.presentation.ui.theme.LightGray
@@ -67,27 +72,21 @@ import com.den.culinarychest.presentation.ui.theme.LightRed
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
-import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageRecipeUserViewModel
-import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageStepsViewModel
-import com.den.culinarychest.presentation.ui.other.common.model.AddStep
-import com.den.culinarychest.presentation.ui.other.common.model.AddStepCreate
-import com.example.culinarychest.data.repository.TokenRepositoryImpl
 import com.example.culinarychest.domain.model.recipe.Recipe
-import com.example.culinarychest.domain.model.recipe.UpdateRecipe
-import com.example.culinarychest.domain.model.step.CreateStep
-import com.example.culinarychest.domain.model.step.UpdateStep
 import java.io.File
 import java.io.InputStream
 
 @Composable
 fun EditRecipeScreen(
     navController: NavController,
+    imageViewModel: ImageViewModel,
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     manageStepsViewModel: ManageStepsViewModel,
     recipe: Recipe,
 ) {
     EditRecipe(
         controller = navController,
+        imageViewModel = imageViewModel,
         manageRecipeUserViewModel = manageRecipeUserViewModel,
         manageStepsViewModel = manageStepsViewModel,
         recipe = recipe,
@@ -97,10 +96,13 @@ fun EditRecipeScreen(
 @Composable
 private fun EditRecipe(
     controller: NavController,
+    imageViewModel: ImageViewModel,
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     manageStepsViewModel: ManageStepsViewModel,
     recipe: Recipe,
 ) {
+
+    val recipeImageUrl = imageViewModel.photoUrl.collectAsState().value
 
     val stepsFromServer = remember { mutableStateListOf<AddStep>() }
     val stepsCreateApp = remember { mutableStateListOf<AddStepCreate>() }
@@ -218,8 +220,7 @@ private fun EditRecipe(
         ) {
             item {
                 EditRecipeImage(
-                    context = LocalContext.current,
-                    recipeImageUrl = recipe.imageUrl,
+                    recipeImageUrl = recipeImageUrl,
                     addImage = { image -> imageFile = image }
                 )
                 Spacer(modifier = Modifier.height(12.dp))
@@ -448,23 +449,13 @@ private fun EditRecipeTopBar(
 @SuppressLint("UnrememberedMutableInteractionSource")
 @Composable
 private fun EditRecipeImage(
-    context: Context,
-    recipeImageUrl: String,
+    recipeImageUrl: String?,
     addImage: (File?) -> Unit
 ) {
     Box(
         modifier = Modifier
             .padding(top = 6.dp)
     ) {
-        val desiredPath = recipeImageUrl.substringAfter("/wwwroot/")
-        val imageUrl =
-            "https://zany-meme-jp7rjw5xjwpfpv47-7286.app.github.dev/images/${desiredPath}"
-        val imageLoader = CreateImageLoader(context)
-
-        val painter = rememberAsyncImagePainter(
-            model = imageUrl,
-            imageLoader = imageLoader
-        )
         var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
         var selectedImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
         val context = LocalContext.current
@@ -486,8 +477,11 @@ private fun EditRecipeImage(
             }
 
         if (selectedImageBitmap == null) {
-            Image(
-                painter = painter,
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(recipeImageUrl)
+                    .crossfade(true)
+                    .build(),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

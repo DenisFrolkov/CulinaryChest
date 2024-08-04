@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
+import com.den.culinarychest.presentation.ui.main.viewmodel.ImageViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.FavoriteViewModel
 import com.den.culinarychest.presentation.ui.other.common.components.Item.RecipeItem
 import com.den.culinarychest.presentation.ui.other.common.route.AppNavigationRoute
@@ -27,13 +28,13 @@ import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
-import com.example.culinarychest.data.repository.TokenRepositoryImpl
 import com.example.culinarychest.domain.model.recipe.Recipe
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun FavoriteScreen(
     controller: NavController,
+    imageViewModel: ImageViewModel,
     favoriteViewModel: FavoriteViewModel,
     recipeDetailsViewModel: RecipeDetailsViewModel,
 ) {
@@ -49,13 +50,14 @@ fun FavoriteScreen(
     if (recipe.isEmpty()) {
         EmptyScreenText()
     } else {
-        ListRecipes(controller, recipe, recipeDetailsViewModel)
+        ListRecipes(controller, imageViewModel, recipe, recipeDetailsViewModel)
     }
 }
 
 @Composable
 private fun ListRecipes(
     controller: NavController,
+    imageViewModel: ImageViewModel,
     recipeDtoList: List<Recipe>,
     recipeDetailsViewModel: RecipeDetailsViewModel,
 ) {
@@ -70,10 +72,11 @@ private fun ListRecipes(
             Spacer(modifier = Modifier.height(72.dp))
         }
 
-        if (recipeDtoList != null) {
+        if (recipeDtoList.isEmpty()) {
             items(recipeDtoList) { recipe ->
                 RecipeItem(
                     controller = controller,
+                    imageViewModel= imageViewModel,
                     textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
                     recipe = recipe,
                     recipeDetailsViewModel = recipeDetailsViewModel

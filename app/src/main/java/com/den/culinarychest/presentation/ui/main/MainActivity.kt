@@ -1,44 +1,26 @@
 package com.den.culinarychest.presentation.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import com.den.culinarychest.presentation.ui.main.viewmodel.ImageViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.auth.AuthorizationViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.auth.RegistrationViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.common.GenericViewModelFactory
+import com.den.culinarychest.presentation.ui.main.viewmodel.common.TokenViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.profile.ProfileViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.CreatedViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.CreatingRecipeViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.FavoriteViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageOtherRecipeViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageRecipeUserViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageStepsViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.SearchViewModel
 import com.den.culinarychest.presentation.ui.other.common.navigation.appNavigation.AppNavigation
 import com.den.culinarychest.presentation.ui.theme.CulinaryChestTheme
-import com.den.culinarychest.presentation.ui.main.viewmodel.auth.AuthorizationViewModel
-import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageOtherRecipeViewModel
-import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.CreatingRecipeViewModel
-import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.CreatedViewModel
-import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.FavoriteViewModel
-import com.den.culinarychest.presentation.ui.main.viewmodel.common.GenericViewModelFactory
-import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageRecipeUserViewModel
-import com.den.culinarychest.presentation.ui.main.viewmodel.profile.ProfileViewModel
-import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
-import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageStepsViewModel
-import com.den.culinarychest.presentation.ui.main.viewmodel.auth.RegistrationViewModel
-import com.den.culinarychest.presentation.ui.main.viewmodel.common.TokenViewModel
-import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.SearchViewModel
-import com.example.culinarychest.data.api.RetrofitInstance
-import com.example.culinarychest.data.repository.UserFavoriteRecipeRepositoryImpl
-import com.example.culinarychest.data.repository.UserRecipeRepositoryImpl
-import com.example.culinarychest.data.repository.UserRepositoryImpl
-import com.example.culinarychest.data.repository.RecipeRepositoryImpl
-import com.example.culinarychest.data.repository.RecipeStepsRepositoryImpl
-import com.example.culinarychest.data.repository.TokenRepositoryImpl
-import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.CreateApplicationUserFavoriteRecipesUseCase
-import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.DeleteApplicationUserFavoriteRecipeUseCase
-import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.GetUserFavoriteRecipesUseCase
-import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.GetFavoriteRecipeByRecipeIdUseCase
-import com.example.culinarychest.domain.usecase.userRecipeUseCases.CreateUserRecipeUseCase
-import com.example.culinarychest.domain.usecase.userRecipeUseCases.DeleteUserRecipeUseCase
-import com.example.culinarychest.domain.usecase.userRecipeUseCases.GetUserRecipesUseCase
-import com.example.culinarychest.domain.usecase.userRecipeUseCases.UpdateUserRecipeUseCase
-import com.example.culinarychest.domain.usecase.userUseCases.GetUserInfoUseCase
-import com.example.culinarychest.domain.usecase.userUseCases.RegistrationUserUseCase
+import com.example.culinarychest.domain.usecase.GetRecipePhotoUseCase
 import com.example.culinarychest.domain.usecase.recipeRepositoryUseCases.GetRecipeByIdUseCase
 import com.example.culinarychest.domain.usecase.recipeRepositoryUseCases.GetRecipesByIdsUseCase
 import com.example.culinarychest.domain.usecase.recipeRepositoryUseCases.GetRecipesUseCase
@@ -48,12 +30,30 @@ import com.example.culinarychest.domain.usecase.recipeStepsUseCases.UpdateStepUs
 import com.example.culinarychest.domain.usecase.tokenUseCase.ClearTokenUseCase
 import com.example.culinarychest.domain.usecase.tokenUseCase.GetTokenUseCase
 import com.example.culinarychest.domain.usecase.tokenUseCase.SaveTokenUseCase
+import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.CreateApplicationUserFavoriteRecipesUseCase
+import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.DeleteApplicationUserFavoriteRecipeUseCase
+import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.GetFavoriteRecipeByRecipeIdUseCase
+import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.GetUserFavoriteRecipesUseCase
+import com.example.culinarychest.domain.usecase.userRecipeUseCases.CreateUserRecipeUseCase
+import com.example.culinarychest.domain.usecase.userRecipeUseCases.DeleteUserRecipeUseCase
+import com.example.culinarychest.domain.usecase.userRecipeUseCases.GetUserRecipesUseCase
+import com.example.culinarychest.domain.usecase.userRecipeUseCases.UpdateUserRecipeUseCase
 import com.example.culinarychest.domain.usecase.userUseCases.AuthorizationUserUseCase
+import com.example.culinarychest.domain.usecase.userUseCases.GetUserInfoUseCase
+import com.example.culinarychest.domain.usecase.userUseCases.RegistrationUserUseCase
 
 class MainActivity : ComponentActivity() {
 
     init {
         AppModule.init(this)
+    }
+
+    private val imageViewModel by viewModels<ImageViewModel> {
+        GenericViewModelFactory {
+            ImageViewModel(
+                GetRecipePhotoUseCase(AppModule.provideImageRepository())
+            )
+        }
     }
 
     private val tokenViewModel by viewModels<TokenViewModel> {
@@ -174,9 +174,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Log.e("AAA", "Activity created")
             CulinaryChestTheme {
                 AppNavigation(
+                    imageViewModel,
                     tokenViewModel,
                     registrationApplicationUserViewModel,
                     authorizationUserViewModel,
