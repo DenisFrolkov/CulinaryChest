@@ -8,11 +8,13 @@ import com.example.culinarychest.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.model.favorite_recipe.FavoriteRecipeRequest
 import com.example.culinarychest.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.model.recipe.RecipeRequest
-import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.GetFavoriteRecipeByRecipeIdUseCase
+import com.example.culinarychest.domain.usecase.GetRecipePhotoUseCase
 import com.example.culinarychest.domain.usecase.recipeRepositoryUseCases.GetRecipeByIdUseCase
 import com.example.culinarychest.domain.usecase.tokenUseCase.GetTokenUseCase
+import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.GetFavoriteRecipeByRecipeIdUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -21,6 +23,7 @@ import kotlinx.coroutines.launch
 
 class RecipeDetailsViewModel(
     private val getTokenUseCase: GetTokenUseCase,
+    private val getRecipePhotoUseCase: GetRecipePhotoUseCase,
     private val getFavoriteRecipeByRecipeIdUseCase: GetFavoriteRecipeByRecipeIdUseCase,
     private val getRecipeByIdUseCase: GetRecipeByIdUseCase
 ) : ViewModel() {
@@ -30,6 +33,9 @@ class RecipeDetailsViewModel(
 
     private val _recipe = MutableStateFlow<List<Recipe>>(emptyList())
     val recipe = _recipe.asStateFlow()
+
+    private val _photoUrl = MutableStateFlow<String?>(null)
+    val photoUrl: StateFlow<String?> get() = _photoUrl
 
     private val _showErrorToastChannel = Channel<Boolean>()
     val showErrorToastChannel = _showErrorToastChannel.receiveAsFlow()
@@ -54,6 +60,7 @@ class RecipeDetailsViewModel(
                         is ProcessingResult.Success -> {
                             result.data?.let { recipe ->
                                 _recipe.update { recipe }
+                                loadImagesForRecipes(recipe)
                             }
                         }
                         is ProcessingResult.Loading -> {
@@ -88,4 +95,25 @@ class RecipeDetailsViewModel(
             }
         }
     }
+
+    private fun loadImagesForRecipes(recipes: List<Recipe>) {
+        recipes.forEach { recipe ->
+            viewModelScope.launch {
+                try {
+                    val url = getRecipePhotoUseCase(recipe.imageUrl)
+                    _recipe.update { currentRecipes ->
+                        currentRecipes.map {
+                            if (it.imageUrl == recipe.imageUrl) {
+                                it.copy(imageUrl = url)
+                            } else {
+                                it
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                }
+            }
+        }
+    }
+
 }

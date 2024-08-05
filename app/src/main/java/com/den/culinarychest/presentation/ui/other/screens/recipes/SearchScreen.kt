@@ -39,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.ui.main.viewmodel.ImageViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.SearchViewModel
 import com.den.culinarychest.presentation.ui.other.common.components.Item.RecipeItem
@@ -52,7 +51,6 @@ import com.den.culinarychest.presentation.ui.theme.SoftPink
 @Composable
 fun SearchScreen(
     navController: NavController,
-    imageViewModel: ImageViewModel,
     recipeDetailsViewModel: RecipeDetailsViewModel,
     searchViewModel: SearchViewModel,
 ) {
@@ -61,7 +59,6 @@ fun SearchScreen(
 
     Search(
         controller = navController,
-        imageViewModel = imageViewModel,
         searchViewModel = searchViewModel,
         recipeDetailsViewModel = recipeDetailsViewModel,
     )
@@ -71,7 +68,6 @@ fun SearchScreen(
 @Composable
 private fun Search(
     controller: NavController,
-    imageViewModel: ImageViewModel,
     searchViewModel: SearchViewModel,
     recipeDetailsViewModel: RecipeDetailsViewModel,
 ) {
@@ -118,7 +114,6 @@ private fun Search(
                 items(recipeList) { recipe ->
                     RecipeItem(
                         controller = controller,
-                        imageViewModel = imageViewModel,
                         textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
                         recipe = recipe,
                         recipeDetailsViewModel = recipeDetailsViewModel

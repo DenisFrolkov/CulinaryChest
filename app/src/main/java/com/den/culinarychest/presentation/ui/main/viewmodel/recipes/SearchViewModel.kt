@@ -6,6 +6,7 @@ import com.example.culinarychest.domain.model.ProcessingResult
 import com.example.culinarychest.domain.model.application_user.Token
 import com.example.culinarychest.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.model.recipe.SearchRequest
+import com.example.culinarychest.domain.usecase.GetRecipePhotoUseCase
 import com.example.culinarychest.domain.usecase.recipeRepositoryUseCases.GetRecipesUseCase
 import com.example.culinarychest.domain.usecase.tokenUseCase.GetTokenUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +17,7 @@ import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val getTokenUseCase: GetTokenUseCase,
+    private val getRecipePhotoUseCase: GetRecipePhotoUseCase,
     private val getRecipesUseCase: GetRecipesUseCase
 ) : ViewModel() {
 
@@ -27,26 +29,27 @@ class SearchViewModel(
     init {
         viewModelScope.launch {
             getToken = getTokenUseCase.invoke().toString()
+            getToken?.let { token ->
+                getListRecipes(null)
+            }
         }
     }
 
     fun getListRecipes(searchTerm: String?) {
         viewModelScope.launch {
-            getToken?.let {
-                getRecipesUseCase(SearchRequest(Token(it), searchTerm))
+            getToken?.let { token ->
+                getRecipesUseCase(SearchRequest(Token(token), searchTerm))
                     .collectLatest { result ->
                         when (result) {
                             is ProcessingResult.Error -> {
-                                // Handle error
                             }
-
                             is ProcessingResult.Success -> {
                                 result.data?.let { userInfo ->
-                                    _listRecipes.update { userInfo }
+                                    _listRecipes.value = userInfo
+                                    loadImagesForRecipes(userInfo)
                                 }
                             }
                             is ProcessingResult.Loading -> {
-
                             }
                         }
                     }
@@ -54,4 +57,23 @@ class SearchViewModel(
         }
     }
 
+    private fun loadImagesForRecipes(recipes: List<Recipe>) {
+        recipes.forEach { recipe ->
+            viewModelScope.launch {
+                try {
+                    val url = getRecipePhotoUseCase(recipe.imageUrl)
+                    _listRecipes.update { currentRecipes ->
+                        currentRecipes.map {
+                            if (it.imageUrl == recipe.imageUrl) {
+                                it.copy(imageUrl = url)
+                            } else {
+                                it
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                }
+            }
+        }
+    }
 }

@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.ui.main.viewmodel.ImageViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.CreatedViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.FavoriteViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
@@ -43,14 +42,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun HorizontalPagerScreen(
     navController: NavController,
-    imageViewModel: ImageViewModel,
     createdViewModel: CreatedViewModel,
     favoriteViewModel: FavoriteViewModel,
     recipeDetailsViewModel: RecipeDetailsViewModel,
 ) {
     HorizontalPager(
         controller = navController,
-        imageViewModel = imageViewModel,
         createdViewModel = createdViewModel,
         favoriteViewModel = favoriteViewModel,
         recipeDetailsViewModel = recipeDetailsViewModel,
@@ -62,7 +59,6 @@ fun HorizontalPagerScreen(
 @Composable
 private fun HorizontalPager(
     controller: NavController,
-    imageViewModel: ImageViewModel,
     createdViewModel: CreatedViewModel,
     favoriteViewModel: FavoriteViewModel,
     recipeDetailsViewModel: RecipeDetailsViewModel,
@@ -108,14 +104,12 @@ private fun HorizontalPager(
             when (page) {
                 0 -> CreatedScreen(
                     controller = controller,
-                    imageViewModel = imageViewModel,
                     createdViewModel = createdViewModel,
                     recipeDetailsViewModel = recipeDetailsViewModel,
                 )
 
                 1 -> FavoriteScreen(
                     controller = controller,
-                    imageViewModel = imageViewModel,
                     favoriteViewModel = favoriteViewModel,
                     recipeDetailsViewModel = recipeDetailsViewModel,
                 )

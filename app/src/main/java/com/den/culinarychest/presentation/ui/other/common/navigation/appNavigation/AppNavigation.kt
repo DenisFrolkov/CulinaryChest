@@ -9,7 +9,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.den.culinarychest.presentation.ui.main.viewmodel.ImageViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.auth.AuthorizationViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.auth.RegistrationViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.common.TokenViewModel
@@ -34,7 +33,6 @@ import com.den.culinarychest.presentation.ui.other.screens.common.FetchUserRecip
 
 @Composable
 fun AppNavigation(
-    imageViewModel: ImageViewModel,
     tokenViewModel: TokenViewModel,
     registrationViewModel: RegistrationViewModel,
     authorizationViewModel: AuthorizationViewModel,
@@ -83,7 +81,6 @@ fun AppNavigation(
         composable(AppNavigationRoute.BottomAppNavigationBar.route) {
             BottomNavigationBar(
                 navController = appNavigationController,
-                imageViewModel = imageViewModel,
                 searchViewModel = searchViewModel,
                 recipeDetailsViewModel = recipeDetailsViewModel,
                 createdViewModel = createdViewModel,
@@ -107,10 +104,8 @@ fun AppNavigation(
 
             val recipeInfo = recipeDetailsViewModel.recipe.collectAsState(initial = emptyList())
             recipeInfo.value.forEach { recipe ->
-                imageViewModel.fetchRecipePhoto(recipe.imageUrl)
                 FetchOtherUserRecipeScreen(
                     navController = appNavigationController,
-                    imageViewModel = imageViewModel,
                     recipe = recipe,
                     recipeDetailsViewModel = recipeDetailsViewModel,
                     manageOtherRecipeViewModel = manageOtherRecipeViewModel,
@@ -132,10 +127,8 @@ fun AppNavigation(
 
             val recipeInfo = recipeDetailsViewModel.recipe.collectAsState().value
             recipeInfo.forEach { recipe ->
-                imageViewModel.fetchRecipePhoto(recipe.imageUrl)
                 FetchUserRecipeScreen(
                     navController = appNavigationController,
-                    imageViewModel = imageViewModel,
                     manageRecipeUserViewModel = manageRecipeUserViewModel,
                     recipe = recipe,
                 )
@@ -156,10 +149,8 @@ fun AppNavigation(
 
             val recipeInfo = recipeDetailsViewModel.recipe.collectAsState().value
             recipeInfo.forEach { recipe ->
-                imageViewModel.fetchRecipePhoto(recipe.imageUrl)
                 EditRecipeScreen(
                     navController = appNavigationController,
-                    imageViewModel = imageViewModel,
                     manageRecipeUserViewModel = manageRecipeUserViewModel,
                     manageStepsViewModel = manageStepsViewModel,
                     recipe = recipe,

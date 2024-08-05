@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,7 +27,6 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.ui.main.viewmodel.ImageViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
@@ -37,15 +35,10 @@ import com.example.culinarychest.domain.model.recipe.Recipe
 @Composable
 fun RecipeItem(
     controller: NavController,
-    imageViewModel: ImageViewModel,
     textRouteNavigation: String,
     recipe: Recipe,
     recipeDetailsViewModel: RecipeDetailsViewModel
 ) {
-
-    imageViewModel.fetchRecipePhoto(recipe.imageUrl)
-    val recipeImageUrl = imageViewModel.photoUrl.collectAsState().value
-
     Column(modifier = Modifier
         .fillMaxWidth()
         .padding(bottom = 16.dp)
@@ -59,8 +52,17 @@ fun RecipeItem(
         .border(width = .15.dp, color = SoftGray, shape = RoundedCornerShape(12.dp))
         .background(SoftOrange, RoundedCornerShape(12.dp))) {
         Row {
-            LoadImage(
-                recipeImageUrl = recipeImageUrl
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(recipe.imageUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(110.dp)
+                    .padding(start = 16.dp, top = 16.dp)
+                    .clip(shape = RoundedCornerShape(15.dp))
             )
             Column(
                 modifier = Modifier.padding(start = 10.dp, top = 12.dp)
@@ -107,20 +109,4 @@ fun RecipeItem(
             }
         }
     }
-}
-
-@Composable
-fun LoadImage(recipeImageUrl: String?) {
-    AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(recipeImageUrl)
-            .crossfade(true)
-            .build(),
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .size(110.dp)
-            .padding(start = 16.dp, top = 16.dp)
-            .clip(shape = RoundedCornerShape(15.dp))
-    )
 }

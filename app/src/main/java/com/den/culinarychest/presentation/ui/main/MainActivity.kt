@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import com.den.culinarychest.presentation.ui.main.viewmodel.ImageViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.auth.AuthorizationViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.auth.RegistrationViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.common.GenericViewModelFactory
@@ -48,14 +47,6 @@ class MainActivity : ComponentActivity() {
         AppModule.init(this)
     }
 
-    private val imageViewModel by viewModels<ImageViewModel> {
-        GenericViewModelFactory {
-            ImageViewModel(
-                GetRecipePhotoUseCase(AppModule.provideImageRepository())
-            )
-        }
-    }
-
     private val tokenViewModel by viewModels<TokenViewModel> {
         GenericViewModelFactory {
             TokenViewModel(
@@ -86,6 +77,7 @@ class MainActivity : ComponentActivity() {
         GenericViewModelFactory {
             SearchViewModel(
                 GetTokenUseCase(AppModule.provideTokenRepository()),
+                GetRecipePhotoUseCase(AppModule.provideImageRepository()),
                 GetRecipesUseCase(AppModule.provideRecipeRepository())
             )
         }
@@ -95,6 +87,7 @@ class MainActivity : ComponentActivity() {
         GenericViewModelFactory {
             RecipeDetailsViewModel(
                 GetTokenUseCase(AppModule.provideTokenRepository()),
+                GetRecipePhotoUseCase(AppModule.provideImageRepository()),
                 GetFavoriteRecipeByRecipeIdUseCase(AppModule.provideUserFavoriteRecipeRepository()),
                 GetRecipeByIdUseCase(AppModule.provideRecipeRepository())
             )
@@ -105,6 +98,7 @@ class MainActivity : ComponentActivity() {
         GenericViewModelFactory {
             CreatedViewModel(
                 GetTokenUseCase(AppModule.provideTokenRepository()),
+                GetRecipePhotoUseCase(AppModule.provideImageRepository()),
                 GetUserRecipesUseCase(AppModule.provideUserRecipeRepository())
             )
         }
@@ -114,6 +108,7 @@ class MainActivity : ComponentActivity() {
         GenericViewModelFactory {
             FavoriteViewModel(
                 GetTokenUseCase(AppModule.provideTokenRepository()),
+                GetRecipePhotoUseCase(AppModule.provideImageRepository()),
                 GetUserFavoriteRecipesUseCase(AppModule.provideUserFavoriteRecipeRepository()),
                 GetRecipesByIdsUseCase(AppModule.provideRecipeRepository())
             )
@@ -176,7 +171,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             CulinaryChestTheme {
                 AppNavigation(
-                    imageViewModel,
                     tokenViewModel,
                     registrationApplicationUserViewModel,
                     authorizationUserViewModel,

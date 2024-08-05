@@ -30,7 +30,6 @@ import androidx.navigation.compose.rememberNavController
 import com.den.culinarychest.R
 import com.den.culinarychest.presentation.other.screens.HorizontalPagerScreen
 import com.den.culinarychest.presentation.other.screens.ProfileScreen
-import com.den.culinarychest.presentation.ui.main.viewmodel.ImageViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.common.TokenViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.profile.ProfileViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.CreatedViewModel
@@ -46,7 +45,6 @@ import com.den.culinarychest.presentation.ui.theme.SoftOrange
 @Composable
 fun BottomNavigationBar(
     navController: NavController,
-    imageViewModel: ImageViewModel,
     searchViewModel: SearchViewModel,
     recipeDetailsViewModel: RecipeDetailsViewModel,
     createdViewModel: CreatedViewModel,
@@ -129,7 +127,6 @@ fun BottomNavigationBar(
             composable(BottomNavigationRoute.SearchScreen.route) {
                 SearchScreen(
                     navController = navController,
-                    imageViewModel = imageViewModel,
                     recipeDetailsViewModel = recipeDetailsViewModel,
                     searchViewModel = searchViewModel,
                 )
@@ -137,7 +134,6 @@ fun BottomNavigationBar(
             composable(BottomNavigationRoute.TopNavigationBar.route) {
                 HorizontalPagerScreen(
                     navController = navController,
-                    imageViewModel = imageViewModel,
                     createdViewModel = createdViewModel,
                     favoriteViewModel = favoriteViewModel,
                     recipeDetailsViewModel = recipeDetailsViewModel,

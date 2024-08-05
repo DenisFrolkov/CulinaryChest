@@ -7,9 +7,10 @@ import com.example.culinarychest.domain.model.application_user.Token
 import com.example.culinarychest.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.model.recipe.RecipeIdsRequest
-import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.GetUserFavoriteRecipesUseCase
+import com.example.culinarychest.domain.usecase.GetRecipePhotoUseCase
 import com.example.culinarychest.domain.usecase.recipeRepositoryUseCases.GetRecipesByIdsUseCase
 import com.example.culinarychest.domain.usecase.tokenUseCase.GetTokenUseCase
+import com.example.culinarychest.domain.usecase.userFavoriteRecipeUseCases.GetUserFavoriteRecipesUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 
 class FavoriteViewModel(
     private val getTokenUseCase: GetTokenUseCase,
+    private val getRecipePhotoUseCase: GetRecipePhotoUseCase,
     private val getUserFavoriteRecipesUseCase: GetUserFavoriteRecipesUseCase,
     private val getRecipesByIdsUseCase: GetRecipesByIdsUseCase
 ) : ViewModel() {
@@ -77,6 +79,7 @@ class FavoriteViewModel(
                         is ProcessingResult.Success -> {
                             result.data?.let { recipes ->
                                 _listRecipesById.update { recipes }
+                                loadImagesForFavoriteRecipes(recipes)
                             }
                         }
 
@@ -84,6 +87,27 @@ class FavoriteViewModel(
 
                         }
                     }
+                }
+            }
+        }
+    }
+
+    private fun loadImagesForFavoriteRecipes(favoriteRecipes: List<Recipe>) {
+        favoriteRecipes.forEach { recipe ->
+            viewModelScope.launch {
+                try {
+                    val url = getRecipePhotoUseCase(recipe.imageUrl)
+                    _listRecipesById.update { currentRecipes ->
+                        currentRecipes.map {
+                            if (it.imageUrl == recipe.imageUrl) {
+                                it.copy(imageUrl = url)
+                            } else {
+                                it
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+
                 }
             }
         }

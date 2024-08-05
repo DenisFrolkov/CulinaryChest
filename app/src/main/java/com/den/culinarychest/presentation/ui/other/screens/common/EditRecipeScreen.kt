@@ -30,7 +30,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -60,7 +59,6 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.ui.main.viewmodel.ImageViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageRecipeUserViewModel
 import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageStepsViewModel
 import com.den.culinarychest.presentation.ui.other.common.model.AddStep
@@ -79,14 +77,12 @@ import java.io.InputStream
 @Composable
 fun EditRecipeScreen(
     navController: NavController,
-    imageViewModel: ImageViewModel,
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     manageStepsViewModel: ManageStepsViewModel,
     recipe: Recipe,
 ) {
     EditRecipe(
         controller = navController,
-        imageViewModel = imageViewModel,
         manageRecipeUserViewModel = manageRecipeUserViewModel,
         manageStepsViewModel = manageStepsViewModel,
         recipe = recipe,
@@ -96,14 +92,10 @@ fun EditRecipeScreen(
 @Composable
 private fun EditRecipe(
     controller: NavController,
-    imageViewModel: ImageViewModel,
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     manageStepsViewModel: ManageStepsViewModel,
     recipe: Recipe,
 ) {
-
-    val recipeImageUrl = imageViewModel.photoUrl.collectAsState().value
-
     val stepsFromServer = remember { mutableStateListOf<AddStep>() }
     val stepsCreateApp = remember { mutableStateListOf<AddStepCreate>() }
 
@@ -220,7 +212,7 @@ private fun EditRecipe(
         ) {
             item {
                 EditRecipeImage(
-                    recipeImageUrl = recipeImageUrl,
+                    recipeImageUrl = recipe.imageUrl,
                     addImage = { image -> imageFile = image }
                 )
                 Spacer(modifier = Modifier.height(12.dp))

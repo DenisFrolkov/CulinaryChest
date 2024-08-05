@@ -18,9 +18,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -47,14 +47,13 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.ui.main.viewmodel.ImageViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageOtherRecipeViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
 import com.den.culinarychest.presentation.ui.other.common.components.Item.DisplayRecipeInfo
 import com.den.culinarychest.presentation.ui.other.common.components.Item.StepRecipeItem
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
-import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageOtherRecipeViewModel
-import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.RecipeDetailsViewModel
 import com.example.culinarychest.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.model.recipe.Recipe
 import java.time.LocalDateTime
@@ -62,14 +61,12 @@ import java.time.LocalDateTime
 @Composable
 fun FetchOtherUserRecipeScreen(
     navController: NavController,
-    imageViewModel: ImageViewModel,
     recipe: Recipe,
     recipeDetailsViewModel: RecipeDetailsViewModel,
     manageOtherRecipeViewModel: ManageOtherRecipeViewModel,
 ) {
     FetchOtherUserRecipe(
         controller = navController,
-        imageViewModel = imageViewModel,
         recipe = recipe,
         recipeDetailsViewModel = recipeDetailsViewModel,
         manageOtherRecipeViewModel = manageOtherRecipeViewModel,
@@ -79,14 +76,10 @@ fun FetchOtherUserRecipeScreen(
 @Composable
 fun FetchOtherUserRecipe(
     controller: NavController,
-    imageViewModel: ImageViewModel,
     recipe: Recipe,
     recipeDetailsViewModel: RecipeDetailsViewModel,
     manageOtherRecipeViewModel: ManageOtherRecipeViewModel,
 ) {
-
-    val recipeImageUrl = imageViewModel.photoUrl.collectAsState().value
-
     var clickElementLike by remember {
         mutableStateOf(false)
     }
@@ -107,7 +100,7 @@ fun FetchOtherUserRecipe(
         ) {
             item {
                 FetchOtherUserRecipeImage(
-                    recipeImageUrl
+                    recipe.imageUrl
                 )
                 FetchOtherUserRecipeMiniInformation(recipe = recipe)
                 FetchOtherUserRecipeTitle(recipe = recipe)

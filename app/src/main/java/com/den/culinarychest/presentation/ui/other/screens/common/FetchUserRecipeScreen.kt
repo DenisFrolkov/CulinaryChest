@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,27 +43,24 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.den.culinarychest.R
-import com.den.culinarychest.presentation.ui.main.viewmodel.ImageViewModel
+import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageRecipeUserViewModel
 import com.den.culinarychest.presentation.ui.other.common.components.Item.DisplayRecipeInfo
 import com.den.culinarychest.presentation.ui.other.common.components.Item.StepRecipeItem
 import com.den.culinarychest.presentation.ui.other.common.route.AppNavigationRoute
 import com.den.culinarychest.presentation.ui.theme.SoftGray
 import com.den.culinarychest.presentation.ui.theme.SoftOrange
 import com.den.culinarychest.presentation.ui.theme.SoftPink
-import com.den.culinarychest.presentation.ui.main.viewmodel.recipes.ManageRecipeUserViewModel
 import com.example.culinarychest.domain.model.recipe.Recipe
 import com.example.culinarychest.domain.model.step.Step
 
 @Composable
 fun FetchUserRecipeScreen(
     navController: NavController,
-    imageViewModel: ImageViewModel,
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     recipe: Recipe,
 ) {
     FetchUserRecipe(
         controller = navController,
-        imageViewModel = imageViewModel,
         manageRecipeUserViewModel = manageRecipeUserViewModel,
         recipe = recipe,
     )
@@ -73,12 +69,9 @@ fun FetchUserRecipeScreen(
 @Composable
 fun FetchUserRecipe(
     controller: NavController,
-    imageViewModel: ImageViewModel,
     manageRecipeUserViewModel: ManageRecipeUserViewModel,
     recipe: Recipe,
 ) {
-
-    val recipeImageUrl = imageViewModel.photoUrl.collectAsState().value
     val recipeIngredients = """ ${recipe.ingredients} """.trimIndent()
     val dropDownMenuItems = arrayOf(
         "Редактировать", "Удалить"
@@ -95,7 +88,7 @@ fun FetchUserRecipe(
                 .background(color = SoftPink)
         ) {
             item {
-                FetchUserRecipeImage(recipeImageUrl = recipeImageUrl)
+                FetchUserRecipeImage(recipeImageUrl = recipe.imageUrl)
                 FetchUserRecipeMiniInformation(recipe = recipe)
                 FetchUserRecipeTitle(recipe = recipe)
                 FetchUserRecipeIngredient(recipeIngredients = recipeIngredients)
@@ -306,9 +299,9 @@ fun RecipeDropDownMenu(
 ) {
     Column(
         modifier = Modifier.background(
-                color = Color.White,
-                shape = RoundedCornerShape(bottomStart = 12.dp)
-            )
+            color = Color.White,
+            shape = RoundedCornerShape(bottomStart = 12.dp)
+        )
     ) {
         dropDownMenuItems.forEach { dropDownMenuItem ->
             Text(text = dropDownMenuItem, style = TextStyle(
