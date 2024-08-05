@@ -1,20 +1,22 @@
 package com.example.culinarychest.data.model
 
-import com.example.culinarychest.data.model.application_user.UserDto
-import com.example.culinarychest.data.model.application_user.UserInfoDto
 import com.example.culinarychest.data.model.application_user.DuplicationUserInfoDto
 import com.example.culinarychest.data.model.application_user.LoginDto
 import com.example.culinarychest.data.model.application_user.TokenDto
+import com.example.culinarychest.data.model.application_user.UserDto
+import com.example.culinarychest.data.model.application_user.UserInfoDto
+import com.example.culinarychest.data.model.favorite_recipe.AddedDateFavoriteRecipeDto
 import com.example.culinarychest.data.model.favorite_recipe.CreateFavoriteRecipeDto
 import com.example.culinarychest.data.model.favorite_recipe.FavoriteRecipeDto
 import com.example.culinarychest.data.model.recipe.RecipeDto
 import com.example.culinarychest.data.model.step.StepDataDto
 import com.example.culinarychest.data.model.step.StepDto
 import com.example.culinarychest.domain.model.application_user.ApplicationUser
-import com.example.culinarychest.domain.model.application_user.UserInfo
 import com.example.culinarychest.domain.model.application_user.DuplicationUserInfo
 import com.example.culinarychest.domain.model.application_user.Login
 import com.example.culinarychest.domain.model.application_user.Token
+import com.example.culinarychest.domain.model.application_user.UserInfo
+import com.example.culinarychest.domain.model.favorite_recipe.AddedDateFavoriteRecipe
 import com.example.culinarychest.domain.model.favorite_recipe.CreateFavoriteRecipe
 import com.example.culinarychest.domain.model.favorite_recipe.FavoriteRecipe
 import com.example.culinarychest.domain.model.recipe.Recipe
@@ -75,6 +77,26 @@ object Mappers {
         return CreateFavoriteRecipeDto(
             token = this.token.toDto(),
             recipeId = this.recipeId,
+            addedDate = this.addedDate.toDto()
+        )
+    }
+
+    fun CreateFavoriteRecipeDto.toDomain(): CreateFavoriteRecipe {
+        return CreateFavoriteRecipe(
+            token = this.token.toDomain(),
+            recipeId = this.recipeId,
+            addedDate = this.addedDate.toDomain()
+        )
+    }
+
+    fun AddedDateFavoriteRecipeDto.toDomain(): AddedDateFavoriteRecipe {
+        return AddedDateFavoriteRecipe(
+            addedDate = this.addedDate
+        )
+    }
+
+    fun AddedDateFavoriteRecipe.toDto(): AddedDateFavoriteRecipeDto {
+        return AddedDateFavoriteRecipeDto(
             addedDate = this.addedDate
         )
     }

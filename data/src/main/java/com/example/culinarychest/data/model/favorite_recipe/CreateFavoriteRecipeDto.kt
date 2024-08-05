@@ -7,5 +7,5 @@ data class CreateFavoriteRecipeDto(
     val token: TokenDto,
     val recipeId: Int,
     @SerializedName("addedDate")
-    val addedDate: String
+    val addedDate: AddedDateFavoriteRecipeDto
 )

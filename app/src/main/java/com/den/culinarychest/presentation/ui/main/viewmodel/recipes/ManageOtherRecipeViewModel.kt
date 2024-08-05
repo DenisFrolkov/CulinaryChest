@@ -3,6 +3,7 @@ package com.den.culinarychest.presentation.ui.main.viewmodel.recipes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.culinarychest.domain.model.application_user.Token
+import com.example.culinarychest.domain.model.favorite_recipe.AddedDateFavoriteRecipe
 import com.example.culinarychest.domain.model.favorite_recipe.CreateFavoriteRecipe
 import com.example.culinarychest.domain.model.favorite_recipe.FavoriteRecipeRequest
 import com.example.culinarychest.domain.usecase.tokenUseCase.GetTokenUseCase
@@ -35,7 +36,7 @@ class ManageOtherRecipeViewModel(
                         CreateFavoriteRecipe(
                             Token(it),
                             recipeId,
-                            addedDate
+                            AddedDateFavoriteRecipe(addedDate)
                         )
                     )
                 }

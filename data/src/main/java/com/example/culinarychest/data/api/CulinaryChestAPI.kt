@@ -5,6 +5,7 @@ import com.example.culinarychest.data.model.application_user.LoginDto
 import com.example.culinarychest.data.model.application_user.TokenDto
 import com.example.culinarychest.data.model.application_user.UserDto
 import com.example.culinarychest.data.model.application_user.UserInfoDto
+import com.example.culinarychest.data.model.favorite_recipe.AddedDateFavoriteRecipeDto
 import com.example.culinarychest.data.model.favorite_recipe.FavoriteRecipeDto
 import com.example.culinarychest.data.model.recipe.RecipeDto
 import com.example.culinarychest.data.model.step.StepDataDto
@@ -46,7 +47,7 @@ interface CulinaryChestAPI {
     suspend fun createFavoriteRecipesUser(
         @Header("Authorization") token: String,
         @Path("recipeId") recipeId: Int,
-        @Body addedDate: String
+        @Body addedDate: AddedDateFavoriteRecipeDto
     )
 
     @DELETE("/api/applicationUser/favoriteRecipe/{recipeId}")

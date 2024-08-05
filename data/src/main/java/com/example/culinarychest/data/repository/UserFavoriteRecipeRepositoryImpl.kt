@@ -2,6 +2,7 @@ package com.example.culinarychest.data.repository
 
 import com.example.culinarychest.data.api.CulinaryChestAPI
 import com.example.culinarychest.data.model.Mappers.toDomain
+import com.example.culinarychest.data.model.Mappers.toDto
 import com.example.culinarychest.domain.model.application_user.Token
 import com.example.culinarychest.domain.model.favorite_recipe.CreateFavoriteRecipe
 import com.example.culinarychest.domain.model.favorite_recipe.FavoriteRecipe
@@ -26,9 +27,10 @@ class UserFavoriteRecipeRepositoryImpl(
         createFavoriteRecipe: CreateFavoriteRecipe
     ) {
         return culinaryChestAPI.createFavoriteRecipesUser(
-            createFavoriteRecipe.token.token,
-            createFavoriteRecipe.recipeId,
-            createFavoriteRecipe.addedDate
+            createFavoriteRecipe.toDto().token.token,
+            createFavoriteRecipe.toDto().recipeId,
+            createFavoriteRecipe.toDto().addedDate
+
         )
     }
 
