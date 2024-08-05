@@ -55,7 +55,6 @@ fun CreatedScreen(
     ) {
         ListRecipeCreatedUser(
             controller,
-            createdViewModel,
             listRecipeCreatedUser,
             recipeDetailsViewModel
         )
@@ -80,7 +79,6 @@ private fun FABButton(controller: NavController) {
 @Composable
 private fun ListRecipeCreatedUser(
     controller: NavController,
-    createdViewModel: CreatedViewModel,
     createdRecipeList: List<Recipe>,
     recipeDetailsViewModel: RecipeDetailsViewModel
 ) {

@@ -70,18 +70,18 @@ private fun ListRecipes(
         }
 
         if (recipeList.isEmpty()) {
+            item {
+                CircularProgressIndicator(
+                    color = SoftOrange,
+                )
+            }
+        } else {
             items(recipeList) { recipe ->
                 RecipeItem(
                     controller = controller,
                     textRouteNavigation = AppNavigationRoute.FetchOtherUserRecipeScreen.route,
                     recipe = recipe,
                     recipeDetailsViewModel = recipeDetailsViewModel
-                )
-            }
-        } else {
-            item {
-                CircularProgressIndicator(
-                    color = SoftOrange,
                 )
             }
         }
